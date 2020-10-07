@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body } from '@nestjs/common';
+import { Controller, Post, Get, Param, Body, Patch, Delete } from '@nestjs/common';
 import { UsersService } from './users.service';
 
 
@@ -12,8 +12,8 @@ export class UsersController {
         @Body('name') name: string,
         @Body('email') email: string,
         @Body('password') password: string,
-        @Body('favorites') favorites [],
-        @Body('score') score: string,
+        @Body('favorites') favorites: [],
+        @Body('score') score: Number,
         @Body('role') role: string,
     ) {
         const newUser = await this.usersService.insertUser(
@@ -31,5 +31,36 @@ export class UsersController {
     async getAllUsers() {
         const users = await this.usersService.getUsers();
         return users;
+    }
+
+    @Get(':id')   //  pour admin
+    getUser(@Param('id') userId: string) {
+        return this.usersService.getSingleUser(userId);
+    }
+
+    @Patch(':id')   //  pour utilisateur simple
+    async updateUser(
+        @Param('id') userId: string,
+        @Body('name') name: string,
+        @Body('email') email: string,
+        @Body('password') password: string,
+        @Body('favorites') favorites: [],
+       // @Body('role') role: boolean
+    ) {
+        await this.usersService.updateUser(
+            userId,
+            name,
+            email,
+            password,
+            favorites,
+            //role
+            );
+        return null;
+    }
+
+    @Delete(':id')   //  pour admin
+    async removeUser(@Param('id') prodId: string) {
+        await this.usersService.deleteUser(prodId);
+        return null;
     }
 }
