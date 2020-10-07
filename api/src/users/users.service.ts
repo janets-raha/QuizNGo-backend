@@ -148,5 +148,11 @@ export class UsersService {
     }
     return user;
   }
+
+  async findAuth(username: string): Promise<User | undefined> {
+    let res;
+    res = await this.userModel.findOne({ email: username }).exec();  // changer username a email
+    return res;
+}
     
 }

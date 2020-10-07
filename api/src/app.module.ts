@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import { MongooseModule } from '@nestjs/mongoose';
     QuestionModule,
     QuizzModule,
     CategoryModule,
-    MongooseModule.forRoot('mongodb+srv://atlas_dbuser:atlas_dbpassword@cluster0.mamvx.mongodb.net/Quizz')],
+    MongooseModule.forRoot('mongodb+srv://atlas_dbuser:atlas_dbpassword@cluster0.mamvx.mongodb.net/Quizz'),
+    AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })
