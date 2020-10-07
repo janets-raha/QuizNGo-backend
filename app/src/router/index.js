@@ -24,13 +24,13 @@ const routes = [
     path: "/register",
     name: "Register",
     component: Register
-  }, */
+  }, 
   {
     path: "/quiz",
     name: "Quiz",
     component: Quiz,
   },
-  /* {
+   {
     path: "/login",
     name: "Login",
     component: Login,

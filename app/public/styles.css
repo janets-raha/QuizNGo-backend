@@ -1,34 +1,24 @@
-.concert-img {
-  width: 500px;
-}
-
-.tickets-img {
-  width: 150px;
-}
 @media (max-width: 576px) {
-  .concert-img,
-  .tickets-img {
-    width: 100%;
-  }
 }
-
-.modal-dialog {
-  width: 335px !important;
+.w-100px {
+  width: 100px !important;
+}
+.w-75px {
+  width: 75px !important;
 }
 
 .pointer {
   cursor: pointer;
 }
 .card-header {
-  background-color: rgba(153, 190, 207, 0.445) !important ;
-  font-weight: bold;
+  background-color: rgba(217, 218, 164, 0.445) !important ;
   color: rgb(82, 82, 82);
 }
 
 .nav-pills .router-link-exact-active,
 .bg-dark-theme,
 .btn-primary {
-  background-color: rgb(136, 85, 36) !important;
+  background-color: rgb(73, 136, 36) !important;
 }
 
 .nav-pills .nav-link {

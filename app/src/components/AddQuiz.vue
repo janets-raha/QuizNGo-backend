@@ -1,7 +1,7 @@
 <template>
   <div class="pt-2 mx-3">
-    <h3>Nouveau Quiz</h3>
-    <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+    <div class="text-center"><h3>Nouveau Quiz</h3></div>
+    <b-form @submit="onSubmit" @reset="onReset">
       <b-row no-gutters>
         <b-col md="4">
           <b-form-group
@@ -15,7 +15,7 @@
               id="name"
               col-md-10
               v-model="form.name"
-              type="email"
+              type="text"
               required
               placeholder="Entrez le nom du quiz"
             ></b-form-input>
@@ -85,82 +85,119 @@
               v-model="form.bonus_xp"
               required
               placeholder="Entrez les points bonus"
+              type="number"
             ></b-form-input>
           </b-form-group>
         </b-col>
       </b-row>
 
-      <b-form-group id="input-question" label="Question:" label-for="question">
-        <b-form-textarea
-          id="question"
-          v-model="form.question"
-          required
-          placeholder="Entrez la question"
-        ></b-form-textarea>
-      </b-form-group>
-
-      <b-button @click="addAnswer">Ajouter une question</b-button>
+      <b-button @click="addQuestion">Ajouter une question</b-button>
 
       <div
+        v-for="(question, q_index) in questions"
         class="accordion"
         role="tablist"
-        v-for="(answer, index) in answers"
-        :key="index"
+        :key="q_index"
       >
         <b-card no-body class="mb-1">
-          <b-card-header header-tag="header" class="p-1" role="tab">
-            <b-button block v-b-toggle="'accordion-' + index" variant="info"
-              >Accordion {{ index + 1 }}</b-button
+          <b-card-header header-tag="header" role="tab" class="p-0">
+            <b-container
+              fluid
+              v-b-toggle="'accordion-' + q_index"
+              variant="info"
+              class="p-2 btn-primary d-flex justify-content-between"
             >
+              <span>Question {{ q_index + 1 }}</span>
+
+              <b-icon
+                icon="trash-fill"
+                variant="danger"
+                class="h4 pt-1 m-0"
+                @click.prevent="deleteQuestion(q_index)"
+              ></b-icon>
+            </b-container>
           </b-card-header>
           <b-collapse
-            :id="'accordion-' + index"
+            :id="'accordion-' + q_index"
             visible
-            accordion="my-accordion"
+            accordion="quiz-accordion"
             role="tabpanel"
           >
             <b-card-body>
+              <b-form-textarea
+                id="question"
+                v-model="questions[q_index].question"
+                required
+                placeholder="Entrez la question"
+                class="mb-2"
+              ></b-form-textarea>
+              <div class="d-flex mb-2">
+                <span class="text-nowrap pt-2">Points:</span>
+                <b-form-input
+                  :id="'xps-' + q_index"
+                  type="number"
+                  v-model="questions[q_index].xps"
+                  required
+                  placeholder="Entrez les points bonus"
+                  class="mx-2 w-75px"
+                ></b-form-input
+                ><b-button
+                  @click="addAnswer(q_index)"
+                  class="text-nowrap ml-auto"
+                  >Ajouter une réponse</b-button
+                >
+              </div>
+
               <b-form-group
-                :id="'input-answer-' + index"
-                :label="'Réponse N° ' + (index + 1) + ':'"
-                :label-for="'answer-' + index"
+                v-for="(answer, a_index) in questions[q_index].answers"
+                :key="a_index"
+                :id="'input-answer-' + q_index + '-' + a_index"
+                :label="'Réponse N° ' + (a_index + 1) + ':'"
+                :label-for="'answer-' + q_index + '-' + a_index"
               >
                 <b-form-input
-                  id="'input-answer-' +index"
-                  v-model="answers[index].answer"
+                  id="'answer-' +q_index + '-' +a_index"
+                  v-model="questions[q_index].answers[a_index].answer"
                   required
-                  placeholder="Entrez un réponse"
+                  placeholder="Entrez une réponse"
                 ></b-form-input>
+                <div class="d-flex justify-content-between">
+                  <b-form-checkbox
+                    v-model="questions[q_index].answers[a_index].is_correct"
+                    >Correct</b-form-checkbox
+                  >
+                  <b-icon
+                    icon="trash-fill"
+                    variant="danger"
+                    class="h4 pt-1 m-0 pointer"
+                    @click.prevent="deleteAnswer(q_index, a_index)"
+                  ></b-icon>
+                </div>
               </b-form-group>
             </b-card-body>
           </b-collapse>
         </b-card>
       </div>
 
-      <!-- <div v-for="(answer, index) in answers" :key="index">
-        <b-form-group
-          :id="'input-answer-' + index"
-          :label="'Réponse N° ' + (index + 1) + ':'"
-          :label-for="'answer-' + index"
+      <b-container class="mt-3 d-flex justify-content-center">
+        <b-button type="reset" variant="danger" class="mt-2">Annuler</b-button>
+        <b-button
+          variant="primary"
+          class="mx-4 mt-2"
+          @click.prevent="displayQuiz"
+          >Visualiser</b-button
         >
-          <b-form-input
-            id="'input-answer-' +index"
-            v-model="answers[index].answer"
-            required
-            placeholder="Entrez un réponse"
-          ></b-form-input>
-        </b-form-group>
-      </div> -->
-
-      <b-button type="submit" variant="primary">Submit</b-button>
-      <b-button type="reset" variant="danger">Reset</b-button>
+        <b-button type="submit" variant="primary" class="mt-2"
+          >Ajouter</b-button
+        >
+      </b-container>
     </b-form>
   </div>
 </template>
 
 <script>
 export default {
-  data() {
+  data: () => {
     return {
       form: {
         category: null,
@@ -169,7 +206,7 @@ export default {
         bonus_time: null,
         bonus_xp: null,
       },
-      answers: [],
+      questions: [],
       categories: [
         { text: "Selectionnez...", value: null },
         { text: "Laravel", value: 1 },
@@ -177,29 +214,45 @@ export default {
         "RegEx",
       ],
       difficulties: ["Facile", "Moyen", "Difficile"],
-      show: true,
     };
   },
+  mounted() {
+    console.log(this.questions);
+  },
   methods: {
-    addAnswer() {
-      this.answers.push({ answer: "réponse" });
+    addQuestion() {
+      console.log(this.questions);
+      this.questions.push({
+        question: "",
+        xps: 10,
+        answers: [
+          { answer: "", is_correct: false },
+          { answer: "", is_correct: true },
+        ],
+      });
+    },
+    deleteQuestion(q_index) {
+      if (confirm("Supprimer définitivement cette question?"))
+        this.questions.splice(q_index, 1);
+    },
+    deleteAnswer(q_index, a_index) {
+      if (confirm("Supprimer définitivement cette réponse?"))
+        this.questions[q_index].answers.splice(a_index, 1);
+    },
+    addAnswer(q_index) {
+      this.questions[q_index].answers.push({ answer: "", is_correct: false });
     },
     onSubmit(evt) {
       evt.preventDefault();
-      alert(JSON.stringify(this.form));
+      alert(JSON.stringify(this.form, this.questions));
+    },
+    displayQuiz(evt) {
+      //evt.preventDefault();
+      console.log(this.form, this.questions);
     },
     onReset(evt) {
       evt.preventDefault();
-      // Reset our form values
-      this.form.email = "";
-      this.form.name = "";
-      this.form.food = null;
-      this.form.checked = [];
-      // Trick to reset/clear native browser form validation state
-      this.show = false;
-      this.$nextTick(() => {
-        this.show = true;
-      });
+      this.$router.push("/admin");
     },
   },
 };
