@@ -1,13 +1,12 @@
 import { Controller, Post, Get, Param, Body, Patch, Delete } from '@nestjs/common';
 import { UsersService } from './users.service';
 
-
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {
   }
 
-  @Post()
+  @Post() // //  pour utilisateur simple et admin
     async addUser(
         @Body('name') name: string,
         @Body('email') email: string,
@@ -27,25 +26,49 @@ export class UsersController {
         return { "new user created": newUser };
     }
 
-    @Get()
+
+    @Get('admin')   //  pour admin
     async getAllUsers() {
         const users = await this.usersService.getUsers();
         return users;
     }
 
-    @Get(':id')   //  pour admin
+    @Get('admin/:id')   //  pour admin
     getUser(@Param('id') userId: string) {
         return this.usersService.getSingleUser(userId);
     }
 
-    @Patch(':id')   //  pour utilisateur simple
+    @Patch('admin:id')   //  pour admin
+    async updateUserAdmin(
+        @Param('id') userId: string,
+        @Body('name') name: string,
+        @Body('email') email: string,
+        @Body('password') password: string,
+        @Body('favorites') favorites: [],
+        @Body('score') score: Number,
+        @Body('role') role: string,
+    ) {
+        await this.usersService.updateUserAdmin(
+            userId,
+            name,
+            email,
+            password,
+            favorites,
+            score,
+            role,
+            );
+        return null;
+    }
+
+    @Patch('admin:id')   //  pour utilisateur simple
     async updateUser(
         @Param('id') userId: string,
         @Body('name') name: string,
         @Body('email') email: string,
         @Body('password') password: string,
         @Body('favorites') favorites: [],
-       // @Body('role') role: boolean
+        //@Body('score') score: Number,
+        //@Body('role') role: boolean,
     ) {
         await this.usersService.updateUser(
             userId,
@@ -53,12 +76,13 @@ export class UsersController {
             email,
             password,
             favorites,
-            //role
+           // score,
+           // role,
             );
         return null;
     }
 
-    @Delete(':id')   //  pour admin
+    @Delete('admin/:id')   //  pour admin
     async removeUser(@Param('id') prodId: string) {
         await this.usersService.deleteUser(prodId);
         return null;

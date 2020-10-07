@@ -1,8 +1,8 @@
 import * as Mongoose from "mongoose";
 
 export const UserSchema = new Mongoose.Schema ({
-  name: { type: String, required: true/*, unique: true */},
-  email: { type: String, required: true/*, unique: true*/ },
+  name: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   favorites: { type: Mongoose.Schema.Types.ObjectId, ref: "Quizz" },
   score: { type: Number, default: "99" },

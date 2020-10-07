@@ -33,7 +33,6 @@ export class UsersService {
         } catch (error) {
             throw new NotAcceptableException("Email already used.");
         }
-
     }
 
     async getUsers() {
@@ -57,17 +56,50 @@ export class UsersService {
           email: user.email, 
           password: user.password, 
           favorites: user.favorites,
+          score: user.score,
           role: user.role,
       };
   }
   
+  async updateUserAdmin(
+    userId?: string,
+    name?: string, 
+    email?: string, 
+    password?: string, 
+    favorites?: [],
+    score?: Number,
+    role?: string,
+) {
+    const updatedUser = await this.findUser(userId);
+    if (name) {
+    updatedUser.name = name;
+    }
+    if (email) {
+    updatedUser.email = email;
+    }
+    if (password) {
+    updatedUser.password = password;
+    }
+    if (favorites) {
+    updatedUser.favorites = favorites;
+    }
+    if (score) {
+    updatedUser.score = score;
+    }
+    if (role) {
+    updatedUser.role = role;
+    }
+    updatedUser.save();
+}
+
   async updateUser(
       userId?: string,
       name?: string, 
       email?: string, 
       password?: string, 
       favorites?: [],
-      role?: string,
+      //score?: Number,
+      //role?: string,
   ) {
       const updatedUser = await this.findUser(userId);
       if (name) {
@@ -82,9 +114,12 @@ export class UsersService {
       if (favorites) {
       updatedUser.favorites = favorites;
       }
-      if (role) {
-      updatedUser.role = role;
-      }
+      //if (score) {
+      //updatedUser.score = score;
+      //}
+      //if (role) {
+      //updatedUser.role = role;
+      //}
       updatedUser.save();
   }
   
@@ -106,6 +141,6 @@ export class UsersService {
       throw new NotFoundException('Could not find user.');
     }
     return user;
-}
+  }
     
 }
