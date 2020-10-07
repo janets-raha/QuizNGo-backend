@@ -13,8 +13,9 @@ export class QuizzController {
     @Body('category') category: Mongoose.Schema.Types.ObjectId,
     @Body('difficulty') difficulty: String,
     @Body('bonus_time') bonus_time: Number,
-    @Body('bonus_xp') bonus_xp: Number) {
-    const result = await this.quizzService.createQuizz(name, category, difficulty, bonus_time, bonus_xp);
+    @Body('bonus_xp') bonus_xp: Number,
+    @Body('is_published') is_published: Boolean) {
+    const result = await this.quizzService.createQuizz(name, category, difficulty, bonus_time, bonus_xp, is_published);
     return { id: result };
   }
 
@@ -38,6 +39,7 @@ export class QuizzController {
     @Body('bonus_time') bonus_time: Number,
     @Body('bonus_xp') bonus_xp: Number,
     @Body('avg_rating') avg_rating: Number,
+    @Body('is_published') is_published: Boolean
   ) {
     const result = await this.quizzService.update(quizzId,
       name,
@@ -45,7 +47,8 @@ export class QuizzController {
       difficulty,
       bonus_time,
       bonus_xp,
-      avg_rating);
+      avg_rating,
+      is_published);
     return { message: result };
   }
 

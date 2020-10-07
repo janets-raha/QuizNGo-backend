@@ -18,8 +18,9 @@ export class QuizzService {
     category: Mongoose.Schema.Types.ObjectId,
     difficulty: String,
     bonus_time: Number,
-    bonus_xp: Number,) {
-    const newQuizz = new this.quizzModel({ name, category, difficulty, bonus_time, bonus_xp });
+    bonus_xp: Number,
+    is_published: Boolean,) {
+    const newQuizz = new this.quizzModel({ name, category, difficulty, bonus_time, bonus_xp, is_published });
     const result = await newQuizz.save();
     return result.id;
   }
@@ -34,6 +35,7 @@ export class QuizzService {
       bonus_time: quiz.bonus_time,
       bonus_xp: quiz.bonus_xp,
       avg_rating: quiz.avg_rating,
+      is_published: quiz.is_published
     }))
   }
 
@@ -50,6 +52,7 @@ export class QuizzService {
         bonus_time: quiz.bonus_time,
         bonus_xp: quiz.bonus_xp,
         avg_rating: quiz.avg_rating,
+        is_published: quiz.is_published
       }
     }
   }
@@ -62,6 +65,7 @@ export class QuizzService {
     bonus_time: Number,
     bonus_xp: Number,
     avg_rating: Number,
+    is_published: Boolean
   ) {
     const quiz = await this.quizzModel.findById(id).exec();
     if (!quiz) {
@@ -84,6 +88,9 @@ export class QuizzService {
       }
       if (avg_rating) {
         quiz.avg_rating = avg_rating
+      }
+      if (is_published) {
+        quiz.is_published = is_published
       }
       quiz.save()
       return " Quiz successfully updated"
