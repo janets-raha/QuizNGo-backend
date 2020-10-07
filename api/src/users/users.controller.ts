@@ -38,7 +38,7 @@ export class UsersController {
         return this.usersService.getSingleUser(userId);
     }
 
-    @Patch('admin:id')   //  pour admin
+    @Patch('admin/:id')   //  pour admin
     async updateUserAdmin(
         @Param('id') userId: string,
         @Body('name') name: string,
@@ -60,22 +60,22 @@ export class UsersController {
         return null;
     }
 
-    @Patch('admin:id')   //  pour utilisateur simple
+    @Patch(':id')   //  pour utilisateur simple
     async updateUser(
-        @Param('id') userId: string,
+        //@Param('id') userId: string,
         @Body('name') name: string,
         @Body('email') email: string,
         @Body('password') password: string,
-        @Body('favorites') favorites: [],
+        //@Body('favorites') favorites: [],
         //@Body('score') score: Number,
         //@Body('role') role: boolean,
     ) {
         await this.usersService.updateUser(
-            userId,
+            //userId,
             name,
             email,
             password,
-            favorites,
+           // favorites,
            // score,
            // role,
             );

@@ -19,10 +19,12 @@ export class UsersService {
         score: Number,
         role: string,
         ) {
-        const newUser = new this.userModel({
+          const bcrypt = require('bcrypt');
+          const hashedPwd = await bcrypt.hash(password, 10);
+          const newUser = new this.userModel({
             name, 
             email, 
-            password, 
+            password: hashedPwd, 
             favorites,
             score,
             role,
@@ -72,24 +74,26 @@ export class UsersService {
 ) {
     const updatedUser = await this.findUser(userId);
     if (name) {
-    updatedUser.name = name;
+      updatedUser.name = name;
     }
     if (email) {
-    updatedUser.email = email;
+      updatedUser.email = email;
     }
     if (password) {
-    updatedUser.password = password;
+      const bcrypt = require('bcrypt');
+      const hashedPwd = await bcrypt.hash(password, 10);
+      updatedUser.password = password;
     }
     if (favorites) {
-    updatedUser.favorites = favorites;
+      updatedUser.favorites = favorites;
     }
     if (score) {
-    updatedUser.score = score;
+      updatedUser.score = score;
     }
     if (role) {
-    updatedUser.role = role;
+      updatedUser.role = role;
     }
-    updatedUser.save();
+      updatedUser.save();
 }
 
   async updateUser(
@@ -103,16 +107,18 @@ export class UsersService {
   ) {
       const updatedUser = await this.findUser(userId);
       if (name) {
-      updatedUser.name = name;
+        updatedUser.name = name;
       }
       if (email) {
-      updatedUser.email = email;
+        updatedUser.email = email;
       }
       if (password) {
-      updatedUser.password = password;
+        const bcrypt = require('bcrypt');
+        const hashedPwd = await bcrypt.hash(password, 10);
+        updatedUser.password = password;
       }
       if (favorites) {
-      updatedUser.favorites = favorites;
+        updatedUser.favorites = favorites;
       }
       //if (score) {
       //updatedUser.score = score;
