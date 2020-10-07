@@ -1,6 +1,6 @@
 <template>
   <b-container class="py-3">
-    <b-button to="/admin/quiz" variant="success">Ajouter un Quiz</b-button>
+    <b-button to="/newquiz" variant="success">Ajouter un Quiz</b-button>
   </b-container>
 </template>
 

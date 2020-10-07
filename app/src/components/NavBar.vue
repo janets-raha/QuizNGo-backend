@@ -57,8 +57,8 @@
 export default {
   data() {
     return {
-      isLoggedIn: false,
-      isAdmin: false,
+      isLoggedIn: true,
+      isAdmin: true,
       user: null,
       notifCount: 0,
     };
@@ -85,7 +85,7 @@ export default {
       });
     }
   },
-  methods: {
+  xmethods: {
     logout() {
       localStorage.removeItem("token");
       this.user = null;

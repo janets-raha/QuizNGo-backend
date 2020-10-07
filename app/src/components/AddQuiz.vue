@@ -207,17 +207,14 @@ export default {
         bonus_xp: null,
       },
       questions: [],
-      categories: [
-        { text: "Selectionnez...", value: null },
-        { text: "Laravel", value: 1 },
-        "Javascript",
-        "RegEx",
-      ],
+      categories: [{ text: "Selectionnez...", value: null }],
       difficulties: ["Facile", "Moyen", "Difficile"],
     };
   },
-  mounted() {
+  async mounted() {
     console.log(this.questions);
+    const categories = await QuizApi.getCategories();
+    this.categories = this.categories.concat(categories);
   },
   methods: {
     addQuestion() {
@@ -242,10 +239,6 @@ export default {
     addAnswer(q_index) {
       this.questions[q_index].answers.push({ answer: "", is_correct: false });
     },
-    onSubmit(evt) {
-      evt.preventDefault();
-      alert(JSON.stringify(this.form, this.questions));
-    },
     displayQuiz(evt) {
       //evt.preventDefault();
       console.log(this.form, this.questions);
@@ -253,6 +246,10 @@ export default {
     onReset(evt) {
       evt.preventDefault();
       this.$router.push("/admin");
+    },
+    async onSubmit(evt) {
+      evt.preventDefault();
+      console.log(this.form, this.questions);
     },
   },
 };

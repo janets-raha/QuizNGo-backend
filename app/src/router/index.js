@@ -24,22 +24,21 @@ const routes = [
     path: "/register",
     name: "Register",
     component: Register
-  }, 
+  }, */
   {
-    path: "/quiz",
-    name: "Quiz",
-    component: Quiz,
-  },
+    path: "/newquiz",
+    name: "NewQuiz",
+    component: AddQuiz,
+  } /*
    {
     path: "/login",
     name: "Login",
     component: Login,
-  }, */
-  /* {
+  },  {
     path: "/editconcert/:concertId",
     name: "EditConcert",
     component: EditConcert
-  }, */
+  }, */,
   /* {
     path: "/ticket/:concertId",
     name: "Ticket",
@@ -53,12 +52,12 @@ const routes = [
         name: "Admin",
         path: "",
         component: AdminQuiz,
-      },
+      } /*
       {
         name: "Quiz",
         path: "quiz",
         component: AddQuiz,
-      } /* ,
+      }  ,
       {
         name: "AdminConcerts",
         path: "admin-concerts",
@@ -68,7 +67,7 @@ const routes = [
         path: "/stats",
         name: "AdminStats",
         component: AdminStats
-      } */,
+      } ,*/,
     ],
   },
   /* {
