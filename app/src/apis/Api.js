@@ -1,11 +1,10 @@
 import axios from "axios";
 
 let baseApi = axios.create({
-  baseURL: "http://localhost:3000"
+  baseURL: "http://localhost:3000",
 });
 
-let Api = function () {
-
+let Api = function() {
   let token = localStorage.getItem("token");
   baseApi.defaults.headers.common["Accept"] = "*/*";
   if (token) {

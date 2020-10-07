@@ -196,6 +196,7 @@
 </template>
 
 <script>
+import AdminQuiz from "../apis/AdminQuiz";
 export default {
   data: () => {
     return {
@@ -205,6 +206,7 @@ export default {
         difficulty: null,
         bonus_time: null,
         bonus_xp: null,
+        is_published: false,
       },
       questions: [],
       categories: [{ text: "Selectionnez...", value: null }],
@@ -212,9 +214,8 @@ export default {
     };
   },
   async mounted() {
-    console.log(this.questions);
-    const categories = await QuizApi.getCategories();
-    this.categories = this.categories.concat(categories);
+    const categories = await AdminQuiz.getCategories();
+    this.categories = this.categories.concat(categories.data);
   },
   methods: {
     addQuestion() {
@@ -250,6 +251,7 @@ export default {
     async onSubmit(evt) {
       evt.preventDefault();
       console.log(this.form, this.questions);
+      const newQuiz = await AdminQuiz.addQuiz({ data: this.form });
     },
   },
 };
