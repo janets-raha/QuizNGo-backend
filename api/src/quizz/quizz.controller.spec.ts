@@ -2,15 +2,17 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import * as mongoose from 'mongoose';
-import { CategoryService } from './category.service';
-import { CategorySchema, CategoryRef } from './category.model'
-import { CategoryModule } from './category.module';
+import { QuizzService } from './quizz.service';
+import { QuizzSchema, QuizzRef } from './quizz.model'
+import { QuizzModule } from './quizz.module';
+import { QuestionModule } from '../question/question.module'
 
+const ObjectID = require('mongodb').ObjectID;
 let mongod: MongoMemoryServer;
 
-describe('CategoryController', () => {
+describe('QuizzController', () => {
   let module: TestingModule;
-  let categoryService: CategoryService;
+  let quizzService: QuizzService;
 
   afterEach(async () => {
     await module.close();
@@ -31,26 +33,24 @@ describe('CategoryController', () => {
           }),
         }),
         MongooseModule.forFeature([
-          { name: CategoryRef, schema: CategorySchema },
+          { name: QuizzRef, schema: QuizzSchema },
         ]),
-        CategoryModule,
+        QuizzModule,
+        QuestionModule
       ],
-      providers: [CategoryService,],
+      providers: [QuizzService,],
     }).compile();
-    categoryService = module.get(CategoryService);
+    quizzService = module.get(QuizzService);
   });
 
-  it('Category service should be defined', () => {
-    expect(categoryService).toBeDefined();
+  it('Quizz service should be defined', () => {
+    expect(quizzService).toBeDefined();
   });
 
-  it('create category should return data', async () => {
-    const result = await categoryService.createCategory('Javascript');
-    expect(result).toBeDefined();
-  });
 
-  it('show categories should return object', async () => {
-    const result = await categoryService.showCategories();
+  it('show one quizz should return object', async () => {
+    const id: mongoose.Schema.Types.ObjectId = new ObjectID()
+    const result = await quizzService.showOneQuizz(id);
     expect(typeof (result)).toBe('object');
   });
 

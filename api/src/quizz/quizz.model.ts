@@ -1,6 +1,6 @@
 import * as Mongoose from 'mongoose';
 
-
+export const QuizzRef = 'QuizzRef';
 export const QuizzSchema = new Mongoose.Schema({
   name: { type: String, required: true, unique: true },
   category: { type: Mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
