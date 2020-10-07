@@ -1,29 +1,108 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Vue from "vue";
+import VueRouter from "vue-router";
+import Home from "../views/Home.vue";
+//import Register from "../views/Register.vue";
+//import Login from "../views/Login.vue";
+//import Profile from "../views/Profile.vue";
+//import AdminUsers from "../components/AdminUsers.vue";
+import AdminQuiz from "../components/AdminQuiz.vue";
+import Quiz from "../components/Quiz.vue";
+import AddQuiz from "../components/AddQuiz.vue";
+import Admin from "../views/Admin.vue";
+//import MyAccount from "../components/MyAccount.vue";
+//import Favorites from "../components/Favorites.vue";
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/',
-    name: 'Home',
-    component: Home
+    path: "/",
+    name: "Home",
+    component: Home,
   },
+  /* {
+    path: "/register",
+    name: "Register",
+    component: Register
+  }, */
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
-]
+    path: "/quiz",
+    name: "Quiz",
+    component: Quiz,
+  },
+  /* {
+    path: "/login",
+    name: "Login",
+    component: Login,
+  }, */
+  /* {
+    path: "/editconcert/:concertId",
+    name: "EditConcert",
+    component: EditConcert
+  }, */
+  /* {
+    path: "/ticket/:concertId",
+    name: "Ticket",
+    component: Ticket
+  }, */
+  {
+    path: "/admin",
+    component: Admin,
+    children: [
+      {
+        name: "Admin",
+        path: "",
+        component: AdminQuiz,
+      },
+      {
+        name: "Quiz",
+        path: "quiz",
+        component: AddQuiz,
+      } /* ,
+      {
+        name: "AdminConcerts",
+        path: "admin-concerts",
+        component: AdminConcerts
+      },
+      {
+        path: "/stats",
+        name: "AdminStats",
+        component: AdminStats
+      } */,
+    ],
+  },
+  /* {
+    path: "/profile",
+    component: Profile,
+    children: [
+      {
+        name: "Profile",
+        path: "",
+        component: MyAccount
+      },
+      {
+        name: "Favorites",
+        path: "favorites",
+        component: Favorites
+      },
+      {
+        path: "tickets",
+        name: "Tickets",
+        component: Tickets
+      }
+    ]
+  }, */
+  /* {
+    path: "/my-ticket/:ticketId",
+    name: "RecapTicket",
+    component: RecapTicket
+  } */
+];
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: "history",
   base: process.env.BASE_URL,
-  routes
-})
+  routes,
+});
 
-export default router
+export default router;

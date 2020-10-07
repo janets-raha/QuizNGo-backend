@@ -1,0 +1,45 @@
+.concert-img {
+  width: 500px;
+}
+
+.tickets-img {
+  width: 150px;
+}
+@media (max-width: 576px) {
+  .concert-img,
+  .tickets-img {
+    width: 100%;
+  }
+}
+
+.modal-dialog {
+  width: 335px !important;
+}
+
+.pointer {
+  cursor: pointer;
+}
+.card-header {
+  background-color: rgba(153, 190, 207, 0.445) !important ;
+  font-weight: bold;
+  color: rgb(82, 82, 82);
+}
+
+.nav-pills .router-link-exact-active,
+.bg-dark-theme,
+.btn-primary {
+  background-color: rgb(136, 85, 36) !important;
+}
+
+.nav-pills .nav-link {
+  font-size: large !important;
+}
+
+.card {
+  box-shadow: 0 0 8px rgba(33, 33, 33, 0.1);
+}
+
+html,
+body {
+  background-color: #f8f9fa;
+}
