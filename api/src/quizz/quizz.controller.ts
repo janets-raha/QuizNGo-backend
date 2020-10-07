@@ -38,7 +38,6 @@ export class QuizzController {
     @Body('bonus_time') bonus_time: Number,
     @Body('bonus_xp') bonus_xp: Number,
     @Body('avg_rating') avg_rating: Number,
-    @Body('questions') questions: [Mongoose.Schema.Types.ObjectId]
   ) {
     const result = await this.quizzService.update(quizzId,
       name,
@@ -46,14 +45,13 @@ export class QuizzController {
       difficulty,
       bonus_time,
       bonus_xp,
-      avg_rating,
-      questions);
+      avg_rating);
     return { message: result };
   }
 
   @Delete(':id')
   async deleteQuizz(@Param('id') quizzId: Mongoose.Schema.Types.ObjectId) {
     const result = await this.quizzService.delete(quizzId);
-    return result;
+    return { message: result };
   }
 }

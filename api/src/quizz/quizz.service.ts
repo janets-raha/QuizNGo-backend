@@ -3,10 +3,14 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Quizz } from './quizz.model';
+import { Question } from 'src/question/question.model';
+
 
 @Injectable()
 export class QuizzService {
-  constructor(@InjectModel('Quizz') private readonly quizzModel: Model<Quizz>) {
+  constructor(
+    @InjectModel('Quizz') private readonly quizzModel: Model<Quizz>,
+    @InjectModel('Question') private readonly questionModel: Model<Question>) {
   }
 
   async createQuizz(
@@ -30,7 +34,6 @@ export class QuizzService {
       bonus_time: quiz.bonus_time,
       bonus_xp: quiz.bonus_xp,
       avg_rating: quiz.avg_rating,
-      questions: quiz.questions
     }))
   }
 
@@ -47,7 +50,6 @@ export class QuizzService {
         bonus_time: quiz.bonus_time,
         bonus_xp: quiz.bonus_xp,
         avg_rating: quiz.avg_rating,
-        questions: quiz.questions
       }
     }
   }
@@ -60,7 +62,6 @@ export class QuizzService {
     bonus_time: Number,
     bonus_xp: Number,
     avg_rating: Number,
-    questions: [Mongoose.Schema.Types.ObjectId]
   ) {
     const quiz = await this.quizzModel.findById(id).exec();
     if (!quiz) {
@@ -84,23 +85,23 @@ export class QuizzService {
       if (avg_rating) {
         quiz.avg_rating = avg_rating
       }
-      if (questions) {
-        quiz.questions = questions
-      }
       quiz.save()
       return " Quiz successfully updated"
     }
-
   }
+
 
   async delete(id: Mongoose.Schema.Types.ObjectId) {
     const quiz = await this.quizzModel.deleteOne({ _id: id }).exec();
-    // also delete the questions
-
     if (quiz.deletedCount === 0) {
       throw new NotFoundException('Quiz not found');
     } else {
-      return "Quiz successfully deleted"
+      const questions = await this.questionModel.deleteMany({ quizz_id: id }).exec();
+      if (questions.deletedCount === 0) {
+        return "Quiz successfully deleted"
+      } else {
+        return "Quiz and related questions successfully deleted"
+      }
     }
   }
 }

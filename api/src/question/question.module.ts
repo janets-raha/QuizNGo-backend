@@ -16,5 +16,8 @@ import { QuizzModule } from 'src/quizz/quizz.module';
     providers: [
         QuestionService,
     ],
+    exports: [
+        QuestionService, MongooseModule
+    ]
 })
 export class QuestionModule { }

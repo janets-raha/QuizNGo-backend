@@ -24,4 +24,26 @@ export class QuestionController {
     return result;
   }
 
+  @Get()
+  async showQuestions() {
+    const result = await this.questionService.showAllQuestions()
+    return result;
+  }
+
+  @Patch(':id')
+  async updateQuestion(
+    @Param('id') id: Mongoose.Schema.Types.ObjectId,
+    @Body('xps') xps: Number,
+    @Body('question') question: String,
+    @Body('answers') answers: [Object]) {
+    const result = await this.questionService.update(id, xps, question, answers)
+    return result;
+  }
+
+  @Delete(':id')
+  async deleteQuestion(@Param('id') id: Mongoose.Schema.Types.ObjectId) {
+    const result = await this.questionService.delete(id);
+    return { message: result }
+  }
+
 }
