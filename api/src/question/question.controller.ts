@@ -1,13 +1,14 @@
 import * as Mongoose from 'mongoose';
 import { Controller, Get, Post, Patch, Delete, Param, Body } from '@nestjs/common';
 import { QuestionService } from './question.service';
+import { Question } from './question.model';
 
 @Controller('question')
 export class QuestionController {
   constructor(private readonly questionService: QuestionService) {
   }
 
-  @Post()
+  @Post('one')
   async addQuestion(
     @Body('quizz_id') quizz_id: Mongoose.Schema.Types.ObjectId,
     @Body('xps') xps: Number,
@@ -16,6 +17,15 @@ export class QuestionController {
   ) {
     const result = await this.questionService.createQuestion(quizz_id, xps, question, answers);
     return { id: result };
+  }
+
+  @Post()
+  async addQuestions(
+    @Body('questions') questions: [Question]
+
+  ) {
+    const result = await this.questionService.createQuestions(questions);
+    return { message: result };
   }
 
   @Get(':id')

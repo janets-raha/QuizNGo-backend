@@ -6,6 +6,7 @@ import { Question } from './question.model';
 import { Quizz } from '../quizz/quizz.model';
 
 
+
 @Injectable()
 export class QuestionService {
   constructor(
@@ -24,6 +25,16 @@ export class QuestionService {
     if (result) {
       return result._id
     }
+  }
+
+  async createQuestions(
+    questions: [Question]
+  ) {
+    questions.map(async quest => {
+      const newQuestion = new this.questionModel({ quizz_id: quest.quizz_id, xps: quest.xps, question: quest.question, answers: quest.answers });
+      const result = await newQuestion.save();
+    })
+    return questions.length + " question(s) added";
   }
 
   async showQuestions(quizz_id: Mongoose.Schema.Types.ObjectId) {
