@@ -22,7 +22,10 @@ export class CategoryService {
   }
 
   async showCategories() {
-    const result = await this.categoryModel.find().exec();
+    const result = await this.categoryModel
+      .find({})
+      .sort({ name: 1 })
+      .exec();
     return result.map(cat => ({
       value: cat._id,
       text: cat.name,

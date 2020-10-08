@@ -3,11 +3,14 @@ export default {
   getCategories() {
     return Api().get("/category/");
   },
+  addCategory(payload) {
+    return Api().post("/category/", payload.data);
+  },
   getQuizzes() {
     return Api().get("/quiz");
   },
   addQuiz(payload) {
-    return Api().post("/quiz", payload.data);
+    return Api().post("/quizz", payload.data);
   },
   updateQuiz(payload) {
     return Api().patch("/quiz/" + payload.quizId, payload.data);
@@ -16,19 +19,23 @@ export default {
     return Api().delete("/quiz/" + quizId);
   },
 
-  getAnswers(quizId) {
-    return Api().get("/answer/" + quizId);
+  getQuestions(quizId) {
+    return Api().get("/question/" + quizId);
   },
 
-  addAnswers(payload) {
-    return Api().post("/answer" + payload.quizId, payload.data);
+  addQuestions(payload) {
+    return Api().post("/question", payload.data);
   },
 
-  updateAnswers(payload) {
-    return Api().patch("/answer/" + payload.quizId, payload.data);
+  updateQuestions(payload) {
+    return Api().put("/question", payload.data);
   },
 
-  deleteAnswer(answerId) {
-    return Api().delete("/answer/" + id);
+  updateQuestion(payload) {
+    return Api().patch("/question/" + payload.questionId, payload.data);
+  },
+
+  deleteQuestions(questionId) {
+    return Api().delete("/question/" + questionId);
   },
 };

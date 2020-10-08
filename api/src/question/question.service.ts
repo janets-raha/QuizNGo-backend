@@ -6,6 +6,7 @@ import { Question } from './question.model';
 import { Quizz } from '../quizz/quizz.model';
 
 
+
 @Injectable()
 export class QuestionService {
   constructor(
@@ -24,6 +25,16 @@ export class QuestionService {
     if (result) {
       return result._id
     }
+  }
+
+  async createQuestions(
+    questions: [Question]
+  ) {
+    questions.map(async quest => {
+      const newQuestion = new this.questionModel({ quizz_id: quest.quizz_id, xps: quest.xps, question: quest.question, answers: quest.answers });
+      const result = await newQuestion.save();
+    })
+    return questions.length + " question(s) added";
   }
 
   async showQuestions(quizz_id: Mongoose.Schema.Types.ObjectId) {
@@ -49,33 +60,53 @@ export class QuestionService {
   }
 
 
-  async update(
-    quest_id: Mongoose.Schema.Types.ObjectId,
-    xps: Number,
-    question: String,
-    answers: [Object]) {
-    const newquestion = await this.questionModel.findById(quest_id).exec();
-    if (!newquestion) {
-      throw new NotFoundException('Question not found');
-    } else {
-      if (xps) {
-        newquestion.xps = xps
+  /*   async update(
+      quest_id: Mongoose.Schema.Types.ObjectId,
+      xps: Number,
+      question: String,
+      answers: [Object]) {
+      const newquestion = await this.questionModel.findById(quest_id).exec();
+      if (!newquestion) {
+        throw new NotFoundException('Question not found');
+      } else {
+        if (xps) {
+          newquestion.xps = xps
+        }
+        if (question) {
+          newquestion.question = question
+        }
+        if (answers) {
+          newquestion.answers = answers
+        }
+        return {
+          id: newquestion._id,
+          quizz_id: newquestion.quizz_id,
+          xps: newquestion.xps,
+          question: newquestion.question,
+          answers: newquestion.answers
+        };
       }
-      if (question) {
-        newquestion.question = question
+    } */
+
+
+  async updateQuestions(
+    quizz_id: Mongoose.Schema.Types.ObjectId,
+    questions: [Question]) {
+    questions.map(async quest => {
+      const newquestion = await this.questionModel.findById(quest.id).exec();
+      if (!newquestion) {
+        throw new NotFoundException('Question not found');
+      } else {
+        newquestion.xps = quest.xps;
+        newquestion.question = quest.question;
+        newquestion.answers = quest.answers;
+        newquestion.save()
       }
-      if (answers) {
-        newquestion.answers = answers
-      }
-      return {
-        id: newquestion._id,
-        quizz_id: newquestion.quizz_id,
-        xps: newquestion.xps,
-        question: newquestion.question,
-        answers: newquestion.answers
-      };
-    }
+    })
+    return questions.length + " questions modified !"
+
   }
+
 
   async delete(quest_id: Mongoose.Schema.Types.ObjectId,) {
     const quest = await this.questionModel.deleteOne({ _id: quest_id }).exec();
