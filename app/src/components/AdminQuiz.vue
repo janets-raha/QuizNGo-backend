@@ -4,13 +4,13 @@
 
     <!--Labels -->
     <b-row no-gutter id="labels" class="text-center" align-v="center">
-      <b-col>
+      <b-col md="4">
         <strong> Titre </strong>
       </b-col>
-      <b-col>
+      <b-col md="3">
         <strong> Techno </strong>
       </b-col>
-      <b-col>
+      <b-col md="1">
         <strong> Difficulté </strong>
       </b-col>
       <b-col> </b-col>
@@ -20,36 +20,36 @@
     <!--Cards -->
     <div v-for="(quiz, idx) in quizz" :key="idx">
       <b-row no-gutter id="quizCard" class="text-center" align-v="center">
-        <b-col>
+        <b-col md="4">
           <strong>
             {{ quiz.name }}
           </strong>
         </b-col>
-        <b-col>
+        <b-col md="3">
           {{ quiz.category.name }}
         </b-col>
-        <b-col v-if="quiz.difficulty === 'Facile'" class="h1">
+        <b-col v-if="quiz.difficulty === 'Facile'" class="h1" md="1">
           <b-icon icon="reception1" variant="success" class="mr-1"></b-icon>
         </b-col>
-        <b-col v-if="quiz.difficulty === 'Moyen'" class="h1">
+        <b-col v-if="quiz.difficulty === 'Moyen'" class="h1" md="1">
           <b-icon icon="reception2" variant="warning" class="mr-1"></b-icon>
         </b-col>
-        <b-col v-if="quiz.difficulty === 'Difficile'" class="h1">
+        <b-col v-if="quiz.difficulty === 'Difficile'" class="h1" md="1">
           <b-icon icon="reception3" variant="danger" class="mr-1"></b-icon>
         </b-col>
-        <b-col>
+        <b-col md="2">
           <b-button variant="warning" class="btn-block">
             <b-icon icon="pencil" variant="dark" class="mr-1"></b-icon>
             Modifier
           </b-button>
         </b-col>
-        <b-col v-if="quiz.is_published === true">
+        <b-col v-if="quiz.is_published === false" md="2">
           <b-button variant="success" class="btn-block">
             <b-icon icon="box-arrow-up" variant="light" class="mr-1"></b-icon>
             Publier
           </b-button>
         </b-col>
-        <b-col v-else>
+        <b-col v-else md="2">
           <b-button variant="outline-success" class="btn-block">
             <b-icon
               icon="box-arrow-in-down"
@@ -61,6 +61,7 @@
         </b-col>
       </b-row>
     </div>
+    <!--  -->
   </b-container>
 </template>
 
