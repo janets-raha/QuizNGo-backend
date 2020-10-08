@@ -7,7 +7,7 @@ import Home from "../views/Home.vue";
 //import AdminUsers from "../components/AdminUsers.vue";
 import AdminQuiz from "../components/AdminQuiz.vue";
 import Quiz from "../components/Quiz.vue";
-import AddQuiz from "../components/AddQuiz.vue";
+import EditQuiz from "../components/EditQuiz.vue";
 import Admin from "../views/Admin.vue";
 //import MyAccount from "../components/MyAccount.vue";
 //import Favorites from "../components/Favorites.vue";
@@ -28,7 +28,12 @@ const routes = [
   {
     path: "/newquiz",
     name: "NewQuiz",
-    component: AddQuiz,
+    component: EditQuiz,
+  },
+  {
+    path: "/editquiz/:quiz_id",
+    name: "EditQuiz",
+    component: EditQuiz,
   } /*
    {
     path: "/login",

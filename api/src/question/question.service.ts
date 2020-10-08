@@ -1,51 +1,59 @@
-import * as Mongoose from 'mongoose';
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { Question } from './question.model';
-import { Quizz } from '../quizz/quizz.model';
-
-
+import * as Mongoose from "mongoose";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model } from "mongoose";
+import { Question } from "./question.model";
+import { Quizz } from "../quizz/quizz.model";
 
 @Injectable()
 export class QuestionService {
   constructor(
-    @InjectModel('Question') private readonly questionModel: Model<Question>,
-    @InjectModel('Quizz') private readonly quizzModel: Model<Quizz>) {
-  }
+    @InjectModel("Question") private readonly questionModel: Model<Question>,
+    @InjectModel("Quizz") private readonly quizzModel: Model<Quizz>,
+  ) {}
 
   async createQuestion(
     quizz_id: Mongoose.Schema.Types.ObjectId,
     xps: Number,
     question: String,
-    answers: [Object]
+    answers: [Object],
   ) {
-    const newQuestion = new this.questionModel({ quizz_id, xps, question, answers });
+    const newQuestion = new this.questionModel({
+      quizz_id,
+      xps,
+      question,
+      answers,
+    });
     const result = await newQuestion.save();
     if (result) {
-      return result._id
+      return result._id;
     }
   }
 
-  async createQuestions(
-    questions: [Question]
-  ) {
+  async createQuestions(questions: [Question]) {
     questions.map(async quest => {
-      const newQuestion = new this.questionModel({ quizz_id: quest.quizz_id, xps: quest.xps, question: quest.question, answers: quest.answers });
+      const newQuestion = new this.questionModel({
+        quizz_id: quest.quizz_id,
+        xps: quest.xps,
+        question: quest.question,
+        answers: quest.answers,
+      });
       const result = await newQuestion.save();
-    })
+    });
     return questions.length + " question(s) added";
   }
 
   async showQuestions(quizz_id: Mongoose.Schema.Types.ObjectId) {
-    const questions = await this.questionModel.find({ quizz_id: quizz_id }).exec();
+    const questions = await this.questionModel
+      .find({ quizz_id: quizz_id })
+      .exec();
     return questions.map(quest => ({
       id: quest._id,
       quizz_id: quest.quizz_id,
       xps: quest.xps,
       question: quest.question,
-      answers: quest.answers
-    }))
+      answers: quest.answers,
+    }));
   }
 
   async showAllQuestions() {
@@ -55,10 +63,9 @@ export class QuestionService {
       quizz_id: quest.quizz_id,
       xps: quest.xps,
       question: quest.question,
-      answers: quest.answers
-    }))
+      answers: quest.answers,
+    }));
   }
-
 
   /*   async update(
       quest_id: Mongoose.Schema.Types.ObjectId,
@@ -88,35 +95,38 @@ export class QuestionService {
       }
     } */
 
-
   async updateQuestions(
     quizz_id: Mongoose.Schema.Types.ObjectId,
-    questions: [Question]) {
+    questions: [Question],
+  ) {
     questions.map(async quest => {
       const newquestion = await this.questionModel.findById(quest.id).exec();
       if (!newquestion) {
-        throw new NotFoundException('Question not found');
+        throw new NotFoundException("Question not found");
       } else {
         newquestion.xps = quest.xps;
         newquestion.question = quest.question;
         newquestion.answers = quest.answers;
-        newquestion.save()
+        newquestion.save();
       }
-    })
-    return questions.length + " questions modified !"
-
+    });
+    return questions.length + " questions modified !";
   }
 
-
-  async delete(quest_id: Mongoose.Schema.Types.ObjectId,) {
+  async delete(quest_id: Mongoose.Schema.Types.ObjectId) {
     const quest = await this.questionModel.deleteOne({ _id: quest_id }).exec();
     if (quest.deletedCount === 0) {
-      throw new NotFoundException('Question not found');
+      throw new NotFoundException("Question not found");
     } else {
-      return "Question successfully deleted"
+      return "Question successfully deleted";
     }
   }
 
+  async deleteAll(quiz_id: Mongoose.Schema.Types.ObjectId) {
+    const quest = await this.questionModel
+      .deleteMany({ quizz_id: quiz_id })
+      .exec();
 
-
+    return "Questions successfully deleted";
+  }
 }
