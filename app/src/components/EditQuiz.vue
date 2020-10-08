@@ -1,6 +1,8 @@
 <template>
   <b-container class="pt-2 container">
-    <div class="text-center mt-2"><h3>Nouveau Quiz</h3></div>
+    <div class="text-center mt-2">
+      <h3>{{ editing ? "Modifier Quiz" : "Nouveau Quiz" }}</h3>
+    </div>
     <b-overlay :show="showOverlay" rounded="sm">
       <b-form @submit="onSubmit" @reset="onReset">
         <b-row no-gutters>
@@ -185,19 +187,25 @@
           </b-card>
         </div>
 
-        <b-container class="mt-3 mb-5 d-flex justify-content-center">
-          <b-button type="reset" variant="danger" class="mt-2"
+        <b-container class="mt-3 mb-5 d-flex justify-content-center flex-wrap">
+          <b-button v-if="editing" type="reset" variant="info" class="mt-2 mx-2"
             >Annuler</b-button
+          ><b-button
+            type="button"
+            variant="danger"
+            class="mt-2 mx-2"
+            @click="deleteQuiz"
+            >Supprimer</b-button
           >
           <b-button
             variant="primary"
-            class="mx-4 mt-2"
+            class="mx-2 mt-2"
             @click.prevent="displayQuiz"
             >Visualiser</b-button
           >
-          <b-button type="submit" variant="primary" class="mt-2"
-            >Ajouter</b-button
-          >
+          <b-button type="submit" variant="primary" class="mt-2 mx-2">{{
+            editing ? "Enregistrer" : "Ajouter"
+          }}</b-button>
         </b-container>
       </b-form>
     </b-overlay>
@@ -209,8 +217,10 @@ import AdminQuiz from "../apis/AdminQuiz";
 export default {
   data: () => {
     return {
+      editing: false,
       showOverlay: false,
       form: {
+        id: null,
         category: null,
         name: null,
         difficulty: null,
@@ -224,11 +234,27 @@ export default {
     };
   },
   async mounted() {
-    const categories = await AdminQuiz.getCategories();
-    this.categories = [
-      { text: "Selectionnez...", value: null },
-      { text: "+ Ajouter une valeur...", value: 0 },
-    ].concat(categories.data);
+    this.showOverlay = true;
+    try {
+      const quizId = this.$route.params.quiz_id;
+      if (quizId) {
+        this.editing = true;
+        const quizReq = await AdminQuiz.getQuiz(quizId);
+        this.form = quizReq.data;
+        const questionsReq = await AdminQuiz.getQuestions(quizId);
+        this.questions = questionsReq.data;
+      }
+      const categories = await AdminQuiz.getCategories();
+      this.categories = [
+        { text: "Selectionnez...", value: null },
+        { text: "+ Ajouter une valeur...", value: 0 },
+      ].concat(categories.data);
+      this.showOverlay = false;
+    } catch (err) {
+      this.toast("Erreur!", err.message, true);
+      this.showOverlay = false;
+      this.$router.push("/admin");
+    }
   },
   methods: {
     addQuestion() {
@@ -240,7 +266,7 @@ export default {
           { answer: "", is_correct: false },
           { answer: "", is_correct: true },
         ],
-        quizz_id: null,
+        quizz_id: this.editing ? this.form.id : null,
       });
     },
     deleteQuestion(q_index) {
@@ -258,24 +284,51 @@ export default {
       evt.preventDefault();
       console.log(this.form, this.questions);
     },
+
     onReset(evt) {
       evt.preventDefault();
       this.$router.push("/admin");
+    },
+    async deleteQuiz(evt) {
+      this.showOverlay = true;
+      evt.preventDefault();
+      try {
+        const delReq = await AdminQuiz.deleteQuiz(this.form.id);
+        this.toast("Supprimé!", delReq.data.message);
+        this.showOverlay = false;
+        this.$router.push("/admin");
+      } catch (err) {
+        this.toast("Erreur!", err.message, true);
+        this.showOverlay = false;
+      }
     },
     async onSubmit(evt) {
       this.showOverlay = true;
       evt.preventDefault();
       try {
-        const newQuiz = await AdminQuiz.addQuiz({ data: this.form });
-        const newQuizId = newQuiz.data.id;
-        this.questions.map((question) => (question.quizz_id = newQuizId));
-        const newQuestions = await AdminQuiz.addQuestions({
-          data: { questions: this.questions },
-        });
+        if (this.editing) {
+          const updQuiz = await AdminQuiz.updateQuiz({
+            quizId: this.form.id,
+            data: this.form,
+          });
+          const delQuestions = await AdminQuiz.deleteQuestions({
+            quizId: this.form.id,
+          });
+          const updQuestions = await AdminQuiz.addQuestions({
+            data: { questions: this.questions },
+          });
+          this.toast("Modifié!!", updQuestions.data.message);
+        } else {
+          const newQuiz = await AdminQuiz.addQuiz({ data: this.form });
+          const newQuizId = newQuiz.data.id;
+          this.questions.map((question) => (question.quizz_id = newQuizId));
+          const newQuestions = await AdminQuiz.addQuestions({
+            data: { questions: this.questions },
+          });
 
+          this.toast("Ajouté!", newQuestions.data.message);
+        }
         this.showOverlay = false;
-        this.toast("Ajouté!", newQuestions.data.message);
-
         this.$router.push("/admin");
       } catch (err) {
         this.toast("Erreur!", err.message, true);

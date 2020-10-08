@@ -7,16 +7,19 @@ export default {
     return Api().post("/category/", payload.data);
   },
   getQuizzes() {
-    return Api().get("/quiz");
+    return Api().get("/quizz");
+  },
+  getQuiz(quizId) {
+    return Api().get("/quizz/" + quizId);
   },
   addQuiz(payload) {
     return Api().post("/quizz", payload.data);
   },
   updateQuiz(payload) {
-    return Api().patch("/quiz/" + payload.quizId, payload.data);
+    return Api().patch("/quizz/" + payload.quizId, payload.data);
   },
   deleteQuiz(quizId) {
-    return Api().delete("/quiz/" + quizId);
+    return Api().delete("/quizz/" + quizId);
   },
 
   getQuestions(quizId) {
@@ -28,14 +31,10 @@ export default {
   },
 
   updateQuestions(payload) {
-    return Api().put("/question", payload.data);
-  },
-
-  updateQuestion(payload) {
     return Api().patch("/question/" + payload.questionId, payload.data);
   },
 
-  deleteQuestions(questionId) {
-    return Api().delete("/question/" + questionId);
+  deleteQuestions(payload) {
+    return Api().delete("/question/" + payload.quizId);
   },
 };
