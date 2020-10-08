@@ -149,9 +149,9 @@ export class UsersService {
     return user;
   }
 
-  async findAuth(username: string): Promise<User | undefined> {
+  async findAuth(email: string): Promise<User | undefined> {
     let res;
-    res = await this.userModel.findOne({ email: username }).exec();  // changer username a email
+    res = await this.userModel.findOne({ email: email }).exec();  // changer username a email
     return res;
 }
     
