@@ -1,5 +1,9 @@
-import { Controller, Post, Get, Param, Body, Patch, Delete } from '@nestjs/common';
+import { Controller, Post, Get, Param, Body, Patch, Delete, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UsersService } from './users.service';
+import { RolesGuard } from 'src/auth/roles.guards';
+import { hasRoles } from 'src/auth/roles.decorator';
+
 
 @Controller('users')
 export class UsersController {
@@ -26,18 +30,23 @@ export class UsersController {
         return { "new user created": newUser };
     }
 
-
+    @hasRoles('admin')
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Get('admin')   //  pour admin
     async getAllUsers() {
         const users = await this.usersService.getUsers();
         return users;
     }
 
+    @hasRoles('admin')
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Get('admin/:id')   //  pour admin
     getUser(@Param('id') userId: string) {
         return this.usersService.getSingleUser(userId);
     }
 
+    @hasRoles('admin')
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Patch('admin/:id')   //  pour admin
     async updateUserAdmin(
         @Param('id') userId: string,
