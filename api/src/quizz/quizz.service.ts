@@ -35,7 +35,9 @@ export class QuizzService {
       bonus_time: quiz.bonus_time,
       bonus_xp: quiz.bonus_xp,
       avg_rating: quiz.avg_rating,
-      is_published: quiz.is_published
+      is_published: quiz.is_published,
+      created_at: quiz.createdAt,
+      updated_at: quiz.updatedAt,
     }))
   }
 
@@ -52,7 +54,9 @@ export class QuizzService {
         bonus_time: quiz.bonus_time,
         bonus_xp: quiz.bonus_xp,
         avg_rating: quiz.avg_rating,
-        is_published: quiz.is_published
+        is_published: quiz.is_published,
+        created_at: quiz.createdAt,
+        updated_at: quiz.updatedAt,
       }
     }
   }
