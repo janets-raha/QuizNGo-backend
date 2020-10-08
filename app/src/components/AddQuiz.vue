@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-2 mx-3">
+  <b-container class="pt-2 container">
     <div class="text-center mt-2"><h3>Nouveau Quiz</h3></div>
     <b-overlay :show="showOverlay" rounded="sm">
       <b-form @submit="onSubmit" @reset="onReset">
@@ -28,13 +28,14 @@
               id="input-category"
               label="Langage ou Techno:"
               label-for="category"
-              class="mr-sm-2"
+              class="mr-sm-2 flex-grow-1"
             >
               <b-form-select
                 id="category"
                 v-model="form.category"
                 :options="categories"
                 required
+                @change="selectCategory"
               ></b-form-select>
             </b-form-group>
           </b-col>
@@ -91,7 +92,10 @@
             </b-form-group>
           </b-col>
           <b-col md="4" class="text-center py-3">
-            <b-button @click="addQuestion">Ajouter une question</b-button>
+            <b-button @click="addQuestion"
+              ><b-icon icon="plus-circle" variant="light" class="mr-1"></b-icon
+              >Ajouter une question</b-button
+            >
           </b-col>
         </b-row>
 
@@ -197,7 +201,7 @@
         </b-container>
       </b-form>
     </b-overlay>
-  </div>
+  </b-container>
 </template>
 
 <script>
@@ -215,13 +219,16 @@ export default {
         is_published: false,
       },
       questions: [],
-      categories: [{ text: "Selectionnez...", value: null }],
+      categories: [],
       difficulties: ["Facile", "Moyen", "Difficile"],
     };
   },
   async mounted() {
     const categories = await AdminQuiz.getCategories();
-    this.categories = this.categories.concat(categories.data);
+    this.categories = [
+      { text: "Selectionnez...", value: null },
+      { text: "+ Ajouter une valeur...", value: 0 },
+    ].concat(categories.data);
   },
   methods: {
     addQuestion() {
@@ -282,6 +289,24 @@ export default {
         variant: faulty ? "danger" : "success",
         appendToast: true,
       });
+    },
+    async selectCategory(value) {
+      console.log(value);
+
+      if (value == 0) {
+        let newCat = prompt("Entrez une nouvelle valeur");
+        if (newCat) {
+          const addCat = await AdminQuiz.addCategory({
+            data: { name: newCat },
+          });
+          const categories = await AdminQuiz.getCategories();
+          this.categories = [
+            { text: "Selectionnez...", value: null },
+            { text: "+ Ajouter une valeur...", value: 0 },
+          ].concat(categories.data);
+          this.form.category = addCat.data.id;
+        }
+      }
     },
   },
 };

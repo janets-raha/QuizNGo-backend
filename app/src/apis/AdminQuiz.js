@@ -3,6 +3,9 @@ export default {
   getCategories() {
     return Api().get("/category/");
   },
+  addCategory(payload) {
+    return Api().post("/category/", payload.data);
+  },
   getQuizzes() {
     return Api().get("/quiz");
   },
