@@ -26,7 +26,9 @@ export class QuizzService {
   }
 
   async showQuizzes() {
-    const quizzes = await this.quizzModel.find().exec();
+    const quizzes = await this.quizzModel.find()
+      .populate('category')
+      .exec();
     return quizzes.map(quiz => ({
       id: quiz._id,
       name: quiz.name,
@@ -42,7 +44,7 @@ export class QuizzService {
   }
 
   async showOneQuizz(id: Mongoose.Schema.Types.ObjectId) {
-    const quiz = await this.quizzModel.findById(id).exec();
+    const quiz = await this.quizzModel.findById(id).populate('category').exec();
     if (!quiz) {
       throw new NotFoundException('Quiz not found');
     } else {
