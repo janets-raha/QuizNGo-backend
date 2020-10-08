@@ -7,16 +7,16 @@ export default {
     return Api().post("/category/", payload.data);
   },
   getQuizzes() {
-    return Api().get("/quiz");
+    return Api().get("/quizz");
   },
   addQuiz(payload) {
     return Api().post("/quizz", payload.data);
   },
   updateQuiz(payload) {
-    return Api().patch("/quiz/" + payload.quizId, payload.data);
+    return Api().patch("/quizz/" + payload.quizId, payload.data);
   },
   deleteQuiz(quizId) {
-    return Api().delete("/quiz/" + quizId);
+    return Api().delete("/quizz/" + quizId);
   },
 
   getQuestions(quizId) {
