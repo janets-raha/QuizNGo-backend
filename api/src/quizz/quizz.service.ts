@@ -26,7 +26,9 @@ export class QuizzService {
   }
 
   async showQuizzes() {
-    const quizzes = await this.quizzModel.find().exec();
+    const quizzes = await this.quizzModel.find()
+      .populate('category')
+      .exec();
     return quizzes.map(quiz => ({
       id: quiz._id,
       name: quiz.name,
@@ -35,12 +37,14 @@ export class QuizzService {
       bonus_time: quiz.bonus_time,
       bonus_xp: quiz.bonus_xp,
       avg_rating: quiz.avg_rating,
-      is_published: quiz.is_published
+      is_published: quiz.is_published,
+      created_at: quiz.createdAt,
+      updated_at: quiz.updatedAt,
     }))
   }
 
   async showOneQuizz(id: Mongoose.Schema.Types.ObjectId) {
-    const quiz = await this.quizzModel.findById(id).exec();
+    const quiz = await this.quizzModel.findById(id).populate('category').exec();
     if (!quiz) {
       throw new NotFoundException('Quiz not found');
     } else {
@@ -52,7 +56,9 @@ export class QuizzService {
         bonus_time: quiz.bonus_time,
         bonus_xp: quiz.bonus_xp,
         avg_rating: quiz.avg_rating,
-        is_published: quiz.is_published
+        is_published: quiz.is_published,
+        created_at: quiz.createdAt,
+        updated_at: quiz.updatedAt,
       }
     }
   }

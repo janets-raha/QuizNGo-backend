@@ -13,5 +13,8 @@ import { CategorySchema } from './category.model';
         CategoryController,],
     providers: [
         CategoryService,],
+    exports: [
+        MongooseModule, CategoryService
+    ]
 })
 export class CategoryModule { }
