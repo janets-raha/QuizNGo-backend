@@ -43,13 +43,13 @@
             Modifier
           </b-button>
         </b-col>
-        <b-col v-if="quiz.is_published === false" md="2">
-          <b-button variant="success" class="btn-block">
-            <b-icon icon="box-arrow-up" variant="light" class="mr-1"></b-icon>
-            Publier
+        <b-col md="2">
+          <b-button :id="quiz.id" :variant="quiz.is_published ? 'outline-success' : 'success'" class="btn-block" @click="publish(idx)">
+            <b-icon :icon="quiz.is_published ? 'box-arrow-in-down':'box-arrow-up'" variant="light" class="mr-1"></b-icon>
+            {{quiz.is_published ? 'Dépublier' : 'Publier'}}
           </b-button>
         </b-col>
-        <b-col v-else md="2">
+        <!-- <b-col v-else md="2">
           <b-button id="colorHack1" variant="outline-success" class="btn-block">
             <b-icon
               id="colorHack2"
@@ -59,7 +59,7 @@
             ></b-icon>
             Dépublier
           </b-button>
-        </b-col>
+        </b-col> -->
       </b-row>
     </div>
     <!--  -->
@@ -88,7 +88,7 @@ export default {
   },
   mounted() {
     AdminQuiz.getQuizzes().then((response) => {
-      console.log(response.data)
+      // console.log(response.data)
       this.quizz = response.data;
     });
   },
@@ -99,6 +99,18 @@ export default {
       this.isLoggedIn = false;
       this.isAdmin = false;
       this.$router.push({ name: "Home" });
+    },
+
+    publish(idx) {
+      let quizId = this.quizz[idx].id
+      let pubStatus = this.quizz[idx].is_published
+      console.log("PUBSTATUS :", !pubStatus)
+      AdminQuiz.updateQuiz({quizId, data:{is_published: !pubStatus}})
+      .then(()=>
+          AdminQuiz.getQuizzes().then((response) => {
+            // console.log("RESPONSE.DATA :", response.data)
+      this.quizz = response.data;
+    }));
     },
   },
 };
