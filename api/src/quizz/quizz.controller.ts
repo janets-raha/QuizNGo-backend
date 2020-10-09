@@ -57,4 +57,21 @@ export class QuizzController {
     const result = await this.quizzService.delete(quizzId);
     return { message: result };
   }
+
+  @Post('/filter')
+  async filter(
+    @Body('field') field: string,
+    @Body('query') query: string,
+  ) {
+    const result = await this.quizzService.filter(field, query);
+    return result
+  }
+
+  @Post('/search')
+  async search(
+    @Body('query') query: string,
+  ) {
+    const result = await this.quizzService.search(query);
+    return result
+  }
 }
