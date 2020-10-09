@@ -1,8 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
-//import Register from "../views/Register.vue";
-//import Login from "../views/Login.vue";
+import Register from "../views/Register.vue";
+import Login from "../views/Login.vue";
 //import Profile from "../views/Profile.vue";
 //import AdminUsers from "../components/AdminUsers.vue";
 import AdminQuiz from "../components/AdminQuiz.vue";
@@ -20,11 +20,11 @@ const routes = [
     name: "Home",
     component: Home,
   },
-  /* {
+   {
     path: "/register",
     name: "Register",
     component: Register
-  }, */
+  }, 
   {
     path: "/newquiz",
     name: "NewQuiz",
@@ -34,12 +34,12 @@ const routes = [
     path: "/editquiz/:quiz_id",
     name: "EditQuiz",
     component: EditQuiz,
-  } /*
+  },
    {
     path: "/login",
     name: "Login",
     component: Login,
-  },  {
+  }/*,  {
     path: "/editconcert/:concertId",
     name: "EditConcert",
     component: EditConcert
