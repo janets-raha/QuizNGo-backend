@@ -13,7 +13,7 @@ export default {
     return Api().post('/quizz', payload.data);
   },
   updateQuiz(payload) {
-    return Api().patch('/quiz/' + payload.quizId, payload.data);
+    return Api().patch('/quizz/' + payload.quizId, payload.data);
   },
   deleteQuiz(quizId) {
     return Api().delete('/quiz/' + quizId);
