@@ -44,7 +44,7 @@
           </b-button>
         </b-col>
         <b-col v-if="quiz.is_published === false" md="2">
-          <b-button variant="success" class="btn-block">
+          <b-button :id="quiz.id" variant="success" class="btn-block" @click="publish">
             <b-icon icon="box-arrow-up" variant="light" class="mr-1"></b-icon>
             Publier
           </b-button>
@@ -88,7 +88,7 @@ export default {
   },
   mounted() {
     AdminQuiz.getQuizzes().then((response) => {
-      console.log(response.data)
+      // console.log(response.data)
       this.quizz = response.data;
     });
   },
@@ -99,6 +99,12 @@ export default {
       this.isLoggedIn = false;
       this.isAdmin = false;
       this.$router.push({ name: "Home" });
+    },
+
+    publish(event) {
+      console.log(e)
+      return null
+AdminQuiz.updateQuiz(event.target.id, is_published=!is_published)
     },
   },
 };
