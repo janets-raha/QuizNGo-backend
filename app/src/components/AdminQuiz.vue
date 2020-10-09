@@ -38,7 +38,7 @@
           <b-icon icon="reception3" variant="danger" class="mr-1"></b-icon>
         </b-col>
         <b-col md="2">
-          <b-button variant="warning" class="btn-block">
+          <b-button :to="'/editquiz/' + quiz.id" variant="warning" class="btn-block">
             <b-icon icon="pencil" variant="dark" class="mr-1"></b-icon>
             Modifier
           </b-button>
@@ -50,8 +50,9 @@
           </b-button>
         </b-col>
         <b-col v-else md="2">
-          <b-button variant="outline-success" class="btn-block">
+          <b-button id="colorHack1" variant="outline-success" class="btn-block">
             <b-icon
+              id="colorHack2"
               icon="box-arrow-in-down"
               variant="success"
               class="mr-1"
@@ -87,6 +88,7 @@ export default {
   },
   mounted() {
     AdminQuiz.getQuizzes().then((response) => {
+      console.log(response.data)
       this.quizz = response.data;
     });
   },
@@ -113,4 +115,9 @@ export default {
 #labels {
   margin-top: 20px;
 }
+
+/* #colorHack1:hover ~ #colorHack2 {
+  color: red;
+} */
+
 </style>
