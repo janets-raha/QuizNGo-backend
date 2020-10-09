@@ -1,7 +1,7 @@
 <template>
   <b-container class="pt-2 container">
     <div class="d-flex justify-content-between mt-2">
-      <h3>{{ editing ? "Modifier Quiz" : "Nouveau Quiz" }}</h3>
+      <h3>{{ preview ? "Visualiser Quiz" : editing ? "Modifier Quiz" : "Nouveau Quiz" }}</h3>
       <b-button
             variant="primary"
             class="mx-2 mt-2"
@@ -198,16 +198,15 @@
           <b-button type="reset" variant="info" class="mt-2 mx-2"
             >Annuler</b-button
           ><b-button
-          v-if="editing"
+            v-if="editing"
             type="button"
             variant="danger"
             class="mt-2 mx-2"
             @click="deleteQuiz"
             >Supprimer</b-button
           >
-          
           <b-button type="submit" variant="primary" class="mt-2 mx-2">{{
-            editing ? "Enregistrer" : "Ajouter"
+            editing ? "Enregistrer" : "Créer"
           }}</b-button>
         </b-container>
       </b-form>
@@ -368,7 +367,7 @@ export default {
             { text: "Selectionnez...", value: null },
             { text: "+ Ajouter une valeur...", value: 0 },
           ].concat(categories.data);
-          this.form.category = addCat.data.id;
+          this.form.category._id = addCat.data.id;
         }
       }
     },

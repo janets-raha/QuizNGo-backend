@@ -1,8 +1,6 @@
 <template>
   <b-container class="pt-2 container mb-4">
-    <div class="text-center mt-2">
-      <h3>Prévisualisation du Quiz</h3>
-    </div>
+    
     <b-row no-gutters class=" justify-content-between mb-2" >
       <b-col md="4" class="pt-3 h5">
         <strong>
