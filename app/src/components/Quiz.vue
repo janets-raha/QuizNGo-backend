@@ -1,3 +1,5 @@
 <template>
-  <div>Quiz</div>
+  <b-container>
+    
+  </b-container>
 </template>

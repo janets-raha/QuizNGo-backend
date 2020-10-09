@@ -1,16 +1,23 @@
 <template>
   <b-container class="pt-2 container">
-    <div class="text-center mt-2">
+    <div class="d-flex justify-content-between mt-2">
       <h3>{{ editing ? "Modifier Quiz" : "Nouveau Quiz" }}</h3>
+      <b-button
+            variant="primary"
+            class="mx-2 mt-2"
+            @click.prevent="preview = !preview"
+            >{{ preview ? "Editer" : "Visualiser"}}</b-button
+          >
     </div>
+    <DisplayQuiz v-if="preview" :quiz="form" :questions="questions" />
     <b-overlay :show="showOverlay" rounded="sm">
-      <b-form @submit="onSubmit" @reset="onReset">
+      <b-form v-if="!preview" @submit="onSubmit" @reset="onReset">
         <b-row no-gutters>
           <b-col md="4">
             <b-form-group
-              id="input-name"
+              id="input-name"         
               label="Nom:"
-              label-for="name"
+              label-for="name"            
               class="mr-sm-2"
               col="sm"
             >
@@ -34,7 +41,7 @@
             >
               <b-form-select
                 id="category"
-                v-model="form.category"
+                v-model="form.category._id"
                 :options="categories"
                 required
                 @change="selectCategory"
@@ -198,12 +205,7 @@
             @click="deleteQuiz"
             >Supprimer</b-button
           >
-          <b-button
-            variant="primary"
-            class="mx-2 mt-2"
-            @click.prevent="displayQuiz"
-            >Visualiser</b-button
-          >
+          
           <b-button type="submit" variant="primary" class="mt-2 mx-2">{{
             editing ? "Enregistrer" : "Ajouter"
           }}</b-button>
@@ -215,14 +217,19 @@
 
 <script>
 import AdminQuiz from "../apis/AdminQuiz";
+import DisplayQuiz from "./DisplayQuiz";
 export default {
+  components : {
+    DisplayQuiz,
+  },
   data: () => {
     return {
       editing: false,
+      preview: false,
       showOverlay: false,
       form: {
         id: null,
-        category: null,
+        category: { _id: null, name : null},
         name: null,
         difficulty: null,
         bonus_time: null,
@@ -237,6 +244,11 @@ export default {
   async mounted() {
     this.showOverlay = true;
     try {
+      const categories = await AdminQuiz.getCategories();
+      this.categories = [
+        { text: "Selectionnez...", value: null },
+        { text: "+ Ajouter une valeur...", value: 0 },
+      ].concat(categories.data);
       const quizId = this.$route.params.quiz_id;
       if (quizId) {
         this.editing = true;
@@ -245,11 +257,7 @@ export default {
         const questionsReq = await AdminQuiz.getQuestions(quizId);
         this.questions = questionsReq.data;
       }
-      const categories = await AdminQuiz.getCategories();
-      this.categories = [
-        { text: "Selectionnez...", value: null },
-        { text: "+ Ajouter une valeur...", value: 0 },
-      ].concat(categories.data);
+      
       this.showOverlay = false;
     } catch (err) {
       this.toast("Erreur!", err.message, true);
@@ -346,6 +354,8 @@ export default {
     },
     async selectCategory(value) {
       console.log(value);
+      let catName= this.categories.find(cat=> cat.value == value);
+      this.form.category.name = catName.text;
 
       if (value == 0) {
         let newCat = prompt("Entrez une nouvelle valeur");
