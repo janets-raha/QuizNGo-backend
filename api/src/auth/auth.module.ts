@@ -8,14 +8,17 @@ import { JwtAuthGuard } from './jwt-auth.guard';
 import { JwtStrategy } from './jwt.strategy';
 import { LocalStrategy } from './local.strategy';
 import { RolesGuard } from './roles.guards';
+import * as dotenv from "dotenv";
 
+dotenv.config();
 
 @Module({
   imports: [
     UsersModule, 
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
-      secret: jwtConstants.secret,
+      secret: process.env.JWT_SECRET,
+      //secret: jwtConstants.secret,
       signOptions: { expiresIn: '24h' },
     })
   ],
