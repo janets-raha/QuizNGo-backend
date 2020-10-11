@@ -21,9 +21,11 @@
     <div v-for="(quiz, idx) in quizz" :key="idx">
       <b-row no-gutter id="quizCard" class="text-center" align-v="center">
         <b-col md="4">
-          <strong>
-            {{ quiz.name }}
-          </strong>
+          <b-link :to="'/quiz/' + quiz.id">
+            <strong>
+              {{ quiz.name }}
+            </strong>
+          </b-link>
         </b-col>
         <b-col md="3">
           {{ quiz.category.name }}
@@ -38,15 +40,28 @@
           <b-icon icon="reception3" variant="danger" class="mr-1"></b-icon>
         </b-col>
         <b-col md="2">
-          <b-button :to="'/editquiz/' + quiz.id" variant="warning" class="btn-block">
+          <b-button
+            :to="'/editquiz/' + quiz.id"
+            variant="warning"
+            class="btn-block"
+          >
             <b-icon icon="pencil" variant="dark" class="mr-1"></b-icon>
             Modifier
           </b-button>
         </b-col>
         <b-col md="2">
-          <b-button :id="quiz.id" :variant="quiz.is_published ? 'outline-success' : 'success'" class="btn-block" @click="publish(idx)">
-            <b-icon :icon="quiz.is_published ? 'box-arrow-in-down':'box-arrow-up'" variant="light" class="mr-1"></b-icon>
-            {{quiz.is_published ? 'Dépublier' : 'Publier'}}
+          <b-button
+            :id="quiz.id"
+            :variant="quiz.is_published ? 'outline-success' : 'success'"
+            class="btn-block"
+            @click="publish(idx)"
+          >
+            <b-icon
+              :icon="quiz.is_published ? 'box-arrow-in-down' : 'box-arrow-up'"
+              variant="light"
+              class="mr-1"
+            ></b-icon>
+            {{ quiz.is_published ? "Dépublier" : "Publier" }}
           </b-button>
         </b-col>
         <!-- <b-col v-else md="2">
@@ -102,15 +117,16 @@ export default {
     },
 
     publish(idx) {
-      let quizId = this.quizz[idx].id
-      let pubStatus = this.quizz[idx].is_published
-      console.log("PUBSTATUS :", !pubStatus)
-      AdminQuiz.updateQuiz({quizId, data:{is_published: !pubStatus}})
-      .then(()=>
+      let quizId = this.quizz[idx].id;
+      let pubStatus = this.quizz[idx].is_published;
+      console.log("PUBSTATUS :", !pubStatus);
+      AdminQuiz.updateQuiz({ quizId, data: { is_published: !pubStatus } }).then(
+        () =>
           AdminQuiz.getQuizzes().then((response) => {
             // console.log("RESPONSE.DATA :", response.data)
-      this.quizz = response.data;
-    }));
+            this.quizz = response.data;
+          })
+      );
     },
   },
 };
@@ -131,5 +147,4 @@ export default {
 /* #colorHack1:hover ~ #colorHack2 {
   color: red;
 } */
-
 </style>

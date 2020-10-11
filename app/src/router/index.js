@@ -20,11 +20,11 @@ const routes = [
     name: "Home",
     component: Home,
   },
-  /* {
-    path: "/register",
-    name: "Register",
-    component: Register
-  }, */
+  {
+    path: "/quiz/:quiz_id",
+    name: "Quiz",
+    component: Quiz,
+  },
   {
     path: "/newquiz",
     name: "NewQuiz",
@@ -59,11 +59,6 @@ const routes = [
         component: AdminQuiz,
       } /*
       {
-        name: "Quiz",
-        path: "quiz",
-        component: AddQuiz,
-      }  ,
-      {
         name: "AdminConcerts",
         path: "admin-concerts",
         component: AdminConcerts
@@ -73,6 +68,7 @@ const routes = [
         name: "AdminStats",
         component: AdminStats
       } ,*/,
+      ,
     ],
   },
   /* {
