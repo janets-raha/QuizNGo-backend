@@ -76,7 +76,7 @@
     </div>
     <!-- *********************END NAVBAR *******************-->
 
-    <nav class="navbar navbar-expand navbar-dark bg-dark-theme">
+    <!--  <nav class="navbar navbar-expand navbar-dark bg-dark-theme">
       <div class="container">
         <div class="navbar-header mb-auto">
           <router-link class="navbar-brand" :to="{ path: '/' }">
@@ -125,7 +125,7 @@
           >
         </ul>
       </div>
-    </nav>
+    </nav> -->
   </div>
 </template>
 

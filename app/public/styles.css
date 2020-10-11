@@ -1,4 +1,8 @@
 @media (max-width: 576px) {
+  .scroll-zone {
+    height: calc(100vh - 300px);
+    overflow: scroll;
+  }
 }
 .w-100px {
   width: 100px !important;
@@ -7,6 +11,17 @@
   width: 75px !important;
 }
 
+.scroll-zone {
+  height: calc(100vh - 300px);
+  overflow: scroll;
+}
+.timer {
+  height: 80px;
+  text-align: center;
+}
+.overlay-zone {
+  height: 300px;
+}
 .pointer {
   cursor: pointer;
 }
@@ -31,5 +46,6 @@
 
 html,
 body {
-  background-color: #f8f9fa;
+  background-color: #f8f9fa !important;
+  height: 100%;
 }

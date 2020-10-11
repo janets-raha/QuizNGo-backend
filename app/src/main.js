@@ -5,6 +5,14 @@ import store from "./store";
 import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
+import VueMoment from "vue-moment";
+import moment from "moment";
+
+require("moment/locale/fr");
+
+Vue.use(VueMoment, {
+  moment,
+});
 Vue.config.productionTip = false;
 
 Vue.use(BootstrapVue);
