@@ -49,7 +49,7 @@
               <!-- END NOT LOGGED -->
 
               <!-- START LOGGED --->
-              <div v-else>
+              <div v-if="isLoggedIn && isAdmin">
                 <b-dropdown-item href="/admin">
                   <b-icon icon="wrench"></b-icon>
                   <router-link
