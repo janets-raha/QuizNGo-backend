@@ -8,7 +8,7 @@
           >Quiz</router-link
         >
         <router-link
-          :to="{ name: 'AdminUsers' }"
+          :to="{ name: 'AdminUser' }"
           class="flex-sm-fill text-center nav-link"
           >Users</router-link
         >
@@ -35,7 +35,7 @@ export default {
   },
   xmounted() {
     User.auth().then((response) => {
-      this.isAdmin = response.data.role == "admin";
+      this.isAdmin = response.data.role == 'admin';
     });
   },
 };
