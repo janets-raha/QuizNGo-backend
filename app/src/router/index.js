@@ -39,16 +39,7 @@ const routes = [
     path: "/login",
     name: "Login",
     component: Login,
-  }/*,  {
-    path: "/editconcert/:concertId",
-    name: "EditConcert",
-    component: EditConcert
-  }, */,
-  /* {
-    path: "/ticket/:concertId",
-    name: "Ticket",
-    component: Ticket
-  }, */
+  },
   {
     path: "/admin",
     component: Admin,
@@ -62,11 +53,6 @@ const routes = [
         name: "Quiz",
         path: "quiz",
         component: AddQuiz,
-      }  ,
-      {
-        name: "AdminConcerts",
-        path: "admin-concerts",
-        component: AdminConcerts
       },
       {
         path: "/stats",
@@ -88,19 +74,10 @@ const routes = [
         name: "Favorites",
         path: "favorites",
         component: Favorites
-      },
-      {
-        path: "tickets",
-        name: "Tickets",
-        component: Tickets
       }
     ]
   }, */
-  /* {
-    path: "/my-ticket/:ticketId",
-    name: "RecapTicket",
-    component: RecapTicket
-  } */
+
 ];
 
 const router = new VueRouter({
