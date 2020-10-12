@@ -1,6 +1,9 @@
 <template>
   <div class="bg-light">
-    <NavBar />
+    <NavBar
+      :isLoggedIn="this.$store.getters.loggedIn"
+      :isAdmin="this.$store.getters.isAdmin"
+    />
     <router-view />
   </div>
 </template>

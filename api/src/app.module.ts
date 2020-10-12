@@ -1,3 +1,4 @@
+import { DonequizModule } from './donequiz/donequiz.module';
 import { QuestionModule } from './question/question.module';
 import { QuizzModule } from './quizz/quizz.module';
 import { CategoryModule } from './category/category.module';
@@ -10,7 +11,8 @@ import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
-    UsersModule, 
+    DonequizModule,
+    UsersModule,
     QuestionModule,
     QuizzModule,
     CategoryModule,
