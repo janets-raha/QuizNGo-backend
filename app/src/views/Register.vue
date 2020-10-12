@@ -108,9 +108,9 @@ export default {
         this.form.password2
       ) {
         if (this.form.password == this.form.password2) {
-          // const bcrypt = require("bcrypt"); //
-          // const hashedPwd = bcrypt.hash(password, 10); //
-          // this.form.password = hashedPwd; //
+           //const bcrypt = require("bcrypt"); //
+           //const hashedPwd = bcrypt.hash(password, 10); //
+           //this.form.password = hashedPwd; //
           User.register(this.form)
             .then(() => {
               this.$router.push({ name: "Login" });
