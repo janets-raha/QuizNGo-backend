@@ -27,20 +27,20 @@
               </template>
               <template v-else v-slot:button-content> User </template>
               <div v-if="!isLoggedIn">
-                <b-dropdown-item href="/admin">
+                <b-dropdown-item href="/login">
                   <b-icon icon="box-arrow-in-right"></b-icon>
                   <router-link
                     class="text-decoration-none text-dark"
-                    :to="{ name: 'Admin' }"
+                    :to="{ name: 'Login' }"
                   >
                     Login
                   </router-link>
                 </b-dropdown-item>
-                <b-dropdown-item href="/admin">
+                <b-dropdown-item href="/register">
                   <b-icon icon="person-plus"></b-icon>
                   <router-link
                     class="text-decoration-none text-dark"
-                    :to="{ name: 'Admin' }"
+                    :to="{ name: 'Register' }"
                   >
                     Register
                   </router-link>
@@ -63,6 +63,7 @@
                   <b-icon icon="person-circle"></b-icon>
                   Dashboard
                 </b-dropdown-item>
+                
                 <b-dropdown-item href="#">
                   <b-icon icon="box-arrow-right"></b-icon>
                   Logout
@@ -75,57 +76,6 @@
       </b-navbar>
     </div>
     <!-- *********************END NAVBAR *******************-->
-
-    <nav class="navbar navbar-expand navbar-dark bg-dark-theme">
-      <div class="container">
-        <div class="navbar-header mb-auto">
-          <router-link class="navbar-brand" :to="{ path: '/' }">
-            <img src="/qg_logo_short.png" alt="Qwiz&amp;Go" />
-          </router-link>
-        </div>
-        <ul class="nav navbar-nav justify-content-end">
-          <router-link
-            v-if="isLoggedIn && notifCount"
-            class="nav-item nav-link"
-            :to="{ path: '/profile/favorites' }"
-          >
-            <div class="badge badge-light">{{ notifCount }}</div>
-          </router-link>
-
-          <router-link
-            v-if="!isLoggedIn"
-            class="nav-item nav-link"
-            :to="{ name: 'Login' }"
-            >Connexion</router-link
-          >
-          <router-link
-            v-if="!isLoggedIn"
-            class="nav-item nav-link"
-            :to="{ name: 'Register' }"
-            >Créer un compte</router-link
-          >
-          <router-link
-            v-if="isLoggedIn"
-            class="nav-item nav-link"
-            :to="{ name: 'Profile' }"
-            >Mon compte</router-link
-          >
-          <router-link
-            v-if="isLoggedIn && isAdmin"
-            class="nav-item nav-link"
-            :to="{ name: 'Admin' }"
-            >Admin</router-link
-          >
-          <a
-            class="nav-item nav-link"
-            v-if="isLoggedIn"
-            @click.prevent="logout"
-            href="#"
-            >Déconnexion</a
-          >
-        </ul>
-      </div>
-    </nav>
   </div>
 </template>
 
@@ -138,10 +88,9 @@ export default {
       isLoggedIn: true,
       isAdmin: true,
       user: null,
-      notifCount: 0,
     };
   },
-  xupdated() {
+  updated() {
     if (this.isLoggedIn && !this.user) {
       User.auth().then((response) => {
         this.user = response.data;
@@ -149,7 +98,7 @@ export default {
       });
     }
   },
-  xmounted() {
+  mounted() {
     this.$root.$on("login", () => {
       this.isLoggedIn = true;
     });
@@ -163,7 +112,7 @@ export default {
       });
     }
   },
-  xmethods: {
+  methods: {
     logout() {
       localStorage.removeItem("token");
       this.user = null;
