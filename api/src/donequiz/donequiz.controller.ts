@@ -11,9 +11,10 @@ export class DonequizController {
   async addEntry(
     @Body('user_id') userId: Mongoose.Schema.Types.ObjectId,
     @Body('quizz_id') quizId: Mongoose.Schema.Types.ObjectId,
-    @Body('score') score: Number
+    @Body('score') score: Number,
+    @Body('success_rate') success_rate: Number,
   ) {
-    const result = await this.DonequizService.enterQuiz(userId, quizId, score);
+    const result = await this.DonequizService.enterQuiz(userId, quizId, score, success_rate);
     return { id: result }
   }
 
@@ -34,9 +35,10 @@ export class DonequizController {
   @Patch(':id')
   async update(
     @Param('id') quizId: Mongoose.Schema.Types.ObjectId,
-    @Body('score') score: Number
+    @Body('score') score: Number,
+    @Body('success_rate') success_rate: Number,
   ) {
-    const result = await this.DonequizService.updateQuiz(quizId, score);
+    const result = await this.DonequizService.updateQuiz(quizId, score, success_rate);
     return result;
   }
 

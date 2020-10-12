@@ -6,5 +6,8 @@ export default {
   searchQuiz(payload) {
     return Api().post("/quizz/search", payload.data);
   },
+  sortQuiz(payload) {
+    return Api().post("/quizz/sort", payload.data);
+  }
 
 }

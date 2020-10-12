@@ -14,9 +14,10 @@ export class DonequizService {
   async enterQuiz(
     user_id: Mongoose.Schema.Types.ObjectId,
     quizz_id: Mongoose.Schema.Types.ObjectId,
-    score: Number
+    score: Number,
+    success_rate: Number
   ) {
-    const newEntry = new this.donequizModel({ user_id, quizz_id, score });
+    const newEntry = new this.donequizModel({ user_id, quizz_id, score, success_rate });
     const result = await newEntry.save();
     if (result) {
       return result._id
@@ -32,7 +33,8 @@ export class DonequizService {
         id: quiz._id,
         user_id: quiz.user_id,
         quizz_id: quiz.quizz_id,
-        score: quiz.score
+        score: quiz.score,
+        success_rate: quiz.success_rate
       }
     ))
   }
@@ -44,15 +46,21 @@ export class DonequizService {
         id: quiz._id,
         user_id: quiz.user_id,
         quizz_id: quiz.quizz_id,
-        score: quiz.score
+        score: quiz.score,
+        success_rate: quiz.success_rate
       }
     ))
   }
 
-  async updateQuiz(id: Mongoose.Schema.Types.ObjectId, score: Number) {
+  async updateQuiz(id: Mongoose.Schema.Types.ObjectId, score: Number, success_rate: Number) {
     const quiz = await this.donequizModel.findById(id).exec();
     if (quiz) {
-      quiz.score = score;
+      if (score) {
+        quiz.score = score;
+      }
+      if (success_rate) {
+        quiz.success_rate = success_rate
+      }
       quiz.save()
       return quiz
     } else {

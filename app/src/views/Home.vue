@@ -49,6 +49,20 @@
             </template>
           </b-form-select>
         </div>
+
+        <div class="mx-2">
+          <b-form-select
+            @change="sort()"
+            v-model="sorting"
+            :options="tri"
+            class="mb-3"
+            size="lg"
+          >
+            <!-- This slot appears above the options from 'options' prop -->
+            <template v-slot:first> </template>
+          </b-form-select>
+        </div>
+
         <button @click="reset" class="btn-dark">Reset</button>
       </div>
     </div>
@@ -76,11 +90,16 @@ export default {
       selectedLang: null,
       selectedLevel: null,
       searchItem: null,
+      sorting: "asc",
       options: [],
       niveau: [
         { value: "Facile", text: "Facile" },
         { value: "Moyen", text: "Moyen" },
         { value: "Difficile", text: "Difficile" },
+      ],
+      tri: [
+        { value: "desc", text: "Plus récents" },
+        { value: "asc", text: "Plus anciens" },
       ],
     };
   },
@@ -122,10 +141,21 @@ export default {
       );
     },
 
+    async sort() {
+      console.log(this.sorting);
+      const payload = {};
+      payload.sort = this.sorting;
+      Search.sortQuiz({ data: payload }).then((result) => {
+        console.log(result.data);
+        this.quizzes = result.data;
+      });
+    },
+
     reset() {
       this.selectedLang = null;
       this.selectedLevel = null;
       this.searchItem = null;
+      this.sorting = "desc";
       this.getAllQuizzes();
     },
   },

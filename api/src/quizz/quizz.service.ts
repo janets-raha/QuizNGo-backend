@@ -158,7 +158,22 @@ export class QuizzService {
     } else {
       throw new NotFoundException('No match found')
     }
+  }
 
+  async sort(sort: string) {
+    const quizz = await this.quizzModel.find().sort({ createdAt: sort }).populate('category').exec();
+    return quizz.map(quiz => ({
+      id: quiz._id,
+      name: quiz.name,
+      category: quiz.category,
+      difficulty: quiz.difficulty,
+      bonus_time: quiz.bonus_time,
+      bonus_xp: quiz.bonus_xp,
+      avg_rating: quiz.avg_rating,
+      is_published: quiz.is_published,
+      created_at: quiz.createdAt,
+      updated_at: quiz.updatedAt,
+    }))
   }
 
 }

@@ -74,4 +74,12 @@ export class QuizzController {
     const result = await this.quizzService.search(query);
     return result
   }
+
+  @Post('/sort')
+  async sort(
+    @Body('sort') sort: string,
+  ) {
+    const result = await this.quizzService.sort(sort);
+    return result
+  }
 }
