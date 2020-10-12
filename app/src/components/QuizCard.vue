@@ -8,7 +8,11 @@
         </div>
         <div>
           <p>{{ quiz.avg_rating }}</p>
-          <b-icon icon="heart" class="pointer" @click="addFav"></b-icon>
+          <b-icon
+            icon="heart"
+            class="pointer"
+            @click="addFav(quiz.id)"
+          ></b-icon>
         </div>
       </b-card-text>
 
@@ -21,9 +25,14 @@
 </template>
 
 <script>
+import { userInfo } from "os";
+import User from "../apis/User";
+
 export default {
   data() {
-    return {};
+    return {
+      userId: this.$store.state.user.id,
+    };
   },
   props: {
     quiz: Object,
@@ -32,8 +41,15 @@ export default {
   computed: {},
 
   methods: {
-    addFav() {
-      alert("ajouté aux favoris");
+    addFav(id) {
+      //alert("quiz " + id + " ajouté aux favoris");
+      //console.log(this.userId);
+      this.$store.state.user.favorites.push(id);
+      console.log("nexFav", this.$store.state.user.favorites);
+      User.saveFavorites(
+        this.userId,
+        this.$store.state.user.favorites
+      ).then((response) => console.log("fav", response));
     },
   },
 };
