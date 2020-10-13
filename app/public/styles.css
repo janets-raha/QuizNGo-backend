@@ -40,8 +40,8 @@
   font-size: large !important;
 }
 
-.xcard {
-  box-shadow: 0 0 8px rgba(33, 33, 33, 0.1);
+.xxcard {
+  box-shadow: 0 0 8px rgba(131, 80, 80, 0.1) !important;
 }
 
 html,

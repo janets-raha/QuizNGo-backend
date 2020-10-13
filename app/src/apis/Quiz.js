@@ -12,10 +12,10 @@ export default {
   },
 
   getResults(payload) {
-    console.log(payload);
     return Api().post("/question/" + payload.quizId + "/result", {
       answers: payload.answers,
       timeout: payload.timeout,
+      user_id: payload.userId,
     });
   },
 };

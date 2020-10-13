@@ -1,5 +1,5 @@
 <template>
-  <b-container class="pt-2  mb-4 h-100">
+  <b-container class="pt-2  mb-4">
     <b-row no-gutters align-v="baseline" class=" justify-content-between mb-2 ">
       <b-col md="4" class=" h5">
         <strong>
@@ -39,10 +39,10 @@
       </b-col>
     </b-row>
     <div class="run-status d-flex justify-content-around">
-      <h4>
+      <h4 :class="classBonus">
         {{ chrono | moment("mm:ss") }}
       </h4>
-      <h4>Bonus: {{ bonus }}</h4>
+      <h4 :class="classBonus">Bonus: {{ bonus }}</h4>
     </div>
     <div
       v-if="!running"
@@ -62,14 +62,15 @@
         >
           <b-card no-body>
             <b-card-header class="p-0 bg-light">
-              <div class="d-flex justify-content-between pt-2 pb-2 px-2">
+              <div
+                class="d-flex justify-content-between pt-2 pb-2 px-2"
+                :class="classQuestion(q_index)"
+              >
                 <h5 class="mb-0">Question {{ q_index + 1 }}</h5>
-                <h5 class="text-nowrap mb-0">
-                  {{ questions[q_index].xps }} points
-                </h5>
+                <h5 class="text-nowrap mb-0">{{ xps[q_index] }} points</h5>
               </div>
             </b-card-header>
-            <b-card-body class="h-100 overflow-auto">
+            <b-card-body>
               <strong>
                 <div class="my-2">{{ questions[q_index].question }}</div>
               </strong>
@@ -83,7 +84,10 @@
                     :key="a_index"
                   >
                     <div class="ml-1 p-1">
-                      <b-form-checkbox :value="a_index">
+                      <b-form-checkbox
+                        :value="a_index"
+                        :class="classAnswer(q_index, a_index)"
+                      >
                         {{ answer.answer }}
                       </b-form-checkbox>
                     </div>
@@ -100,7 +104,11 @@
                     v-for="(answer, a_index) in questions[q_index].answers"
                     :key="a_index"
                   >
-                    <b-form-radio :value="a_index" class="ml-1 p-1">
+                    <b-form-radio
+                      :value="a_index"
+                      class="ml-1 p-1"
+                      :class="classAnswer(q_index, a_index)"
+                    >
                       {{ answer.answer }}
                     </b-form-radio>
                   </div>
@@ -111,13 +119,35 @@
         </div>
       </b-overlay>
     </div>
-    <b-button
-      @click="submitAnswers"
-      :disabled="
-        this.answerCount == 0 || this.answerCount !== this.questionCount
-      "
-      >Envoyer {{ answerCount }}/{{ questionCount }}</b-button
-    >
+    <div v-if="!correcting" class="text-center">
+      <b-button
+        class="my-3 px-5 btn-info"
+        @click="submitAnswers"
+        :disabled="
+          this.answerCount == 0 || this.answerCount !== this.questionCount
+        "
+        >Envoyer
+        <span :class="classSubmit"
+          >( reste à répondre : {{ questionCount - answerCount }} )</span
+        ></b-button
+      >
+    </div>
+
+    <b-card no-body v-if="correcting" class="mt-2">
+      <b-card-header class="p-0 bg-info text-center text-light pt-2"
+        ><h3>Quiz Terminé!</h3></b-card-header
+      >
+      <b-card-body class="d-flex justify-content-around flex-wrap p-4">
+        <div class="d-flex flex-nowrap mx-4">
+          <h4>Résultat :</h4>
+          <h4>{{ results.success_rate }} %</h4>
+        </div>
+        <div class="d-flex flex-nowrap mx-4">
+          <h4>xps obtenus :</h4>
+          <h4>{{ results.score }}</h4>
+        </div>
+      </b-card-body>
+    </b-card>
   </b-container>
 </template>
 
@@ -128,6 +158,7 @@ export default {
   data: () => {
     return {
       running: false,
+      correcting: false,
       showOverlay: false,
       quiz: {
         id: null,
@@ -147,9 +178,11 @@ export default {
       userId: null,
       bonus: null,
       timeout: null,
-      results: null,
+      results: {},
+      xps: [],
     };
   },
+
   updated() {
     let cpt = 0;
     this.answers.forEach((answerArray) => {
@@ -157,24 +190,25 @@ export default {
     });
     this.answerCount = cpt;
   },
+
   async mounted() {
     try {
+      this.userId = this.$store.state.user ? this.$store.state.user.id : null;
       const quizId = this.$route.params.quiz_id;
       if (quizId) {
-        this.editing = true;
         const quizReq = await Quiz.getQuiz(quizId);
         this.quiz = quizReq.data;
         let time = new Date();
         time.setMinutes(quizReq.data.bonus_time);
         time.setSeconds(0);
-        this.bonus = quizReq.data.bonus_xp;
         this.chrono = time;
+        this.bonus = quizReq.data.bonus_xp;
       }
     } catch (err) {
       this.toast("Erreur!", err.message, true);
-      this.showOverlay = false;
     }
   },
+
   methods: {
     async startQuiz() {
       try {
@@ -183,7 +217,8 @@ export default {
         const questionsReq = await Quiz.getQuestions(this.quiz.id);
         this.questions = questionsReq.data;
         this.questionCount = questionsReq.data.length;
-        this.questions.forEach((q, i) => (this.answers[i] = []));
+        this.xps = questionsReq.data.map((question) => question.xps);
+        this.answers = questionsReq.data.map((question) => []);
         this.showOverlay = false;
         this.polling = setInterval(() => {
           let tmp = new Date(this.chrono);
@@ -200,18 +235,32 @@ export default {
         clearInterval(interval);
       }
     },
+
     beforeDestroy() {
       clearInterval(this.polling);
     },
+
     async submitAnswers() {
       clearInterval(this.polling);
+      this.timeout =
+        this.chrono.getSeconds() == 0 && this.chrono.getMinutes() == 0;
       const getResults = await Quiz.getResults({
+        userId: this.userId,
         quizId: this.quiz.id,
         answers: this.answers,
-        timeout: this.chrono.getSeconds() == 0 && this.chrono.getMinutes() == 0,
+        timeout: this.timeout,
       });
-      console.log(getResults.data);
+      this.correcting = true;
+      this.results = getResults.data;
+      this.bonus =
+        parseInt(this.results.success_rate) < 75 || this.timeout
+          ? 0
+          : this.quiz.bonus_xp;
+      this.xps = getResults.data.results.map((result) => result.xps);
+
+      //console.log("res", getResults.data.results);
     },
+
     toast(title, message, faulty = false) {
       this.$root.$bvToast.toast(message, {
         title: title,
@@ -219,6 +268,50 @@ export default {
         variant: faulty ? "danger" : "success",
         appendToast: true,
       });
+    },
+
+    classQuestion: function(idx) {
+      return {
+        "text-danger":
+          this.correcting && !this.results.results[idx].is_good_answer,
+        "text-success":
+          this.correcting && this.results.results[idx].is_good_answer,
+      };
+    },
+
+    classAnswer: function(q_index, a_index) {
+      const user_answser = this.correcting
+        ? this.results.results[q_index].user_answers.find(
+            (a) => a == a_index
+          ) != undefined
+        : false;
+      const good_answser = this.correcting
+        ? this.results.results[q_index].good_answers.find(
+            (a) => a == a_index
+          ) != undefined
+        : false;
+      return {
+        "text-success": good_answser,
+        "text-danger": user_answser && !good_answser,
+      };
+    },
+  },
+  computed: {
+    classBonus: function() {
+      return {
+        "text-danger":
+          this.correcting &&
+          (parseInt(this.results.success_rate) < 75 || this.timeout),
+        "text-success":
+          !this.timeout &&
+          this.correcting &&
+          parseInt(this.results.success_rate) > 75,
+      };
+    },
+    classSubmit: function(idx) {
+      return {
+        "text-warning": this.running && this.questionCount !== this.answerCount,
+      };
     },
   },
 };

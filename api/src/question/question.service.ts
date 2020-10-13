@@ -4,21 +4,26 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Answer, Question } from "./question.model";
 import { Quizz } from "../quizz/quizz.model";
+import { Donequiz } from "src/donequiz/donequiz.model";
+import { DonequizService } from "src/donequiz/donequiz.service";
 
 @Injectable()
 export class QuestionService {
   constructor(
     @InjectModel("Question") private readonly questionModel: Model<Question>,
     @InjectModel("Quizz") private readonly quizModel: Model<Quizz>,
+    @InjectModel("Donequiz") private readonly DonequizModel: Model<Donequiz>,
+    private readonly doneQuizService: DonequizService,
   ) {}
 
   async getResults(
     quizz_id: Mongoose.Schema.Types.ObjectId,
     answers: [[Number]],
     timeout: Boolean,
+    user_id: Mongoose.Schema.Types.ObjectId,
   ) {
     const results = [];
-    let points: number = 0;
+    let score: number = 0;
     const quiz = await this.quizModel.findById(quizz_id).exec();
     const questions = await this.showAdminQuestions(quizz_id);
     questions.forEach((question, idx) => {
@@ -27,23 +32,32 @@ export class QuestionService {
       question.answers.forEach((answer, idx) => {
         if (answer.is_correct) goodAnswers.push(idx);
       });
-      const goodAnswer =
+      const isGoodAnswer =
         JSON.stringify(goodAnswers.sort()) ===
         JSON.stringify(userAnswers.sort());
-      if (goodAnswer) points += question.xps.valueOf();
+      if (isGoodAnswer) score += question.xps.valueOf();
       results.push({
         index: idx,
-        good_answer: goodAnswer,
+        is_good_answer: isGoodAnswer,
         good_answers: goodAnswers.sort(),
         user_answers: userAnswers.sort(),
+        xps: isGoodAnswer ? questions[idx].xps : 0,
       });
     });
-    const ratio = results.filter(r => r.good_answer).length / questions.length;
-    points += timeout ? 0 : ratio > 0.75 ? quiz.bonus_xp.valueOf() : 0;
+    const success_rate =
+      (results.filter(r => r.is_good_answer).length / questions.length) * 100;
+    score += timeout ? 0 : success_rate > 75 ? quiz.bonus_xp.valueOf() : 0;
 
-    // TODO update UserQuiz
+    if (user_id) {
+      const doneQuiz = await this.doneQuizService.enterQuiz(
+        user_id,
+        quizz_id,
+        score,
+        success_rate,
+      );
+    }
 
-    return { results, points, ratio };
+    return { results, score, success_rate };
   }
 
   async createQuestion(
