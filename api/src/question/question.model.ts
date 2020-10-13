@@ -6,12 +6,19 @@ export const QuestionSchema = new Mongoose.Schema({
   xps: { type: Number, required: true },
   question: { type: String, required: true },
   answers: [{ type: Object, required: true }],
+  is_multi: { type: Boolean}
 
 });
+
+export interface Answer {
+  answer: string,
+  is_correct: boolean
+}
 
 export interface Question extends Mongoose.Document {
   quizz_id: Mongoose.Schema.Types.ObjectId;
   xps: Number;
   question: String;
-  answers: [Object];
+  is_multi: Boolean;
+  answers: [Answer];
 }

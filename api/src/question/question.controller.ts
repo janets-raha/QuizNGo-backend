@@ -9,7 +9,7 @@ import {
   Body,
 } from "@nestjs/common";
 import { QuestionService } from "./question.service";
-import { Question } from "./question.model";
+import { Answer, Question } from "./question.model";
 
 @Controller("question")
 export class QuestionController {
@@ -20,7 +20,7 @@ export class QuestionController {
     @Body("quizz_id") quizz_id: Mongoose.Schema.Types.ObjectId,
     @Body("xps") xps: Number,
     @Body("question") question: String,
-    @Body("answers") answers: [Object],
+    @Body("answers") answers: [Answer],
   ) {
     const result = await this.questionService.createQuestion(
       quizz_id,
@@ -29,6 +29,16 @@ export class QuestionController {
       answers,
     );
     return { id: result };
+  }
+
+  @Post(":id/result")
+  async getResults(
+    @Param("id") id: Mongoose.Schema.Types.ObjectId,
+    @Body("answers") answers: [[Number]],
+    @Body("timeout") timeout: Boolean,
+  ) {
+    const result = await this.questionService.getResults(id, answers, timeout);
+    return result;
   }
 
   @Post()
@@ -40,6 +50,14 @@ export class QuestionController {
   @Get(":id")
   async showQuizQuestions(@Param("id") id: Mongoose.Schema.Types.ObjectId) {
     const result = await this.questionService.showQuestions(id);
+    return result;
+  }
+
+  @Get(":id/admin")
+  async showAdminQuizQuestions(
+    @Param("id") id: Mongoose.Schema.Types.ObjectId,
+  ) {
+    const result = await this.questionService.showAdminQuestions(id);
     return result;
   }
 

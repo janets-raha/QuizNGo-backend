@@ -10,7 +10,6 @@ export default {
     return Api().post("/quizz/sort", payload.data);
   },
   multiSearch(payload) {
-    return Api().post("/quizz/allsearch", payload.data)
-  }
-
-}
+    return Api().post("/quizz/allsearch", payload.data);
+  },
+};
