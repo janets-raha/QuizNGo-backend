@@ -1,6 +1,6 @@
 @media (max-width: 576px) {
   .scroll-zone {
-    height: calc(100vh - 300px);
+    height: calc(100vh - 320px);
     overflow: scroll;
   }
 }
@@ -12,10 +12,10 @@
 }
 
 .scroll-zone {
-  height: calc(100vh - 300px);
+  height: calc(100vh - 330px);
   overflow: scroll;
 }
-.timer {
+.run-status {
   height: 80px;
   text-align: center;
 }

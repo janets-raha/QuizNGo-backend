@@ -6,9 +6,9 @@
           {{ quiz.name }}
         </strong>
       </b-col>
-      <b-col md="4" class=" h5 text-center">
+      <!--  <b-col md="4" class=" h5 text-center">
         Techno : {{ quiz.category.name }}
-      </b-col>
+      </b-col> -->
       <b-col md="4" class="d-flex justify-content-end">
         <b-icon
           v-if="quiz.difficulty === 'Facile'"
@@ -38,10 +38,11 @@
         </div>
       </b-col>
     </b-row>
-    <div class="timer">
-      <h3>
+    <div class="run-status d-flex justify-content-around">
+      <h4>
         {{ chrono | moment("mm:ss") }}
-      </h3>
+      </h4>
+      <h4>Bonus: {{ bonus }}</h4>
     </div>
     <div
       v-if="!running"
@@ -72,50 +73,57 @@
               <strong>
                 <div class="my-2">{{ questions[q_index].question }}</div>
               </strong>
-              <div v-if="isMulti(questions[q_index].answers)">
-                <div
-                  v-for="(answer, a_index) in questions[q_index].answers"
-                  :key="a_index"
+              <div v-if="questions[q_index].is_multi">
+                <b-form-checkbox-group
+                  v-model="answers[q_index]"
+                  :name="'options-' + q_index"
                 >
-                  <div class="ml-1 p-1">
-                    <b-form-checkbox
-                      v-model="answers[q_index][a_index]"
-                      :value="a_index"
-                      @change="handleChange"
-                    >
-                      {{ questions[q_index].answers[a_index].answer }}
-                    </b-form-checkbox>
+                  <div
+                    v-for="(answer, a_index) in questions[q_index].answers"
+                    :key="a_index"
+                  >
+                    <div class="ml-1 p-1">
+                      <b-form-checkbox :value="a_index">
+                        {{ answer.answer }}
+                      </b-form-checkbox>
+                    </div>
                   </div>
-                </div>
+                </b-form-checkbox-group>
               </div>
               <div v-else class="ml-4">
-                <div
-                  v-for="(answer, a_index) in questions[q_index].answers"
-                  :key="a_index"
+                <b-form-radio-group
+                  v-model="answers[q_index][0]"
+                  stacked
+                  :name="'options-' + q_index"
                 >
-                  <b-form-radio
-                    v-model="answers[q_index][a_index]"
-                    @change="handleChange"
-                    class="ml-1 p-1"
-                    :name="'options-' + q_index"
-                    :value="a_index"
-                    >{{
-                      questions[q_index].answers[a_index].answer
-                    }}</b-form-radio
+                  <div
+                    v-for="(answer, a_index) in questions[q_index].answers"
+                    :key="a_index"
                   >
-                </div>
+                    <b-form-radio :value="a_index" class="ml-1 p-1">
+                      {{ answer.answer }}
+                    </b-form-radio>
+                  </div>
+                </b-form-radio-group>
               </div>
             </b-card-body>
           </b-card>
         </div>
       </b-overlay>
     </div>
-    <b-button @click="submitAnswers">Envoyer</b-button>
+    <b-button
+      @click="submitAnswers"
+      :disabled="
+        this.answerCount == 0 || this.answerCount !== this.questionCount
+      "
+      >Envoyer {{ answerCount }}/{{ questionCount }}</b-button
+    >
+    <div class="d-none">{{ lastUpdate }}</div>
   </b-container>
 </template>
 
 <script>
-import AdminQuiz from "../apis/AdminQuiz";
+import Quiz from "../apis/Quiz";
 export default {
   components: {},
   data: () => {
@@ -132,21 +140,34 @@ export default {
         is_published: false,
       },
       questions: [],
+      questionCount: 0,
       answers: [],
+      answerCount: 0,
       chrono: null,
       polling: null,
+      userId: null,
+      lastUpdate: null,
+      bonus: null,
     };
+  },
+  updated() {
+    let cpt = 0;
+    this.answers.forEach((answerArray) => {
+      if (answerArray.length) cpt++;
+    });
+    this.answerCount = cpt;
   },
   async mounted() {
     try {
       const quizId = this.$route.params.quiz_id;
       if (quizId) {
         this.editing = true;
-        const quizReq = await AdminQuiz.getQuiz(quizId);
+        const quizReq = await Quiz.getQuiz(quizId);
         this.quiz = quizReq.data;
         let time = new Date();
         time.setMinutes(quizReq.data.bonus_time);
-        time.setUTCSeconds(0);
+        time.setSeconds(0);
+        this.bonus = quizReq.data.bonus_xp;
         this.chrono = time;
       }
     } catch (err) {
@@ -157,19 +178,21 @@ export default {
   methods: {
     async startQuiz() {
       try {
-        const quizId = this.$route.params.quiz_id;
         this.running = true;
         this.showOverlay = true;
-        const questionsReq = await AdminQuiz.getQuestions(quizId);
+        const questionsReq = await Quiz.getQuestions(this.quiz.id);
         this.questions = questionsReq.data;
+        this.questionCount = questionsReq.data.length;
         this.questions.forEach((q, i) => (this.answers[i] = []));
         this.showOverlay = false;
         this.polling = setInterval(() => {
           let tmp = new Date(this.chrono);
           tmp.setSeconds(this.chrono.getSeconds() - 1);
           this.chrono = tmp;
-          if (this.chrono.getSeconds() == 0 && this.chrono.getMinutes() == 0)
+          if (this.chrono.getSeconds() == 0 && this.chrono.getMinutes() == 0) {
             clearInterval(this.polling);
+            this.bonus = 0;
+          }
         }, 1000);
       } catch (err) {
         this.toast("Erreur!", err.message, true);
@@ -180,18 +203,14 @@ export default {
     beforeDestroy() {
       clearInterval(this.polling);
     },
-    submitAnswers() {
-      console.log(this.answers);
-    },
-    handleChange(e) {
-      console.log(e);
-    },
-    isMulti(answers) {
-      let cpt = 0;
-      answers.forEach((answer) => {
-        if (answer.is_correct) cpt++;
+    async submitAnswers() {
+      clearInterval(this.polling);
+      const sendResults = await Quiz.getResults({
+        quizId: this.quiz.id,
+        answers: this.answers,
+        timeout: this.chrono.getSeconds() == 0 && this.chrono.getMinutes() == 0,
       });
-      return cpt > 1;
+      console.log(this.answers);
     },
     toast(title, message, faulty = false) {
       this.$root.$bvToast.toast(message, {
