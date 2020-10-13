@@ -131,8 +131,6 @@ export default {
     logout() {
       console.log("out");
       localStorage.removeItem("token");
-      //localStorage.removeItem("role");
-      //localStorage.removeItem("user");
       this.$store.commit("setToken", null);
       this.$store.commit("setStatus", null);
       this.$store.commit("setUser", null);
