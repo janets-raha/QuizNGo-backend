@@ -1,16 +1,16 @@
-import { Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { User } from './user.model';
-import { Model } from 'mongoose'
-import * as Mongoose from 'mongoose';
-
+import {
+  Injectable,
+  NotAcceptableException,
+  NotFoundException,
+} from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
+import { User } from "./user.model";
+import { Model } from "mongoose";
+import * as Mongoose from "mongoose";
 
 @Injectable()
 export class UsersService {
-
-  constructor(
-    @InjectModel('User') private readonly userModel: Model<User>
-  ) { }
+  constructor(@InjectModel("User") private readonly userModel: Model<User>) {}
 
   async insertUser(
     name: string,
@@ -20,7 +20,7 @@ export class UsersService {
     score: Number,
     role: string,
   ) {
-    const bcrypt = require('bcrypt');
+    const bcrypt = require("bcrypt");
     const hashedPwd = await bcrypt.hash(password, 10);
     const newUser = new this.userModel({
       name,
@@ -32,7 +32,8 @@ export class UsersService {
     });
     try {
       const result = await newUser.save();
-      return result.id;
+      // return result.id;
+      return result;
     } catch (error) {
       throw new NotAcceptableException("Email already used.");
     }
@@ -81,7 +82,7 @@ export class UsersService {
       updatedUser.email = email;
     }
     if (password) {
-      const bcrypt = require('bcrypt');
+      const bcrypt = require("bcrypt");
       const hashedPwd = await bcrypt.hash(password, 10);
       updatedUser.password = hashedPwd;
     }
@@ -113,7 +114,7 @@ export class UsersService {
       updatedUser.email = email;
     }
     if (password) {
-      const bcrypt = require('bcrypt');
+      const bcrypt = require("bcrypt");
       const hashedPwd = await bcrypt.hash(password, 10);
       updatedUser.password = hashedPwd;
     }
@@ -124,13 +125,13 @@ export class UsersService {
       updatedUser.score = score;
     }
     updatedUser.save();
-    return "User updated"
+    return "User updated";
   }
 
   async deleteUser(userId: string) {
     const result = await this.userModel.deleteOne({ _id: userId }).exec();
     if (result.n === 0) {
-      throw new NotFoundException('Could not find user.');
+      throw new NotFoundException("Could not find user.");
     }
   }
 
@@ -139,18 +140,17 @@ export class UsersService {
     try {
       user = await this.userModel.findById(id).exec();
     } catch (error) {
-      throw new NotFoundException('Could not find user.');
+      throw new NotFoundException("Could not find user.");
     }
     if (!user) {
-      throw new NotFoundException('Could not find user.');
+      throw new NotFoundException("Could not find user.");
     }
     return user;
   }
 
   async findAuth(email: string): Promise<User | undefined> {
     let res;
-    res = await this.userModel.findOne({ email: email }).exec();  // changer username a email
+    res = await this.userModel.findOne({ email: email }).exec(); // changer username a email
     return res;
   }
-
 }
