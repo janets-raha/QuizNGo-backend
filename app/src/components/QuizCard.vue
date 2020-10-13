@@ -3,10 +3,16 @@
     <b-card style="max-width: 25rem; min-width: 20rem">
       <b-card-text class="d-flex justify-content-between flex-column">
         <div class="d-flex justify-content-between">
-          <h3>{{ quiz.name }}</h3>
+          <router-link :to="'/quiz/' + quiz.id" class="text-decoration-none">
+            <h3>{{ quiz.name }}</h3>
+          </router-link>
+
           <div>
             <b-icon
-              v-if="this.$store.state.user.favorites.includes(quiz.id)"
+              v-if="
+                this.$store.state.user &&
+                this.$store.state.user.favorites.includes(quiz.id)
+              "
               icon="heart-fill"
               variant="danger"
               class="pointer"
@@ -52,7 +58,7 @@ import User from "../apis/User";
 export default {
   data() {
     return {
-      userId: this.$store.state.user.id,
+      //userId: this.$store.state.user.id,
     };
   },
   props: {
@@ -64,27 +70,34 @@ export default {
   methods: {
     addFav(id) {
       //alert("quiz " + id + " ajouté aux favoris");
-      if (this.$store.state.user.favorites.includes(id)) {
-        alert("Ce quiz est déjà dans vos favoris");
-      } else {
-        this.$store.state.user.favorites.push(id);
-        //console.log("nexFav", this.$store.state.user.favorites);
-        User.saveFavorites(
-          this.userId,
-          this.$store.state.user.favorites
-        ).then((response) => console.log("fav", response.data));
+      if (this.$store.state.user) {
+        if (this.$store.state.user.favorites.includes(id)) {
+          alert("Ce quiz est déjà dans vos favoris");
+        } else {
+          this.$store.state.user.favorites.push(id);
+          //console.log("nexFav", this.$store.state.user.favorites);
+          User.saveFavorites(
+            //this.userId,
+            this.$store.state.user.id,
+            this.$store.state.user.favorites
+          ).then((response) => console.log("fav", response.data));
+        }
       }
     },
 
     removeFav(id) {
       //alert("quiz " + id + " ajouté aux favoris");
-      const newFav = this.$store.state.user.favorites.filter(
-        (fav) => fav !== id
-      );
-      User.saveFavorites(this.userId, newFav).then((response) => {
-        //console.log("fav", response.data);
-        this.$store.state.user.favorites = newFav;
-      });
+      if (this.$store.state.user) {
+        const newFav = this.$store.state.user.favorites.filter(
+          (fav) => fav !== id
+        );
+        User.saveFavorites(this.$store.state.user.id, newFav).then(
+          (response) => {
+            //console.log("fav", response.data);
+            this.$store.state.user.favorites = newFav;
+          }
+        );
+      }
     },
   },
 };

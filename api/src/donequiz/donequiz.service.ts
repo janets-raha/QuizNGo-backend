@@ -23,9 +23,12 @@ export class DonequizService {
     const doneQuiz = await this.donequizModel.findOne({ user_id, quizz_id }).exec();
     if (doneQuiz) {
       if (doneQuiz.score < score) {
+        user.score = user.score.valueOf() - doneQuiz.score.valueOf()
         doneQuiz.score = score;
         doneQuiz.success_rate = success_rate
         doneQuiz.save()
+        user.score = user.score.valueOf() + score.valueOf()
+        user.save()
         return doneQuiz
       } else {
         return { message: "Previous score is higher" }
@@ -33,8 +36,10 @@ export class DonequizService {
     } else {
       const newEntry = new this.donequizModel({ user_id, quizz_id, score, success_rate });
       const result = await newEntry.save();
+      user.score = user.score.valueOf() + score.valueOf()
+      user.save()
       if (result) {
-        return result._id
+        return result
       } else {
         throw new Error("Error in the creation !")
       }

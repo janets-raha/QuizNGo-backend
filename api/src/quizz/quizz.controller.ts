@@ -58,38 +58,39 @@ export class QuizzController {
     return { message: result };
   }
 
-  @Post('/filter')
-  async filter(
-    @Body('field') field: string,
-    @Body('query') query: string,
-  ) {
-    const result = await this.quizzService.filter(field, query);
-    return result
-  }
+  /*   @Post('/filter')
+    async filter(
+      @Body('field') field: string,
+      @Body('query') query: string,
+    ) {
+      const result = await this.quizzService.filter(field, query);
+      return result
+    }
+  
+    @Post('/search')
+    async search(
+      @Body('query') query: string,
+    ) {
+      const result = await this.quizzService.search(query);
+      return result
+    }
+  
+    @Post('/sort')
+    async sort(
+      @Body('sort') sort: string,
+    ) {
+      const result = await this.quizzService.sort(sort);
+      return result
+    } */
 
   @Post('/search')
-  async search(
-    @Body('query') query: string,
-  ) {
-    const result = await this.quizzService.search(query);
-    return result
-  }
-
-  @Post('/sort')
-  async sort(
-    @Body('sort') sort: string,
-  ) {
-    const result = await this.quizzService.sort(sort);
-    return result
-  }
-
-  @Post('/allsearch')
   async searchAll(
     @Body('query') query?: string,
     @Body('level') level?: string,
-    @Body('category') category?: Mongoose.Schema.Types.ObjectId
+    @Body('category') category?: Mongoose.Schema.Types.ObjectId,
+    @Body('sort') sort?: string,
   ) {
-    const result = await this.quizzService.searchAll(query, level, category);
+    const result = await this.quizzService.searchAll(query, level, category, sort);
     return result
   }
 }

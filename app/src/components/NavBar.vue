@@ -87,7 +87,7 @@ export default {
     return {
       //isLoggedIn: true,
       //isAdmin: true,
-      user: this.$store.state.user,
+      user: this.$store.state.user || null,
     };
   },
 
@@ -167,13 +167,13 @@ export default {
   },
 
   beforeMount() {
-    console.log("nav before");
+    //console.log("nav before");
     this.getAuth();
   },
 
   updated() {
     if (this.$props.isLoggedIn && !this.user) {
-      console.log("updated navbarr");
+      //console.log("updated navbarr");
       this.getAuth();
     }
   },
