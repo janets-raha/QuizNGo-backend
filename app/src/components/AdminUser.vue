@@ -39,7 +39,6 @@
         <!-- Card -->
         <b-collapse
           :id="'accordion-' + idx"
-          visible
           accordion="quiz-accordion"
           role="tabpanel"
         >
@@ -202,6 +201,8 @@
 <script>
 import AdminUser from '../apis/AdminUser.js';
 import User from '../apis/User.js';
+import VueLodash from 'vue-lodash';
+import lodash from 'lodash';
 
 export default {
   data() {
@@ -219,12 +220,21 @@ export default {
       roles: ['user', 'admin'],
     };
   },
+
   mounted() {
-    // ADMIN DISABLED IN users.controller -> MUST BE RE-ENABLED
+    // TODO ADMIN DISABLED IN users.controller -> MUST BE RE-ENABLED
     AdminUser.getUsers().then((response) => {
-      this.users = response.data;
+      const x = _.orderBy(response.data, ['name'], ['asc']); //TODO iteratee name -> lowerCase
+      console.log('LODASH RESPONSE.DATA :', x);
+      this.users = x;
     });
   },
+
+  // computed() {
+  //   orderedUsers = () => {
+  //     return _.orderBy(this.users, 'name');
+  //   };
+  // },
 
   methods: {
     resetNewUserForm(evt) {
@@ -272,29 +282,22 @@ export default {
         this.form.pwdConfirm &&
         this.form.role
       ) {
-        console.log('XXX :', this.users);
+        // console.log('XXX :', this.users);
         if (this.form.password == this.form.pwdConfirm) {
-          User.register(this.form)
-            // .then(() => {
-            //   AdminUser.getUsers()
-            //   .then((response) => {
-            //     this.users = response.data;
-            //   });
-            // });
-            .then((response) => {
-              console.log('RESPONSE.DATA :', response.data);
-              const new_user = response.data.new_user;
-              const newUser = {
-                id: new_user._id,
-                name: new_user.name,
-                email: new_user.email,
-                password: new_user.password,
-                role: new_user.role,
-                score: new_user.score,
-              };
-              console.log('NEW USER :', newUser);
-              this.users.push(newUser);
-            });
+          User.register(this.form).then((response) => {
+            // console.log('RESPONSE.DATA :', response.data);
+            const new_user = response.data.new_user;
+            const newUser = {
+              id: new_user._id,
+              name: new_user.name,
+              email: new_user.email,
+              password: new_user.password,
+              role: new_user.role,
+              score: new_user.score,
+            };
+            // console.log('NEW USER :', newUser);
+            this.users.push(newUser);
+          });
           // console.log('New User :', newUser);
           // this.users.push(newUser);
           // console.log('YYY :', this.users);
@@ -304,11 +307,10 @@ export default {
 
     async updUser(idx) {
       try {
-        // {
+        console.log(this.users[idx]);
         const updUser = await AdminUser.updateUser(this.users[idx]);
-        // }
       } catch (err) {
-        console.error('Error from onSubmit :', error);
+        console.error('Error from updUser :', error);
       }
     },
 
