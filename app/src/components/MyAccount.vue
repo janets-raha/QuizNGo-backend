@@ -115,7 +115,7 @@ export default {
     saveUser() {
       User.saveUser(this.id, this.userForm)
         .then(() => {
-          this.$router.push({ name: "Home" });
+          this.$router.push({ name: "Login" });
         })
         .catch(error => {
           if (error.response.status === 422) {
