@@ -36,8 +36,14 @@ export class QuestionController {
     @Param("id") id: Mongoose.Schema.Types.ObjectId,
     @Body("answers") answers: [[Number]],
     @Body("timeout") timeout: Boolean,
+    @Body("user_id") user_id: Mongoose.Schema.Types.ObjectId,
   ) {
-    const result = await this.questionService.getResults(id, answers, timeout);
+    const result = await this.questionService.getResults(
+      id,
+      answers,
+      timeout,
+      user_id,
+    );
     return result;
   }
 
