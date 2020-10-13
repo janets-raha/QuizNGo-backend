@@ -82,4 +82,14 @@ export class QuizzController {
     const result = await this.quizzService.sort(sort);
     return result
   }
+
+  @Post('/allsearch')
+  async searchAll(
+    @Body('query') query?: string,
+    @Body('level') level?: string,
+    @Body('category') category?: Mongoose.Schema.Types.ObjectId
+  ) {
+    const result = await this.quizzService.searchAll(query, level, category);
+    return result
+  }
 }

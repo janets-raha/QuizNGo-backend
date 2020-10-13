@@ -15,7 +15,7 @@ export class DonequizController {
     @Body('success_rate') success_rate: Number,
   ) {
     const result = await this.DonequizService.enterQuiz(userId, quizId, score, success_rate);
-    return { id: result }
+    return result
   }
 
   @Get()

@@ -4,7 +4,7 @@
       <div class="w-100 mx-2">
         <b-input-group size="lg" class="mb-2 mw-100">
           <b-input-group-prepend>
-            <button style="width: 3rem" @click="search">
+            <button style="width: 3rem" @click="searchAll">
               <b-icon icon="search"></b-icon>
             </button>
           </b-input-group-prepend>
@@ -20,7 +20,7 @@
       >
         <div class="mx-2">
           <b-form-select
-            @change="filter('category')"
+            @change="searchAll"
             v-model="selectedLang"
             :options="options"
             class="mb-3"
@@ -35,7 +35,7 @@
         </div>
         <div class="mx-2">
           <b-form-select
-            @change="filter('difficulty')"
+            @change="searchAll"
             v-model="selectedLevel"
             :options="niveau"
             class="mb-3"
@@ -90,7 +90,7 @@ export default {
       selectedLang: null,
       selectedLevel: null,
       searchItem: null,
-      sorting: "asc",
+      sorting: "desc",
       options: [],
       niveau: [
         { value: "Facile", text: "Facile" },
@@ -120,7 +120,7 @@ export default {
       });
     },
 
-    async filter(field) {
+    /*     async filter(field) {
       const payload = {};
       payload.field = field;
       if (field === "category") {
@@ -131,22 +131,38 @@ export default {
       Search.filterQuiz({ data: payload }).then(
         (result) => (this.quizzes = result.data)
       );
-    },
+    }, */
 
-    async search() {
+    /*     async search() {
+      console.log("search function")
       const payload = {};
       payload.query = this.searchItem;
       Search.searchQuiz({ data: payload }).then(
         (result) => (this.quizzes = result.data)
       );
+    }, */
+
+    async searchAll() {
+      const payload = {};
+      if (this.searchItem) {
+        payload.query = this.searchItem;
+      } else {
+        payload.query = " ";
+      }
+
+      payload.category = this.selectedLang;
+      payload.level = this.selectedLevel;
+      Search.multiSearch({ data: payload }).then((result) => {
+        console.log(result.data);
+        this.quizzes = result.data;
+      });
     },
 
     async sort() {
-      console.log(this.sorting);
       const payload = {};
       payload.sort = this.sorting;
       Search.sortQuiz({ data: payload }).then((result) => {
-        console.log(result.data);
+        //console.log(result.data);
         this.quizzes = result.data;
       });
     },

@@ -27,6 +27,7 @@ export class QuizzService {
 
   async showQuizzes() {
     const quizzes = await this.quizzModel.find()
+      .sort({ createdAt: "desc" })
       .populate('category')
       .exec();
     return quizzes.map(quiz => ({
@@ -174,6 +175,51 @@ export class QuizzService {
       created_at: quiz.createdAt,
       updated_at: quiz.updatedAt,
     }))
+  }
+
+  async searchAll(query: string, level: string, category: Mongoose.Schema.Types.ObjectId) {
+    let payload;
+    if (level && category) {
+      payload = {
+        name: { $regex: query, $options: 'i' },
+        difficulty: level,
+        category: category,
+      }
+    } else if (level && !category) {
+      payload = {
+        name: { $regex: query, $options: 'i' },
+        difficulty: level,
+      }
+    } else if (!level && category) {
+      payload = {
+        name: { $regex: query, $options: 'i' },
+        category: category,
+      }
+    } else {
+      payload = {
+        name: { $regex: query, $options: 'i' },
+      }
+    }
+
+    const quizzes = await this.quizzModel
+      .find(payload).populate('category').exec();
+    if (quizzes) {
+      return quizzes.map(quiz => ({
+        id: quiz._id,
+        name: quiz.name,
+        category: quiz.category,
+        difficulty: quiz.difficulty,
+        bonus_time: quiz.bonus_time,
+        bonus_xp: quiz.bonus_xp,
+        avg_rating: quiz.avg_rating,
+        is_published: quiz.is_published,
+        created_at: quiz.createdAt,
+        updated_at: quiz.updatedAt,
+      }))
+
+    } else {
+      throw new NotFoundException('No match found')
+    }
   }
 
 }
