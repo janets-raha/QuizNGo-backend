@@ -16,7 +16,7 @@ import * as Mongoose from "mongoose";
 
 @Controller("users")
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Post() // //  pour utilisateur simple et admin
   async addUser(
@@ -46,8 +46,8 @@ export class UsersController {
     return users;
   }
 
-  @hasRoles("admin")
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  //@hasRoles("admin")
+  //@UseGuards(JwtAuthGuard, RolesGuard)
   @Get("admin/:id") //  pour admin
   getUser(@Param("id") userId: string) {
     return this.usersService.getSingleUser(userId);

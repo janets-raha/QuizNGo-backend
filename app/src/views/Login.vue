@@ -81,7 +81,6 @@ export default {
       User.login(this.form)
         .then((response) => {
           this.$root.$emit("login", true);
-          console.log("logged in");
           localStorage.setItem("token", response.data.access_token);
           this.$store.state.access_token = localStorage.getItem("token");
           this.$store.commit("setToken", localStorage.getItem("token"));

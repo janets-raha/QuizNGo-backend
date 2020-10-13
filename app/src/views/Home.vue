@@ -12,6 +12,7 @@
             type="search"
             placeholder="Search terms"
             v-model="searchItem"
+            @keypress.enter="searchAll"
           ></b-form-input>
         </b-input-group>
       </div>
@@ -52,7 +53,7 @@
 
         <div class="mx-2">
           <b-form-select
-            @change="sort()"
+            @change="searchAll"
             v-model="sorting"
             :options="tri"
             class="mb-3"
@@ -113,6 +114,10 @@ export default {
     this.getAllQuizzes();
   },
 
+  updated() {
+    //this.getAllQuizzes();
+  },
+
   methods: {
     async getAllQuizzes() {
       AdminQuiz.getQuizzes().then((result) => {
@@ -152,20 +157,21 @@ export default {
 
       payload.category = this.selectedLang;
       payload.level = this.selectedLevel;
+      payload.sort = this.sorting;
       Search.multiSearch({ data: payload }).then((result) => {
-        console.log(result.data);
+        //console.log(result.data);
         this.quizzes = result.data;
       });
     },
 
-    async sort() {
+    /*     async sort() {
       const payload = {};
       payload.sort = this.sorting;
       Search.sortQuiz({ data: payload }).then((result) => {
         //console.log(result.data);
         this.quizzes = result.data;
       });
-    },
+    }, */
 
     reset() {
       this.selectedLang = null;

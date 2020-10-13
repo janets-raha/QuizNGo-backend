@@ -177,7 +177,7 @@ export class QuizzService {
     }))
   }
 
-  async searchAll(query: string, level: string, category: Mongoose.Schema.Types.ObjectId) {
+  async searchAll(query: string, level: string, category: Mongoose.Schema.Types.ObjectId, sort: string) {
     let payload;
     if (level && category) {
       payload = {
@@ -202,7 +202,7 @@ export class QuizzService {
     }
 
     const quizzes = await this.quizzModel
-      .find(payload).populate('category').exec();
+      .find(payload).sort({ createdAt: sort }).populate('category').exec();
     if (quizzes) {
       return quizzes.map(quiz => ({
         id: quiz._id,
