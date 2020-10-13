@@ -45,7 +45,7 @@ export class UsersService {
       id: users.id,
       name: users.name,
       email: users.email,
-      password: users.password,
+      // password: users.password,
       favorites: users.favorites,
       score: users.score,
       role: users.role,
