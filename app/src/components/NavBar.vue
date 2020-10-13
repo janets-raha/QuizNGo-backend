@@ -60,7 +60,7 @@
                     Admin
                   </router-link>
                 </b-dropdown-item>
-                <b-dropdown-item href="#">
+                <b-dropdown-item href="/dashboard">
                   <b-icon icon="person-circle"></b-icon>
                   Dashboard
                 </b-dropdown-item>
