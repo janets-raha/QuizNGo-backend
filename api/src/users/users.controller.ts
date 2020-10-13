@@ -34,7 +34,7 @@ export class UsersController {
       score,
       role,
     );
-    return { "new user created": newUser };
+    return { new_user: newUser };
   }
 
   // @hasRoles('admin')
