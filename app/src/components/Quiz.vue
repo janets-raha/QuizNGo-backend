@@ -118,7 +118,6 @@
       "
       >Envoyer {{ answerCount }}/{{ questionCount }}</b-button
     >
-    <div class="d-none">{{ lastUpdate }}</div>
   </b-container>
 </template>
 
@@ -146,8 +145,9 @@ export default {
       chrono: null,
       polling: null,
       userId: null,
-      lastUpdate: null,
       bonus: null,
+      timeout: null,
+      results: null,
     };
   },
   updated() {
@@ -205,12 +205,12 @@ export default {
     },
     async submitAnswers() {
       clearInterval(this.polling);
-      const sendResults = await Quiz.getResults({
+      const getResults = await Quiz.getResults({
         quizId: this.quiz.id,
         answers: this.answers,
         timeout: this.chrono.getSeconds() == 0 && this.chrono.getMinutes() == 0,
       });
-      console.log(this.answers);
+      console.log(getResults.data);
     },
     toast(title, message, faulty = false) {
       this.$root.$bvToast.toast(message, {
