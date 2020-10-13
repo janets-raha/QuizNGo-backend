@@ -148,7 +148,8 @@
         </div>
       </b-card-body>
     </b-card>
-    <Comments :quizId="quiz.id"></Comments>
+
+    <Comments v-if="showComments" :quizId="quiz.id"></Comments>
   </b-container>
 </template>
 
@@ -162,6 +163,7 @@ export default {
   },
   data: () => {
     return {
+      showcomments: false,
       running: false,
       correcting: false,
       showOverlay: false,
@@ -263,6 +265,7 @@ export default {
           : this.quiz.bonus_xp;
       this.xps = getResults.data.results.map((result) => result.xps);
 
+      this.showComments = true;
       //console.log("res", getResults.data.results);
     },
 

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import * as Mongoose from 'mongoose';
 import { CommentService } from './comment.service';
 
@@ -29,6 +29,15 @@ export class CommentController {
     @Param('id') quizzId: Mongoose.Schema.Types.ObjectId
   ) {
     const result = await this.commentService.getQuizComment(quizzId);
+    return result
+  }
+
+  @Patch(':id')
+  async updateComment(
+    @Param('id') commentId: Mongoose.Schema.Types.ObjectId,
+    @Body('comment') comment: string
+  ) {
+    const result = await this.commentService.updateComment(commentId, comment);
     return result
   }
 
