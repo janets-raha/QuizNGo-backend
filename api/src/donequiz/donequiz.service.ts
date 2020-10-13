@@ -3,11 +3,13 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Donequiz } from './donequiz.model';
+import { User } from 'src/users/user.model';
 
 @Injectable()
 export class DonequizService {
   constructor(
-    @InjectModel('Donequiz') private readonly donequizModel: Model<Donequiz>
+    @InjectModel('Donequiz') private readonly donequizModel: Model<Donequiz>,
+    @InjectModel('User') private readonly userModel: Model<User>
   ) {
   }
 
@@ -17,13 +19,27 @@ export class DonequizService {
     score: Number,
     success_rate: Number
   ) {
-    const newEntry = new this.donequizModel({ user_id, quizz_id, score, success_rate });
-    const result = await newEntry.save();
-    if (result) {
-      return result._id
+    const user = await this.userModel.findById(user_id).exec();
+    const doneQuiz = await this.donequizModel.findOne({ user_id, quizz_id }).exec();
+    if (doneQuiz) {
+      if (doneQuiz.score < score) {
+        doneQuiz.score = score;
+        doneQuiz.success_rate = success_rate
+        doneQuiz.save()
+        return doneQuiz
+      } else {
+        return { message: "Previous score is higher" }
+      }
     } else {
-      throw new Error("Erreur lors de la création !")
+      const newEntry = new this.donequizModel({ user_id, quizz_id, score, success_rate });
+      const result = await newEntry.save();
+      if (result) {
+        return result._id
+      } else {
+        throw new Error("Error in the creation !")
+      }
     }
+
   }
 
   async getAllQuiz() {

@@ -8,6 +8,9 @@ export default {
   },
   sortQuiz(payload) {
     return Api().post("/quizz/sort", payload.data);
+  },
+  multiSearch(payload) {
+    return Api().post("/quizz/allsearch", payload.data)
   }
 
 }
