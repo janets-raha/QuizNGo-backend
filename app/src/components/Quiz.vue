@@ -1,7 +1,7 @@
 <template>
-  <b-container class="pt-2  mb-4 h-100">
-    <b-row no-gutters align-v="baseline" class=" justify-content-between mb-2 ">
-      <b-col md="4" class=" h5">
+  <b-container class="pt-2 mb-4 h-100">
+    <b-row no-gutters align-v="baseline" class="justify-content-between mb-2">
+      <b-col md="4" class="h5">
         <strong>
           {{ quiz.name }}
         </strong>
@@ -14,25 +14,25 @@
           v-if="quiz.difficulty === 'Facile'"
           icon="reception1"
           variant="success"
-          class="mr-3  h1"
+          class="mr-3 h1"
         ></b-icon>
         <b-icon
           v-if="quiz.difficulty === 'Moyen'"
           icon="reception2"
           variant="warning"
-          class="mr-3  h1"
+          class="mr-3 h1"
         ></b-icon>
         <b-icon
           v-if="quiz.difficulty === 'Difficile'"
           icon="reception3"
           variant="danger"
-          class="mr-3 mt-1  h1"
+          class="mr-3 mt-1 h1"
         ></b-icon>
-        <div class="pt-3 h5  mr-3">
+        <div class="pt-3 h5 mr-3">
           <b-icon icon="stopwatch" variant="primary"></b-icon>
           {{ quiz.bonus_time }} min
         </div>
-        <div class="pt-3 h5 ">
+        <div class="pt-3 h5">
           <b-icon icon="award" variant="primary"></b-icon>+
           {{ quiz.bonus_xp }} pts
         </div>
@@ -118,13 +118,19 @@
       "
       >Envoyer {{ answerCount }}/{{ questionCount }}</b-button
     >
+
+    <Comments :quizId="quiz.id"></Comments>
   </b-container>
 </template>
 
 <script>
 import Quiz from "../apis/Quiz";
+import Comments from "../components/Comments";
+
 export default {
-  components: {},
+  components: {
+    Comments,
+  },
   data: () => {
     return {
       running: false,
