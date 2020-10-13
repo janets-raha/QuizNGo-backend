@@ -2,21 +2,55 @@ import * as Mongoose from "mongoose";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { Question } from "./question.model";
+import { Answer, Question } from "./question.model";
 import { Quizz } from "../quizz/quizz.model";
 
 @Injectable()
 export class QuestionService {
   constructor(
     @InjectModel("Question") private readonly questionModel: Model<Question>,
-    @InjectModel("Quizz") private readonly quizzModel: Model<Quizz>,
+    @InjectModel("Quizz") private readonly quizModel: Model<Quizz>,
   ) {}
+
+  async getResults(
+    quizz_id: Mongoose.Schema.Types.ObjectId,
+    answers: [[Number]],
+    timeout: Boolean,
+  ) {
+    const results = [];
+    let points: number = 0;
+    const quiz = await this.quizModel.findById(quizz_id).exec();
+    const questions = await this.showAdminQuestions(quizz_id);
+    questions.forEach((question, idx) => {
+      const userAnswers = answers[idx];
+      const goodAnswers = [];
+      question.answers.forEach((answer, idx) => {
+        if (answer.is_correct) goodAnswers.push(idx);
+      });
+      const goodAnswer =
+        JSON.stringify(goodAnswers.sort()) ===
+        JSON.stringify(userAnswers.sort());
+      if (goodAnswer) points += question.xps.valueOf();
+      results.push({
+        index: idx,
+        good_answer: goodAnswer,
+        good_answers: goodAnswers.sort(),
+        user_answers: userAnswers.sort(),
+      });
+    });
+    const ratio = results.filter(r => r.good_answer).length / questions.length;
+    points += timeout ? 0 : ratio > 0.75 ? quiz.bonus_xp.valueOf() : 0;
+
+    // TODO update UserQuiz
+
+    return { results, points, ratio };
+  }
 
   async createQuestion(
     quizz_id: Mongoose.Schema.Types.ObjectId,
     xps: Number,
     question: String,
-    answers: [Object],
+    answers: [Answer],
   ) {
     const newQuestion = new this.questionModel({
       quizz_id,
@@ -44,6 +78,35 @@ export class QuestionService {
   }
 
   async showQuestions(quizz_id: Mongoose.Schema.Types.ObjectId) {
+    const questions = await this.questionModel
+      .find({ quizz_id: quizz_id })
+      .exec();
+
+    questions.map(quest => {
+      let cpt = 0;
+      quest.answers.forEach(a => {
+        if (a.is_correct) cpt++;
+      });
+      quest.is_multi = cpt > 1;
+      return quest.answers.map(answer => {
+        delete answer.is_correct;
+        return {
+          answer: answer,
+        };
+      });
+    });
+
+    return questions.map(quest => ({
+      id: quest._id,
+      quizz_id: quest.quizz_id,
+      xps: quest.xps,
+      question: quest.question,
+      is_multi: quest.is_multi,
+      answers: quest.answers,
+    }));
+  }
+
+  async showAdminQuestions(quizz_id: Mongoose.Schema.Types.ObjectId) {
     const questions = await this.questionModel
       .find({ quizz_id: quizz_id })
       .exec();

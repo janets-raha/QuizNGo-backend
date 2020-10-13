@@ -1,10 +1,10 @@
-import Api from './Api';
+import Api from "./Api";
 export default {
   getCategories() {
-    return Api().get('/category/');
+    return Api().get("/category/");
   },
   addCategory(payload) {
-    return Api().post('/category/', payload.data);
+    return Api().post("/category/", payload.data);
   },
   getQuizzes() {
     return Api().get("/quizz");
@@ -13,7 +13,7 @@ export default {
     return Api().get("/quizz/" + quizId);
   },
   addQuiz(payload) {
-    return Api().post('/quizz', payload.data);
+    return Api().post("/quizz", payload.data);
   },
   updateQuiz(payload) {
     return Api().patch("/quizz/" + payload.quizId, payload.data);
@@ -23,11 +23,11 @@ export default {
   },
 
   getQuestions(quizId) {
-    return Api().get('/question/' + quizId);
+    return Api().get("/question/" + quizId + "/admin");
   },
 
   addQuestions(payload) {
-    return Api().post('/question', payload.data);
+    return Api().post("/question", payload.data);
   },
 
   updateQuestions(payload) {

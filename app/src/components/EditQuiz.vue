@@ -1,23 +1,31 @@
 <template>
   <b-container class="pt-2 container">
-    <div class="d-flex justify-content-between mt-2">
-      <h3>{{ preview ? "Visualiser Quiz" : editing ? "Modifier Quiz" : "Nouveau Quiz" }}</h3>
-      <b-button
-            variant="primary"
-            class="mx-2 mt-2"
-            @click.prevent="preview = !preview"
-            >{{ preview ? "Editer" : "Visualiser"}}</b-button
-          >
-    </div>
-    <DisplayQuiz v-if="preview" :quiz="form" :questions="questions" />
     <b-overlay :show="showOverlay" rounded="sm">
+      <div class="d-flex justify-content-between mt-3">
+        <h3>
+          {{
+            preview
+              ? "Visualiser Quiz"
+              : editing
+              ? "Modifier Quiz"
+              : "Nouveau Quiz"
+          }}
+        </h3>
+        <b-button
+          variant="primary"
+          class="mx-2"
+          @click.prevent="preview = !preview"
+          >{{ preview ? "Editer" : "Visualiser" }}</b-button
+        >
+      </div>
+      <DisplayQuiz v-if="preview" :quiz="form" :questions="questions" />
       <b-form v-if="!preview" @submit="onSubmit" @reset="onReset">
         <b-row no-gutters>
           <b-col md="4">
             <b-form-group
-              id="input-name"         
+              id="input-name"
               label="Nom:"
-              label-for="name"            
+              label-for="name"
               class="mr-sm-2"
               col="sm"
             >
@@ -110,7 +118,7 @@
 
         <div
           v-for="(question, q_index) in questions"
-          class="accordion"
+          class="accordion shadow"
           role="tablist"
           :key="q_index"
         >
@@ -218,7 +226,7 @@
 import AdminQuiz from "../apis/AdminQuiz";
 import DisplayQuiz from "./DisplayQuiz";
 export default {
-  components : {
+  components: {
     DisplayQuiz,
   },
   data: () => {
@@ -228,7 +236,7 @@ export default {
       showOverlay: false,
       form: {
         id: null,
-        category: { _id: null, name : null},
+        category: { _id: null, name: null },
         name: null,
         difficulty: null,
         bonus_time: null,
@@ -256,7 +264,7 @@ export default {
         const questionsReq = await AdminQuiz.getQuestions(quizId);
         this.questions = questionsReq.data;
       }
-      
+
       this.showOverlay = false;
     } catch (err) {
       this.toast("Erreur!", err.message, true);
@@ -266,7 +274,6 @@ export default {
   },
   methods: {
     addQuestion() {
-      console.log(this.questions);
       this.questions.push({
         question: "",
         xps: 10,
@@ -288,11 +295,6 @@ export default {
     addAnswer(q_index) {
       this.questions[q_index].answers.push({ answer: "", is_correct: false });
     },
-    displayQuiz(evt) {
-      evt.preventDefault();
-      console.log(this.form, this.questions);
-    },
-
     onReset(evt) {
       evt.preventDefault();
       this.$router.push("/admin");
@@ -353,7 +355,7 @@ export default {
     },
     async selectCategory(value) {
       console.log(value);
-      let catName= this.categories.find(cat=> cat.value == value);
+      let catName = this.categories.find((cat) => cat.value == value);
       this.form.category.name = catName.text;
 
       if (value == 0) {

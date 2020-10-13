@@ -21,9 +21,11 @@
     <div v-for="(quiz, idx) in quizz" :key="idx">
       <b-row no-gutter id="quizCard" class="text-center" align-v="center">
         <b-col md="4">
-          <strong>
-            {{ quiz.name }}
-          </strong>
+          <b-link :to="'/quiz/' + quiz.id">
+            <strong>
+              {{ quiz.name }}
+            </strong>
+          </b-link>
         </b-col>
         <b-col md="3">
           {{ quiz.category.name }}
@@ -59,7 +61,7 @@
               variant="light"
               class="mr-1"
             ></b-icon>
-            {{ quiz.is_published ? 'Dépublier' : 'Publier' }}
+            {{ quiz.is_published ? "Dépublier" : "Publier" }}
           </b-button>
         </b-col>
         <!-- <b-col v-else md="2">
@@ -80,7 +82,7 @@
 </template>
 
 <script>
-import AdminQuiz from '../apis/AdminQuiz';
+import AdminQuiz from "../apis/AdminQuiz";
 export default {
   data() {
     return {
@@ -95,7 +97,7 @@ export default {
     if (this.isLoggedIn && !this.user) {
       User.auth().then((response) => {
         this.user = response.data;
-        this.isAdmin = this.user.role == 'admin';
+        this.isAdmin = this.user.role == "admin";
       });
     }
   },
@@ -107,11 +109,11 @@ export default {
   },
   methods: {
     logout() {
-      localStorage.removeItem('token');
+      localStorage.removeItem("token");
       this.user = null;
       this.isLoggedIn = false;
       this.isAdmin = false;
-      this.$router.push({ name: 'Home' });
+      this.$router.push({ name: "Home" });
     },
 
     publishToggle(idx) {

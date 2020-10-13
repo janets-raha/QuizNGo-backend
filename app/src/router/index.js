@@ -9,6 +9,8 @@ import AdminQuiz from "../components/AdminQuiz.vue";
 import Quiz from "../components/Quiz.vue";
 import EditQuiz from "../components/EditQuiz.vue";
 import Admin from "../views/Admin.vue";
+import AdminUser from "../components/AdminUser.vue";
+import AdminStats from "../components/AdminStats.vue";
 //import MyAccount from "../components/MyAccount.vue";
 //import Favorites from "../components/Favorites.vue";
 
@@ -20,11 +22,16 @@ const routes = [
     name: "Home",
     component: Home,
   },
-   {
+  {
     path: "/register",
     name: "Register",
-    component: Register
-  }, 
+    component: Register,
+  },
+  {
+    path: "/quiz/:quiz_id",
+    name: "Quiz",
+    component: Quiz,
+  },
   {
     path: "/newquiz",
     name: "NewQuiz",
@@ -35,7 +42,7 @@ const routes = [
     name: "EditQuiz",
     component: EditQuiz,
   },
-   {
+  {
     path: "/login",
     name: "Login",
     component: Login,
@@ -48,17 +55,17 @@ const routes = [
         name: "Admin",
         path: "",
         component: AdminQuiz,
-      } /*
-      {
-        name: "Quiz",
-        path: "quiz",
-        component: AddQuiz,
       },
       {
-        path: "/stats",
+        name: "AdminUser",
+        path: "user",
+        component: AdminUser,
+      },
+      {
         name: "AdminStats",
-        component: AdminStats
-      } ,*/,
+        path: "stats",
+        component: AdminStats,
+      },
     ],
   },
   /* {
@@ -77,7 +84,6 @@ const routes = [
       }
     ]
   }, */
-
 ];
 
 const router = new VueRouter({
