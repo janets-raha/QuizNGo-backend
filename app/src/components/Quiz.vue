@@ -42,7 +42,10 @@
         </div>
       </b-col>
     </b-row>
-    <div class="run-status d-flex justify-content-around">
+    <b-card
+      no-body
+      class="run-status d-flex flex-row justify-content-around pt-2 mb-2"
+    >
       <h4>
         <b-icon icon="stopwatch" variant="info"></b-icon>
         {{ timer | moment("mm:ss") }}
@@ -55,7 +58,7 @@
         <b-icon icon="award" variant="success" :class="classTimer"></b-icon>
         {{ bonus }} pts
       </h4>
-    </div>
+    </b-card>
     <div
       v-if="!running"
       class="scroll-zone text-center d-flex flex-column justify-content-center"
