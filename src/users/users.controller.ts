@@ -41,16 +41,16 @@ export class UsersController {
     return { new_user: newUser }; // modifié pour register new user par admin
   }
 
-  //@hasRoles('admin')
-  //@UseGuards(JwtAuthGuard, RolesGuard)
+  @hasRoles("admin")
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get("admin") //  pour admin
   async getAllUsers() {
     const users = await this.usersService.getUsers();
     return users;
   }
 
-  //@hasRoles("admin")
-  //@UseGuards(JwtAuthGuard, RolesGuard)
+  @hasRoles("admin")
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get("admin/:id") //  pour admin
   getUser(@Param("id") userId: string) {
     return this.usersService.getSingleUser(userId);
