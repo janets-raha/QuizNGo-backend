@@ -7,6 +7,7 @@ import {
   Patch,
   Delete,
   UseGuards,
+  NotAcceptableException,
 } from "@nestjs/common";
 import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
 import { UsersService } from "./users.service";
@@ -16,7 +17,7 @@ import * as Mongoose from "mongoose";
 
 @Controller("users")
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   @Post() // //  pour utilisateur simple et admin
   async addUser(
@@ -27,6 +28,8 @@ export class UsersController {
     @Body("score") score: Number,
     @Body("role") role: string,
   ) {
+    if (password.length < 6)
+      throw new NotAcceptableException("Mot de passe trop court");
     const newUser = await this.usersService.insertUser(
       name,
       email,

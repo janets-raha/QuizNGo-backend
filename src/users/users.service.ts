@@ -31,11 +31,13 @@ export class UsersService {
       role,
     });
     try {
+      //const test = await newUser.validate();
+      //console.log("test", test);
       const result = await newUser.save();
       // return result.id;
       return result;
     } catch (error) {
-      throw new NotAcceptableException("Email already used.");
+      throw new NotAcceptableException(error.message);
     }
   }
 
