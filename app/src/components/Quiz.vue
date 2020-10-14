@@ -1,48 +1,60 @@
 <template>
   <b-container class="pt-2 mb-4">
-    <b-row no-gutters align-v="baseline" class="justify-content-between mb-2">
-      <b-col md="4" class="h5">
-        <strong>
-          {{ quiz.name }}
-        </strong>
+    <b-row no-gutters align-v="baseline" class=" mb-2">
+      <b-col md="6" class="text-center d-flex flex-wrap justify-content-around">
+        <h5>
+          <strong>
+            {{ quiz.name }}
+          </strong>
+        </h5>
+        <div class="h5 text-nowrap text-muted" :class="info">
+          <b-icon icon="gear" variant="info"></b-icon>
+          {{ quiz.category.name }}
+        </div>
       </b-col>
-      <!--  <b-col md="4" class=" h5 text-center">
-        Techno : {{ quiz.category.name }}
-      </b-col> -->
-      <b-col md="4" class="d-flex justify-content-end">
+
+      <b-col md="6" class="d-flex flex-nowrap justify-content-around ">
         <b-icon
           v-if="quiz.difficulty === 'Facile'"
           icon="reception1"
           variant="success"
-          class="mr-3 h1"
+          class="h1"
         ></b-icon>
         <b-icon
           v-if="quiz.difficulty === 'Moyen'"
           icon="reception2"
           variant="warning"
-          class="mr-3 h1"
+          class="h1"
         ></b-icon>
         <b-icon
           v-if="quiz.difficulty === 'Difficile'"
           icon="reception3"
           variant="danger"
-          class="mr-3 mt-1 h1"
+          class="h1"
         ></b-icon>
-        <div class="pt-3 h5 mr-3">
-          <b-icon icon="stopwatch" variant="primary"></b-icon>
+
+        <div class="align-self-end h5  text-nowrap text-muted">
+          <b-icon icon="stopwatch" variant="info"></b-icon>
           {{ quiz.bonus_time }} min
         </div>
-        <div class="pt-3 h5">
-          <b-icon icon="award" variant="primary"></b-icon>+
-          {{ quiz.bonus_xp }} pts
+        <div class="align-self-end h5 text-nowrap text-muted">
+          <b-icon icon="award" variant="info"></b-icon>+ {{ quiz.bonus_xp }} pts
         </div>
       </b-col>
     </b-row>
     <div class="run-status d-flex justify-content-around">
+      <h4>
+        <b-icon icon="stopwatch" variant="info"></b-icon>
+        {{ timer | moment("mm:ss") }}
+      </h4>
       <h4 :class="classBonus">
+        <b-icon icon="alarm" variant="success" :class="classTimer"></b-icon>
         {{ chrono | moment("mm:ss") }}
       </h4>
-      <h4 :class="classBonus">Bonus: {{ bonus }}</h4>
+      <h4 :class="classBonus">
+        <b-icon icon="award" variant="success" :class="classTimer"></b-icon>
+        {{ bonus }} pts
+      </h4>
     </div>
     <div
       v-if="!running"
@@ -119,7 +131,7 @@
         </div>
       </b-overlay>
     </div>
-    <div v-if="!correcting" class="text-center">
+    <div v-if="!correcting && running" class="text-center">
       <b-button
         class="my-3 px-5 btn-info"
         @click="submitAnswers"
@@ -134,21 +146,34 @@
     </div>
 
     <b-card no-body v-if="correcting" class="mt-2">
-      <b-card-header class="p-0 bg-info text-center text-light pt-2"
-        ><h3>Quiz Terminé!</h3></b-card-header
+      <b-card-header
+        class="text-center d-inline-block p-0 bg-info text-light pt-2"
       >
+        <h3 class="mx-1">
+          Résultat <strong>{{ results.success_rate }} %</strong>
+        </h3>
+      </b-card-header>
       <b-card-body class="d-flex justify-content-around flex-wrap p-4">
-        <div class="d-flex flex-nowrap mx-4">
-          <h4>Résultat :</h4>
-          <h4>{{ results.success_rate }} %</h4>
+        <div class="d-flex flex-nowrap">
+          <h4>
+            <b-icon icon="stopwatch" variant="info"></b-icon> Durée &nbsp;
+          </h4>
+          <h4 class="mx-1 text-nowrap">
+            <strong>{{ this.timer | moment("mm:ss") }} min</strong>
+          </h4>
         </div>
-        <div class="d-flex flex-nowrap mx-4">
-          <h4>xps obtenus :</h4>
-          <h4>{{ results.score }}</h4>
+        <div class="d-flex flex-nowrap">
+          <h4 class="mx-1">
+            <b-icon icon="award" variant="info" :class="classTimer" />
+            xps obtenus &nbsp;
+          </h4>
+          <h4 class="mx-1">
+            <strong>{{ results.score }} points</strong>
+          </h4>
         </div>
       </b-card-body>
     </b-card>
-    <Comments :quizId="quiz.id"></Comments>
+    <Comments v-if="correcting" :quizId="quiz.id"></Comments>
   </b-container>
 </template>
 
@@ -179,6 +204,7 @@ export default {
       answers: [],
       answerCount: 0,
       chrono: null,
+      timer: null,
       polling: null,
       userId: null,
       bonus: null,
@@ -206,6 +232,9 @@ export default {
         let time = new Date();
         time.setMinutes(quizReq.data.bonus_time);
         time.setSeconds(0);
+        this.timer = new Date();
+        this.timer.setMinutes(0);
+        this.timer.setSeconds(0);
         this.chrono = time;
         this.bonus = quizReq.data.bonus_xp;
       }
@@ -226,12 +255,21 @@ export default {
         this.answers = questionsReq.data.map((question) => []);
         this.showOverlay = false;
         this.polling = setInterval(() => {
-          let tmp = new Date(this.chrono);
-          tmp.setSeconds(this.chrono.getSeconds() - 1);
-          this.chrono = tmp;
-          if (this.chrono.getSeconds() == 0 && this.chrono.getMinutes() == 0) {
-            clearInterval(this.polling);
+          if (!this.timeout) {
+            this.chrono = new Date(this.chrono);
+            this.chrono.setSeconds(this.chrono.getSeconds() - 1);
+          }
+          this.timer = new Date(this.timer);
+          this.timer.setSeconds(this.timer.getSeconds() + 1);
+          if (
+            this.chrono.getSeconds() === 0 &&
+            this.chrono.getMinutes() === 0
+          ) {
+            this.timeout = true;
             this.bonus = 0;
+          }
+          if (this.timer.getSeconds() === 0 && this.timer.getMinutes() === 30) {
+            clearInterval(this.polling);
           }
         }, 1000);
       } catch (err) {
@@ -247,8 +285,6 @@ export default {
 
     async submitAnswers() {
       clearInterval(this.polling);
-      this.timeout =
-        this.chrono.getSeconds() == 0 && this.chrono.getMinutes() == 0;
       const getResults = await Quiz.getResults({
         userId: this.userId,
         quizId: this.quiz.id,
@@ -275,7 +311,7 @@ export default {
       });
     },
 
-    classQuestion: function (idx) {
+    classQuestion: function(idx) {
       return {
         "text-danger":
           this.correcting && !this.results.results[idx].is_good_answer,
@@ -284,7 +320,7 @@ export default {
       };
     },
 
-    classAnswer: function (q_index, a_index) {
+    classAnswer: function(q_index, a_index) {
       const user_answser = this.correcting
         ? this.results.results[q_index].user_answers.find(
             (a) => a == a_index
@@ -302,7 +338,7 @@ export default {
     },
   },
   computed: {
-    classBonus: function () {
+    classBonus: function() {
       return {
         "text-danger":
           this.correcting &&
@@ -313,7 +349,18 @@ export default {
           parseInt(this.results.success_rate) > 75,
       };
     },
-    classSubmit: function (idx) {
+    classTimer: function() {
+      return {
+        "text-danger": this.running && this.timeout,
+        "text-success": !this.timeout && this.running,
+        "text-warning":
+          !this.timeout &&
+          this.running &&
+          this.chrono.getMinutes() === 0 &&
+          this.chrono.getSeconds() <= 15,
+      };
+    },
+    classSubmit: function(idx) {
       return {
         "text-warning": this.running && this.questionCount !== this.answerCount,
       };
