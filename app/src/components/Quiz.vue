@@ -155,16 +155,14 @@
       </b-card-header>
       <b-card-body class="d-flex justify-content-around flex-wrap p-4">
         <div class="d-flex flex-nowrap">
-          <h4>
-            <b-icon icon="stopwatch" variant="info"></b-icon> Durée &nbsp;
-          </h4>
+          <h4><b-icon icon="stopwatch" variant="info" /> Durée &nbsp;</h4>
           <h4 class="mx-1 text-nowrap">
             <strong>{{ this.timer | moment("mm:ss") }} min</strong>
           </h4>
         </div>
         <div class="d-flex flex-nowrap">
           <h4 class="mx-1">
-            <b-icon icon="award" variant="info" :class="classTimer" />
+            <b-icon icon="award" variant="info" />
             xps obtenus &nbsp;
           </h4>
           <h4 class="mx-1">
