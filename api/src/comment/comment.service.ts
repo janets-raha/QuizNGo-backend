@@ -45,7 +45,18 @@ export class CommentService {
       comment: comment.comment,
       created_at: comment.createdAt
     }))
+  }
 
+  async updateComment(
+    commentId: Mongoose.Schema.Types.ObjectId,
+    newComment: string
+  ) {
+    const comment = await this.commentModel.findById(commentId).exec();
+    if (comment) {
+      comment.comment = newComment;
+      comment.save();
+      return "Comment successfully updated !"
+    }
   }
 
   async deleteComment(id: Mongoose.Schema.Types.ObjectId) {

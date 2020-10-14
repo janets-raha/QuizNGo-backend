@@ -1,6 +1,6 @@
 <template>
   <b-container class="pt-2 mb-4">
-    <b-row no-gutters align-v="baseline" class=" mb-2">
+    <b-row no-gutters align-v="baseline" class="mb-2">
       <b-col md="6" class="text-center d-flex flex-wrap justify-content-around">
         <h5>
           <strong>
@@ -13,7 +13,7 @@
         </div>
       </b-col>
 
-      <b-col md="6" class="d-flex flex-nowrap justify-content-around ">
+      <b-col md="6" class="d-flex flex-nowrap justify-content-around">
         <b-icon
           v-if="quiz.difficulty === 'Facile'"
           icon="reception1"
@@ -33,7 +33,7 @@
           class="h1"
         ></b-icon>
 
-        <div class="align-self-end h5  text-nowrap text-muted">
+        <div class="align-self-end h5 text-nowrap text-muted">
           <b-icon icon="stopwatch" variant="info"></b-icon>
           {{ quiz.bonus_time }} min
         </div>
@@ -174,7 +174,8 @@
         </div>
       </b-card-body>
     </b-card>
-    <Comments v-if="correcting" :quizId="quiz.id"></Comments>
+
+    <Comments v-if="showComments" :quizId="quiz.id"></Comments>
   </b-container>
 </template>
 
@@ -188,6 +189,7 @@ export default {
   },
   data: () => {
     return {
+      showcomments: false,
       running: false,
       correcting: false,
       showOverlay: false,
@@ -300,6 +302,7 @@ export default {
           : this.quiz.bonus_xp;
       this.xps = getResults.data.results.map((result) => result.xps);
 
+      this.showComments = true;
       //console.log("res", getResults.data.results);
     },
 
@@ -312,7 +315,7 @@ export default {
       });
     },
 
-    classQuestion: function(idx) {
+    classQuestion: function (idx) {
       return {
         "text-danger":
           this.correcting && !this.results.results[idx].is_good_answer,
@@ -321,7 +324,7 @@ export default {
       };
     },
 
-    classAnswer: function(q_index, a_index) {
+    classAnswer: function (q_index, a_index) {
       const user_answser = this.correcting
         ? this.results.results[q_index].user_answers.find(
             (a) => a == a_index
@@ -339,7 +342,7 @@ export default {
     },
   },
   computed: {
-    classBonus: function() {
+    classBonus: function () {
       return {
         "text-danger":
           this.correcting &&
@@ -350,7 +353,7 @@ export default {
           parseInt(this.results.success_rate) > 75,
       };
     },
-    classTimer: function() {
+    classTimer: function () {
       return {
         "text-danger": this.running && this.timeout,
         "text-success": !this.timeout && this.running,
@@ -361,7 +364,7 @@ export default {
           this.chrono.getSeconds() <= 15,
       };
     },
-    classSubmit: function(idx) {
+    classSubmit: function (idx) {
       return {
         "text-warning": this.running && this.questionCount !== this.answerCount,
       };

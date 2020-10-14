@@ -8,6 +8,9 @@ export default {
   },
   deleteComment(quizzId) {
     return Api().delete('/comments/' + quizzId)
+  },
+  updateComment(payload) {
+    return Api().patch('/comments/' + payload.quizzId, payload.data)
   }
 
 };
