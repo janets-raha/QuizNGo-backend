@@ -5,9 +5,18 @@ export const UserSchema = new Mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    minlength: [6, "Nom trop court"],
+    minlength: [2, "Le nom doit contenir au moins 2 caractères."],
+    // match: [/^{2,20}$/, "Le nom doit contenir au moins 2 caractères."], // ne marche pas ???
   },
-  email: { type: String, required: true, unique: true },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    match: [
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      "Email invalide.",
+    ],
+  },
   password: {
     type: String,
     required: true,

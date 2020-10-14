@@ -28,8 +28,13 @@ export class UsersController {
     @Body("score") score: Number,
     @Body("role") role: string,
   ) {
-    if (password.length < 6)
-      throw new NotAcceptableException("Mot de passe trop court");
+    // if (password.length < 6)
+    if (!password.match(/^\S{6,}$/))
+      // ^^^ password no spaces, min length 6
+      // /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/ password 1x uppercase min, 1x lowercase min, 1x digit min, 1x [#?!@$%^&*-], min length 8
+      throw new NotAcceptableException(
+        "Le mot de passe doit contenir aumoins 6 caractères sans espace(s).",
+      );
     const newUser = await this.usersService.insertUser(
       name,
       email,
