@@ -16,6 +16,17 @@ export class RatingController {
     return result
   }
 
+  @Post('one')
+  async getRating(
+    @Body('quizz_id') quizz_id: Mongoose.Schema.Types.ObjectId,
+    @Body('user_id') user_id: Mongoose.Schema.Types.ObjectId,
+  ) {
+    const result = await this.ratingService.getOneRating(quizz_id, user_id);
+    return result
+  }
+
+
+
   @Get()
   async getAllRatings() {
     const result = await this.ratingService.getRatings();

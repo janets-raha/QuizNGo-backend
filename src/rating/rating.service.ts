@@ -47,4 +47,23 @@ export class RatingService {
     return ratings
   }
 
+  async getOneRating(
+    quizz_id: Mongoose.Schema.Types.ObjectId,
+    user_id: Mongoose.Schema.Types.ObjectId,
+  ) {
+    const rating = await this.ratingModel.findOne({ quizz_id, user_id })
+    if (rating) {
+      return {
+        id: rating._id,
+        rating: rating.rating,
+        created_at: rating.createdAt
+      }
+    } else {
+      return {
+        message: "No existing rating found"
+      }
+    }
+
+  }
+
 }

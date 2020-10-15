@@ -11,4 +11,6 @@ export interface Rating extends Mongoose.Document {
   user_id: Mongoose.Schema.Types.ObjectId;
   quizz_id: Mongoose.Schema.Types.ObjectId;
   rating: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
