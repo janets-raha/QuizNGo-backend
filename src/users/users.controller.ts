@@ -17,7 +17,7 @@ import * as Mongoose from "mongoose";
 
 @Controller("users")
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Post() // //  pour utilisateur simple et admin
   async addUser(
@@ -30,20 +30,22 @@ export class UsersController {
   ) {
     // if (password.length < 6)
     if (!password.match(/^\S{6,}$/))
-      // ^^^ password no spaces, min length 6
-      // /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/ password 1x uppercase min, 1x lowercase min, 1x digit min, 1x [#?!@$%^&*-], min length 8
-      throw new NotAcceptableException(
-        "Le mot de passe doit contenir aumoins 6 caractères sans espace(s).",
+    // ^^^ password no spaces, min length 6
+    // /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/ password 1x uppercase min, 1x lowercase min, 1x digit min, 1x [#?!@$%^&*-], min length 8
+    {
+      return { error: "Le mot de passe doit contenir au moins 6 caractères sans espace(s)." };
+    } else {
+      const newUser = await this.usersService.insertUser(
+        name,
+        email,
+        password,
+        favorites,
+        score,
+        role,
       );
-    const newUser = await this.usersService.insertUser(
-      name,
-      email,
-      password,
-      favorites,
-      score,
-      role,
-    );
-    return { new_user: newUser }; // modifié pour register new user par admin
+      return newUser;
+    }
+    // modifié pour register new user par admin
   }
 
   @hasRoles("admin")

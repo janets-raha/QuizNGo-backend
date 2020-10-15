@@ -1,5 +1,6 @@
 import * as Mongoose from "mongoose";
 
+export const UserRef = 'UserRef';
 export const UserSchema = new Mongoose.Schema({
   name: {
     type: String,

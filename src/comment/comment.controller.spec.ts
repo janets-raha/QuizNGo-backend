@@ -2,17 +2,17 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import * as mongoose from 'mongoose';
-import { UsersController } from './users.controller';
-import { UsersService } from './users.service';
-import { UserSchema, UserRef } from './user.model';
-import { UsersModule } from './users.module'
+import { CommentService } from './comment.service';
+import { CommentSchema, CommentRef } from './comment.model'
+import { CommentModule } from './comment.module';
+import { CommentController } from './comment.controller';
 
 let mongod: MongoMemoryServer;
 
-describe('UsersController', () => {
+describe('CommentController', () => {
   let module: TestingModule;
-  let controller: UsersController;
-  let service: UsersService;
+  let commentService: CommentService;
+  let commentController: CommentController;
 
   afterEach(async () => {
     await module.close();
@@ -33,20 +33,22 @@ describe('UsersController', () => {
           }),
         }),
         MongooseModule.forFeature([
-          { name: UserRef, schema: UserSchema },
+          { name: CommentRef, schema: CommentSchema },
         ]),
-        UsersModule,
+        CommentModule,
       ],
-      controllers: [UsersController],
-      providers: [UsersService,],
-      exports: [UsersService, MongooseModule],
+      controllers: [
+        CommentController,
+      ],
+      providers: [CommentService,],
     }).compile();
-
-    service = module.get<UsersService>(UsersService);
-    controller = module.get<UsersController>(UsersController);
+    commentService = module.get(CommentService);
   });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
+  it('Comment service should be defined', () => {
+    expect(commentService).toBeDefined();
   });
+
+
+
 });
