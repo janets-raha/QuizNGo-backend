@@ -25,6 +25,12 @@ export class QuizzController {
     return result;
   }
 
+  @Get("/published")
+  async showPublishedQuizz() {
+    const result = await this.quizzService.showPublishedQuizzes();
+    return result;
+  }
+
   @Get(':id')
   async showOneQuizz(@Param('id') quizzId: Mongoose.Schema.Types.ObjectId) {
     const result = await this.quizzService.showOneQuizz(quizzId);

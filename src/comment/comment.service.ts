@@ -37,7 +37,7 @@ export class CommentService {
   async getQuizComment(
     quizzId: Mongoose.Schema.Types.ObjectId,
   ) {
-    const comments = await this.commentModel.find({ quizz_id: quizzId }).populate('user_id').sort({ createdAt: "asc" }).exec();
+    const comments = await this.commentModel.find({ quizz_id: quizzId }).populate('user_id').sort({ createdAt: "desc" }).exec();
     return comments.map(comment => ({
       id: comment._id,
       user_id: comment.user_id,

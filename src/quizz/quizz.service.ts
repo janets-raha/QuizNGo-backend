@@ -44,6 +44,25 @@ export class QuizzService {
     }))
   }
 
+  async showPublishedQuizzes() {
+    const quizzes = await this.quizzModel.find({ is_published: true })
+      .sort({ createdAt: "desc" })
+      .populate('category')
+      .exec();
+    return quizzes.map(quiz => ({
+      id: quiz._id,
+      name: quiz.name,
+      category: quiz.category,
+      difficulty: quiz.difficulty,
+      bonus_time: quiz.bonus_time,
+      bonus_xp: quiz.bonus_xp,
+      avg_rating: quiz.avg_rating,
+      is_published: quiz.is_published,
+      created_at: quiz.createdAt,
+      updated_at: quiz.updatedAt,
+    }))
+  }
+
   async showOneQuizz(id: Mongoose.Schema.Types.ObjectId) {
     const quiz = await this.quizzModel.findById(id).populate('category').exec();
     if (!quiz) {
@@ -96,7 +115,7 @@ export class QuizzService {
       if (avg_rating) {
         quiz.avg_rating = avg_rating
       }
-      if (is_published) {
+      if (is_published !== null) {
         quiz.is_published = is_published
       }
       quiz.save()
