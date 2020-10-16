@@ -7,6 +7,7 @@ import {
   Patch,
   Delete,
   UseGuards,
+  NotAcceptableException,
 } from "@nestjs/common";
 import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
 import { UsersService } from "./users.service";
@@ -27,27 +28,36 @@ export class UsersController {
     @Body("score") score: Number,
     @Body("role") role: string,
   ) {
-    const newUser = await this.usersService.insertUser(
-      name,
-      email,
-      password,
-      favorites,
-      score,
-      role,
-    );
-    return { new_user: newUser }; // modifié pour register new user par admin
+    // if (password.length < 6)
+    if (!password.match(/^\S{6,}$/))
+    // ^^^ password no spaces, min length 6
+    // /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/ password 1x uppercase min, 1x lowercase min, 1x digit min, 1x [#?!@$%^&*-], min length 8
+    {
+      return { error: "Le mot de passe doit contenir au moins 6 caractères sans espace(s)." };
+    } else {
+      const newUser = await this.usersService.insertUser(
+        name,
+        email,
+        password,
+        favorites,
+        score,
+        role,
+      );
+      return newUser;
+    }
+    // modifié pour register new user par admin
   }
 
-  //@hasRoles('admin')
-  //@UseGuards(JwtAuthGuard, RolesGuard)
+  @hasRoles("admin")
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get("admin") //  pour admin
   async getAllUsers() {
     const users = await this.usersService.getUsers();
     return users;
   }
 
-  //@hasRoles("admin")
-  //@UseGuards(JwtAuthGuard, RolesGuard)
+  @hasRoles("admin")
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get("admin/:id") //  pour admin
   getUser(@Param("id") userId: string) {
     return this.usersService.getSingleUser(userId);

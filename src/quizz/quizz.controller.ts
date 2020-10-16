@@ -1,21 +1,36 @@
-import * as Mongoose from 'mongoose';
-import { Controller, Get, Post, Patch, Delete, Param, Body } from '@nestjs/common';
-import { QuizzService } from './quizz.service';
+import * as Mongoose from "mongoose";
+import {
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Delete,
+  Param,
+  Body,
+} from "@nestjs/common";
+import { QuizzService } from "./quizz.service";
 
-@Controller('quizz')
+@Controller("quizz")
 export class QuizzController {
-  constructor(private readonly quizzService: QuizzService) {
-  }
+  constructor(private readonly quizzService: QuizzService) {}
 
   @Post()
   async addQuizz(
-    @Body('name') name: string,
-    @Body('category') category: Mongoose.Schema.Types.ObjectId,
-    @Body('difficulty') difficulty: String,
-    @Body('bonus_time') bonus_time: Number,
-    @Body('bonus_xp') bonus_xp: Number,
-    @Body('is_published') is_published: Boolean) {
-    const result = await this.quizzService.createQuizz(name, category, difficulty, bonus_time, bonus_xp, is_published);
+    @Body("name") name: string,
+    @Body("category") category: Mongoose.Schema.Types.ObjectId,
+    @Body("difficulty") difficulty: String,
+    @Body("bonus_time") bonus_time: Number,
+    @Body("bonus_xp") bonus_xp: Number,
+    @Body("is_published") is_published: Boolean,
+  ) {
+    const result = await this.quizzService.createQuizz(
+      name,
+      category,
+      difficulty,
+      bonus_time,
+      bonus_xp,
+      is_published,
+    );
     return { id: result };
   }
 
@@ -25,35 +40,50 @@ export class QuizzController {
     return result;
   }
 
-  @Get(':id')
-  async showOneQuizz(@Param('id') quizzId: Mongoose.Schema.Types.ObjectId) {
+  @Get("/published")
+  async showPublishedQuizz() {
+    const result = await this.quizzService.showPublishedQuizzes();
+    return result;
+  }
+
+  @Get("stats")
+  async getAllQuizzWithStats() {
+    const result = await this.quizzService.showQuizzesWithStats();
+    return result;
+  }
+
+  @Get(":id")
+  async showOneQuizz(@Param("id") quizzId: Mongoose.Schema.Types.ObjectId) {
     const result = await this.quizzService.showOneQuizz(quizzId);
     return result;
   }
 
-  @Patch(':id')
-  async updateQuizz(@Param('id') quizzId: Mongoose.Schema.Types.ObjectId,
-    @Body('name') name: string,
-    @Body('category') category: Mongoose.Schema.Types.ObjectId,
-    @Body('difficulty') difficulty: String,
-    @Body('bonus_time') bonus_time: Number,
-    @Body('bonus_xp') bonus_xp: Number,
-    @Body('avg_rating') avg_rating: Number,
-    @Body('is_published') is_published: Boolean
+  @Patch(":id")
+  async updateQuizz(
+    @Param("id") quizzId: Mongoose.Schema.Types.ObjectId,
+    @Body("name") name: string,
+    @Body("category") category: Mongoose.Schema.Types.ObjectId,
+    @Body("difficulty") difficulty: String,
+    @Body("bonus_time") bonus_time: Number,
+    @Body("bonus_xp") bonus_xp: Number,
+    @Body("avg_rating") avg_rating: Number,
+    @Body("is_published") is_published: Boolean,
   ) {
-    const result = await this.quizzService.update(quizzId,
+    const result = await this.quizzService.update(
+      quizzId,
       name,
       category,
       difficulty,
       bonus_time,
       bonus_xp,
       avg_rating,
-      is_published);
+      is_published,
+    );
     return { message: result };
   }
 
-  @Delete(':id')
-  async deleteQuizz(@Param('id') quizzId: Mongoose.Schema.Types.ObjectId) {
+  @Delete(":id")
+  async deleteQuizz(@Param("id") quizzId: Mongoose.Schema.Types.ObjectId) {
     const result = await this.quizzService.delete(quizzId);
     return { message: result };
   }
@@ -83,14 +113,19 @@ export class QuizzController {
       return result
     } */
 
-  @Post('/search')
+  @Post("/search")
   async searchAll(
-    @Body('query') query?: string,
-    @Body('level') level?: string,
-    @Body('category') category?: Mongoose.Schema.Types.ObjectId,
-    @Body('sort') sort?: string,
+    @Body("query") query?: string,
+    @Body("level") level?: string,
+    @Body("category") category?: Mongoose.Schema.Types.ObjectId,
+    @Body("sort") sort?: string,
   ) {
-    const result = await this.quizzService.searchAll(query, level, category, sort);
-    return result
+    const result = await this.quizzService.searchAll(
+      query,
+      level,
+      category,
+      sort,
+    );
+    return result;
   }
 }

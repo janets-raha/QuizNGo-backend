@@ -6,13 +6,16 @@ import { QuizzService } from './quizz.service';
 import { QuizzSchema, QuizzRef } from './quizz.model'
 import { QuizzModule } from './quizz.module';
 import { QuestionModule } from '../question/question.module'
+import { QuizzController } from './quizz.controller';
+import { DonequizModule } from 'src/donequiz/donequiz.module';
 
 const ObjectID = require('mongodb').ObjectID;
 let mongod: MongoMemoryServer;
 
 describe('QuizzController', () => {
   let module: TestingModule;
-  let quizzService: QuizzService;
+  let service: QuizzService;
+  let controller: QuizzController
 
   afterEach(async () => {
     await module.close();
@@ -36,21 +39,25 @@ describe('QuizzController', () => {
           { name: QuizzRef, schema: QuizzSchema },
         ]),
         QuizzModule,
+        DonequizModule,
         QuestionModule
       ],
+      controllers: [QuizzController],
       providers: [QuizzService,],
+      exports: [MongooseModule, QuizzService],
     }).compile();
-    quizzService = module.get(QuizzService);
+    service = module.get(QuizzService);
+    controller = module.get(QuizzController);
   });
 
   it('Quizz service should be defined', () => {
-    expect(quizzService).toBeDefined();
+    expect(service).toBeDefined();
   });
 
 
   it('show one quizz should return object', async () => {
     const id: mongoose.Schema.Types.ObjectId = new ObjectID()
-    const result = await quizzService.showOneQuizz(id);
+    const result = await service.showOneQuizz(id);
     expect(typeof (result)).toBe('object');
   });
 

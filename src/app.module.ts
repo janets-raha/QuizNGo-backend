@@ -1,3 +1,4 @@
+import { RatingModule } from './rating/rating.module';
 import { CommentModule } from './comment/comment.module';
 import { DonequizModule } from './donequiz/donequiz.module';
 import { QuestionModule } from './question/question.module';
@@ -12,6 +13,7 @@ import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
+    RatingModule,
     CommentModule,
     DonequizModule,
     UsersModule,

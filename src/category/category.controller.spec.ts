@@ -5,12 +5,14 @@ import * as mongoose from 'mongoose';
 import { CategoryService } from './category.service';
 import { CategorySchema, CategoryRef } from './category.model'
 import { CategoryModule } from './category.module';
+import { CategoryController } from './category.controller';
 
 let mongod: MongoMemoryServer;
 
 describe('CategoryController', () => {
   let module: TestingModule;
   let categoryService: CategoryService;
+  //let categoryController: CategoryController
 
   afterEach(async () => {
     await module.close();
@@ -35,14 +37,23 @@ describe('CategoryController', () => {
         ]),
         CategoryModule,
       ],
+      /*       controllers: [
+              CategoryController,
+            ], */
       providers: [CategoryService,],
     }).compile();
-    categoryService = module.get(CategoryService);
+
+    categoryService = await module.get(CategoryService);
+    //categoryController = module.get(CategoryController)
   });
 
   it('Category service should be defined', () => {
     expect(categoryService).toBeDefined();
   });
+
+  /*   it('Category controller should be defined', () => {
+      expect(categoryController).toBeDefined();
+    }); */
 
   it('create category should return data', async () => {
     const result = await categoryService.createCategory('Javascript');
