@@ -12,7 +12,7 @@ let mongod: MongoMemoryServer;
 describe('CommentController', () => {
   let module: TestingModule;
   let commentService: CommentService;
-  let commentController: CommentController;
+  //let commentController: CommentController;
 
   afterEach(async () => {
     await module.close();
@@ -37,17 +37,20 @@ describe('CommentController', () => {
         ]),
         CommentModule,
       ],
-      controllers: [
-        CommentController,
-      ],
+      /*       controllers: [
+              CommentController,
+            ], */
       providers: [CommentService,],
     }).compile();
-    commentService = module.get(CommentService);
+    commentService = await module.get(CommentService);
   });
 
   it('Comment service should be defined', () => {
     expect(commentService).toBeDefined();
   });
+  /*   it('Comment controller should be defined', () => {
+      expect(commentController).toBeDefined();
+    }); */
 
 
 
