@@ -60,7 +60,7 @@ export class QuizzService {
     }));
   }
 
-  async showQuizzesWithStats() {
+  async getQuizzesWithStats() {
     const quizzes = await this.quizzModel
       .find()
       .sort({ createdAt: "desc" })
