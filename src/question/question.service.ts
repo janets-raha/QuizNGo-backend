@@ -44,8 +44,9 @@ export class QuestionService {
         xps: isGoodAnswer ? questions[idx].xps : 0,
       });
     });
-    const success_rate =
-      (results.filter(r => r.is_good_answer).length / questions.length) * 100;
+    const success_rate = Math.trunc(
+      (results.filter(r => r.is_good_answer).length / questions.length) * 100,
+    );
     score += timeout ? 0 : success_rate > 75 ? quiz.bonus_xp.valueOf() : 0;
 
     if (user_id) {
