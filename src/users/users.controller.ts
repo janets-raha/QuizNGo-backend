@@ -14,11 +14,27 @@ import { UsersService } from "./users.service";
 import { RolesGuard } from "src/auth/roles.guards";
 import { hasRoles } from "src/auth/roles.decorator";
 import * as Mongoose from "mongoose";
+import { ApiBody, ApiCreatedResponse } from '@nestjs/swagger';
+import { UserSchema } from "./user.model";
 
 @Controller("users")
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
+  @ApiCreatedResponse({ description: 'User Registration' })
+  @ApiBody({
+    schema: {
+      type: "object",
+      properties: {
+        name: { type: 'string' },
+        email: { type: 'string' },
+        password: { type: 'string' },
+        favorites: { type: 'array' },
+        score: { type: 'number' },
+        role: { type: 'string' },
+      }
+    }
+  })
   @Post() // //  pour utilisateur simple et admin
   async addUser(
     @Body("name") name: string,

@@ -1,7 +1,9 @@
 import * as Mongoose from "mongoose";
 
 export const UserRef = 'UserRef';
+
 export const UserSchema = new Mongoose.Schema({
+
   name: {
     type: String,
     required: true,
@@ -36,3 +38,9 @@ export interface User extends Mongoose.Document {
   score: Number;
   role: string;
 }
+
+/* const mongoose = require('mongoose');
+const m2s = require('mongoose-to-swagger');
+const Users = mongoose.model('Users', { name: String });
+const swaggerSchema = m2s(Users);
+console.log(swaggerSchema); */
