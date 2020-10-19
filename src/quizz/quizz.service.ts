@@ -289,7 +289,6 @@ export class QuizzService {
         is_published: true,
       };
     }
-
     const quizzes = await this.quizzModel
       .find(payload)
       .sort({ createdAt: sort })
