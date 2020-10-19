@@ -14,7 +14,7 @@ export class QuizzService {
     @InjectModel("Donequiz") private readonly donequizModel: Model<Donequiz>,
     @InjectModel("Question") private readonly questionModel: Model<Question>,
     private readonly doneQuizService: DonequizService,
-  ) {}
+  ) { }
 
   async createQuizz(
     name: string,
@@ -76,15 +76,15 @@ export class QuizzService {
         count => count._id.toString() === quiz._id.toString(),
       )
         ? counts.find(count => count._id.toString() === quiz._id.toString())
-            .count
+          .count
         : null,
 
       success_ratio: successratio.find(
         ratio => ratio._id.toString() === quiz._id.toString(),
       )
         ? successratio.find(
-            ratio => ratio._id.toString() === quiz._id.toString(),
-          ).average
+          ratio => ratio._id.toString() === quiz._id.toString(),
+        ).average
         : null,
       is_published: quiz.is_published,
       created_at: quiz.createdAt,
@@ -267,22 +267,26 @@ export class QuizzService {
     if (level && category) {
       payload = {
         name: { $regex: query, $options: "i" },
+        is_published: true,
         difficulty: level,
         category: category,
       };
     } else if (level && !category) {
       payload = {
         name: { $regex: query, $options: "i" },
+        is_published: true,
         difficulty: level,
       };
     } else if (!level && category) {
       payload = {
         name: { $regex: query, $options: "i" },
+        is_published: true,
         category: category,
       };
     } else {
       payload = {
         name: { $regex: query, $options: "i" },
+        is_published: true,
       };
     }
 
