@@ -39,8 +39,4 @@ export interface User extends Mongoose.Document {
   role: string;
 }
 
-/* const mongoose = require('mongoose');
-const m2s = require('mongoose-to-swagger');
-const Users = mongoose.model('Users', { name: String });
-const swaggerSchema = m2s(Users);
-console.log(swaggerSchema); */
+
