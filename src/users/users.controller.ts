@@ -15,48 +15,46 @@ import { RolesGuard } from "src/auth/roles.guards";
 import { hasRoles } from "src/auth/roles.decorator";
 import * as Mongoose from "mongoose";
 
-
 @Controller("users")
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
-
+  constructor(private readonly usersService: UsersService) {}
 
   /**
-  * @api {post} /users Create new user
-  * @apiName CreateNewUser
-  * @apiGroup User
-  *
-  * @apiParam {String} name User unique name.
-  * @apiParam {String} email User unique email.
-  * @apiParam {String} password User password with 6 char min..
-  * @apiParam {String[]} [favorites] User favorite quiz.
-  * @apiParam {Number} [score=0] User total XPs.
-  * @apiParam {string="admin","user"} [role="user"] User status.
-  *
-  * @apiSuccess {String} name Name of the User.
-  * @apiSuccess {String} email  Email of the User.
-  * @apiSuccess {String[]} favorites Favorites of the User.
-  * @apiSuccess {Number} score Score of the User.
-  * @apiSuccess {string} role Status of the User.
-  *
-  * @apiSuccessExample Success-Response:
-  *     HTTP/1.1 201 OK
-  *     {
-  *       "name": "John",
-  *       "email": "john@john.com",
-  *       "favorites" : [],
-  *       "score" : 0,
-  *       "role": "user"
-  *     }
-  *
-  * @apiError NotAcceptableException.
-  *
-  * @apiErrorExample Error-Response:
-  *     HTTP/1.1 406 Not Acceptable
-  *     {
-  *       "error": "Email must be unique"
-  *     }
-  */
+   * @api {post} /users Create new user
+   * @apiName CreateNewUser
+   * @apiGroup User
+   *
+   * @apiParam {String} name User unique name.
+   * @apiParam {String} email User unique email.
+   * @apiParam {String} password User password with 6 char min..
+   * @apiParam {String[]} [favorites] User favorite quiz.
+   * @apiParam {Number} [score=0] User total XPs.
+   * @apiParam {string="admin","user"} [role="user"] User status.
+   *
+   * @apiSuccess {String} name Name of the User.
+   * @apiSuccess {String} email  Email of the User.
+   * @apiSuccess {String[]} favorites Favorites of the User.
+   * @apiSuccess {Number} score Score of the User.
+   * @apiSuccess {string} role Status of the User.
+   *
+   * @apiSuccessExample Success-Response:
+   *     HTTP/1.1 201 OK
+   *     {
+   *       "name": "John",
+   *       "email": "john@john.com",
+   *       "favorites" : [],
+   *       "score" : 0,
+   *       "role": "user"
+   *     }
+   *
+   * @apiError NotAcceptableException.
+   *
+   * @apiErrorExample Error-Response:
+   *     HTTP/1.1 406 Not Acceptable
+   *     {
+   *       "error": "Email must be unique"
+   *     }
+   */
   @Post() // //  pour utilisateur simple et admin
   async addUser(
     @Body("name") name: string,
@@ -67,11 +65,13 @@ export class UsersController {
     @Body("role") role: string,
   ) {
     // if (password.length < 6)
-    if (!password.match(/^\S{6,}$/))
-    // ^^^ password no spaces, min length 6
-    // /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/ password 1x uppercase min, 1x lowercase min, 1x digit min, 1x [#?!@$%^&*-], min length 8
-    {
-      return { error: "Le mot de passe doit contenir au moins 6 caractères sans espace(s)." };
+    if (!password.match(/^\S{6,}$/)) {
+      // ^^^ password no spaces, min length 6
+      // /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/ password 1x uppercase min, 1x lowercase min, 1x digit min, 1x [#?!@$%^&*-], min length 8
+      return {
+        error:
+          "Le mot de passe doit contenir au moins 6 caractères sans espace(s).",
+      };
     } else {
       const newUser = await this.usersService.insertUser(
         name,
@@ -86,41 +86,38 @@ export class UsersController {
     // modifié pour register new user par admin
   }
 
-
-
-
   /**
-  * @api {get} /users/admin Get all registered users
-  * @apiPermission admin
-  * @apiName GetAllUser
-  * @apiGroup User
-  *
-  *
-  * @apiSuccessExample Success-Response:
-  *     HTTP/1.1 200 OK
-  *     [{
-  *       "name": "John",
-  *       "email": "john@john.com",
-  *       "favorites" : [],
-  *       "score" : 30,
-  *       "role": "user"
-  *     },
-  *     {
-  *       "name": "Jane",
-  *       "email": "jane@jane.com",
-  *       "favorites" : [],
-  *       "score" : 60,
-  *       "role": "admin"
-  *     }]
-  *
-  * @apiError 401 Unauthorized
-  *
-  * @apiErrorExample Error-Response:
-  *     HTTP/1.1 401 Unauthorized
-  *     {
-  *       "error": "unauthorized"
-  *     }
-  */
+   * @api {get} /users/admin Get all registered users
+   * @apiPermission admin
+   * @apiName GetAllUser
+   * @apiGroup User
+   *
+   *
+   * @apiSuccessExample Success-Response:
+   *     HTTP/1.1 200 OK
+   *     [{
+   *       "name": "John",
+   *       "email": "john@john.com",
+   *       "favorites" : [],
+   *       "score" : 30,
+   *       "role": "user"
+   *     },
+   *     {
+   *       "name": "Jane",
+   *       "email": "jane@jane.com",
+   *       "favorites" : [],
+   *       "score" : 60,
+   *       "role": "admin"
+   *     }]
+   *
+   * @apiError 401 Unauthorized
+   *
+   * @apiErrorExample Error-Response:
+   *     HTTP/1.1 401 Unauthorized
+   *     {
+   *       "error": "unauthorized"
+   *     }
+   */
   @hasRoles("admin")
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get("admin") //  pour admin
@@ -135,7 +132,6 @@ export class UsersController {
   getUser(@Param("id") userId: string) {
     return this.usersService.getSingleUser(userId);
   }
-
 
   /**
   * @api {patch} /users/admin/:id Update user (admin)
@@ -182,27 +178,26 @@ export class UsersController {
     return null;
   }
 
-
   /**
-* @api {patch} /users/:id Update user
-* @apiName UpdateUser
-* @apiGroup User
-*  
-* @apiParam {Number} id User unique ID.
-* @apiParam {String} [email] User unique email.
-* @apiParam {String} [password] User password with 6 char min..
-* @apiParam {String[]} [favorites] User favorite quiz.
-* @apiParam {Number} [score=0] User total XPs.
-*
-*
-* @apiSuccessExample Success-Response:
-*     HTTP/1.1 200 OK
-*     {
-*       message : "User successfully updated !"
-*     }
-*
-* @apiError NotAcceptableException.
-*/
+   * @api {patch} /users/:id Update user
+   * @apiName UpdateUser
+   * @apiGroup User
+   *
+   * @apiParam {Number} id User unique ID.
+   * @apiParam {String} [email] User unique email.
+   * @apiParam {String} [password] User password with 6 char min..
+   * @apiParam {String[]} [favorites] User favorite quiz.
+   * @apiParam {Number} [score=0] User total XPs.
+   *
+   *
+   * @apiSuccessExample Success-Response:
+   *     HTTP/1.1 200 OK
+   *     {
+   *       message : "User successfully updated !"
+   *     }
+   *
+   * @apiError NotAcceptableException.
+   */
   @Patch(":id") //  pour utilisateur simple
   async updateUser(
     @Param("id") userId: string,
@@ -225,23 +220,22 @@ export class UsersController {
     return { message: result };
   }
 
-
   /**
-  * @api {delete} /users/admin/:id Delete user
-  * @apiName DeleteUser
-  * @apiGroup User
-  * @apiPermission admin
-  *
-  * @apiParam {Number} id User unique ID.
-  *
-  *
-  * @apiSuccessExample Success-Response:
-  *     HTTP/1.1 200 OK
-  *     {
-  *     }
-  *
-  * @apiError 404 UserNotFound
-  */
+   * @api {delete} /users/admin/:id Delete user
+   * @apiName DeleteUser
+   * @apiGroup User
+   * @apiPermission admin
+   *
+   * @apiParam {Number} id User unique ID.
+   *
+   *
+   * @apiSuccessExample Success-Response:
+   *     HTTP/1.1 200 OK
+   *     {
+   *     }
+   *
+   * @apiError 404 UserNotFound
+   */
   @Delete("admin/:id") //  pour admin
   async removeUser(@Param("id") prodId: string) {
     await this.usersService.deleteUser(prodId);
