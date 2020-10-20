@@ -42,6 +42,12 @@ export class DonequizController {
     return result;
   }
 
+  @Get("rank/:id")
+  async getUserRank(@Param("id") userId: Mongoose.Schema.Types.ObjectId) {
+    const result = await this.DonequizService.getOneUserRank(userId);
+    return result;
+  }
+
   // @Get(":id")
   // async getOneQuiz(@Param("id") quizId: Mongoose.Schema.Types.ObjectId) {
   //   console.log("YYYYY");
