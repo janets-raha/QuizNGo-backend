@@ -14,7 +14,7 @@ export class QuestionService {
     @InjectModel("Quizz") private readonly quizModel: Model<Quizz>,
     @InjectModel("Donequiz") private readonly DonequizModel: Model<Donequiz>,
     private readonly doneQuizService: DonequizService,
-  ) {}
+  ) { }
 
   async getResults(
     quizz_id: Mongoose.Schema.Types.ObjectId,
@@ -188,7 +188,7 @@ export class QuestionService {
         newquestion.save();
       }
     });
-    return questions.length + " questions modified !";
+    return questions.length + " questions updated !";
   }
 
   async delete(quest_id: Mongoose.Schema.Types.ObjectId) {

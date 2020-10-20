@@ -33,6 +33,7 @@ export class UsersController {
   * @apiParam {Number} [score=0] User total XPs.
   * @apiParam {string="admin","user"} [role="user"] User status.
   *
+  * @apiSuccess {String} id ID of the User.
   * @apiSuccess {String} name Name of the User.
   * @apiSuccess {String} email  Email of the User.
   * @apiSuccess {String[]} favorites Favorites of the User.
@@ -42,6 +43,7 @@ export class UsersController {
   * @apiSuccessExample Success-Response:
   *     HTTP/1.1 201 OK
   *     {
+  *       "id" : "5f845e9c3637511f9875b63f"
   *       "name": "John",
   *       "email": "john@john.com",
   *       "favorites" : [],
@@ -99,6 +101,7 @@ export class UsersController {
   * @apiSuccessExample Success-Response:
   *     HTTP/1.1 200 OK
   *     [{
+  *       "id" : "5f845e9c3637511f9875b63f",
   *       "name": "John",
   *       "email": "john@john.com",
   *       "favorites" : [],
@@ -106,6 +109,7 @@ export class UsersController {
   *       "role": "user"
   *     },
   *     {
+  *       "id" : "5f845e9c3637511f9875b75f",
   *       "name": "Jane",
   *       "email": "jane@jane.com",
   *       "favorites" : [],
@@ -129,6 +133,34 @@ export class UsersController {
     return users;
   }
 
+
+
+  /**
+  * @api {get} /users/admin/:id Get one user info
+  * @apiPermission admin
+  * @apiName GetOneUser
+  * @apiGroup User
+  *
+  * @apiParam {Number} id User unique ID.
+  * @apiSuccessExample Success-Response:
+  *     HTTP/1.1 200 OK
+  *     [{
+  *       "id" : "5f845e9c3637511f9875b63f",
+  *       "name": "John",
+  *       "email": "john@john.com",
+  *       "favorites" : [],
+  *       "score" : 30,
+  *       "role": "user"
+  *     },
+  *
+  * @apiError 404 Not Found
+  *
+  * @apiErrorExample Error-Response:
+  *     HTTP/1.1 404 Not Found
+  *     {
+  *       "error": "User not found"
+  *     }
+  */
   @hasRoles("admin")
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get("admin/:id") //  pour admin
@@ -142,7 +174,7 @@ export class UsersController {
   * @apiName UpdateUserAdm
   * @apiGroup User
   * @apiPermission admin
-  
+  *
   * @apiParam {Number} id User unique ID.
   * @apiParam {String} [email] User unique email.
   * @apiParam {String} [password] User password with 6 char min..
