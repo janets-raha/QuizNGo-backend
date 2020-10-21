@@ -7,12 +7,16 @@ import {
   Delete,
   Param,
   Body,
+  UseGuards,
 } from "@nestjs/common";
 import { QuizzService } from "./quizz.service";
+import { hasRoles } from 'src/auth/roles.decorator';
+import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
+import { RolesGuard } from 'src/auth/roles.guards';
 
 @Controller("quizz")
 export class QuizzController {
-  constructor(private readonly quizzService: QuizzService) {}
+  constructor(private readonly quizzService: QuizzService) { }
 
   /**
    * @api {POST} /quizz Create a new quiz
@@ -43,6 +47,8 @@ export class QuizzController {
    * }
 
    */
+  @hasRoles("admin")
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
   async addQuizz(
     @Body("name") name: string,
@@ -188,6 +194,8 @@ export class QuizzController {
           }
         ]
    */
+  @hasRoles("admin")
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get("stats")
   async getAllQuizzWithStats() {
     const result = await this.quizzService.showQuizzesWithStats();
@@ -267,6 +275,7 @@ export class QuizzController {
    *   "XXX": "XXX"
    * }
    */
+  @UseGuards(JwtAuthGuard)
   @Patch(":id")
   async updateQuizz(
     @Param("id") quizzId: Mongoose.Schema.Types.ObjectId,
@@ -314,36 +323,15 @@ export class QuizzController {
    *   "XXX": "XXX"
    * }
    */
+  @hasRoles("admin")
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(":id")
   async deleteQuizz(@Param("id") quizzId: Mongoose.Schema.Types.ObjectId) {
     const result = await this.quizzService.delete(quizzId);
     return { message: result };
   }
 
-  /*   @Post('/filter')
-    async filter(
-      @Body('field') field: string,
-      @Body('query') query: string,
-    ) {
-      const result = await this.quizzService.filter(field, query);
-      return result
-    }
-  
-    @Post('/search')
-    async search(
-      @Body('query') query: string,
-    ) {
-      const result = await this.quizzService.search(query);
-      return result
-    }
-  
-    @Post('/sort')
-    async sort(
-      @Body('sort') sort: string,
-    ) {
-      const result = await this.quizzService.sort(sort);
-      return result
-    } */
+
 
   /**
    * @api {post} /quizz/search Search quiz

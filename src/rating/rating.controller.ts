@@ -1,11 +1,13 @@
 import * as Mongoose from 'mongoose';
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { RatingService } from './rating.service';
+import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
 
 @Controller('ratings')
 export class RatingController {
   constructor(private readonly ratingService: RatingService) { }
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   async addRating(
     @Body('quizz_id') quizz_id: Mongoose.Schema.Types.ObjectId,

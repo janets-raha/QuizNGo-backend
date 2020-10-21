@@ -7,9 +7,13 @@ import {
   Delete,
   Param,
   Body,
+  UseGuards,
 } from "@nestjs/common";
 import { QuestionService } from "./question.service";
 import { Answer, Question } from "./question.model";
+import { hasRoles } from 'src/auth/roles.decorator';
+import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
+import { RolesGuard } from 'src/auth/roles.guards';
 
 @Controller("question")
 export class QuestionController {
@@ -37,6 +41,8 @@ export class QuestionController {
   * @apiError InternalServorError Database error while creating new entry.
   *
   */
+  @hasRoles("admin")
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post("one")
   async addQuestion(
     @Body("quizz_id") quizz_id: Mongoose.Schema.Types.ObjectId,
@@ -126,6 +132,8 @@ export class QuestionController {
   * @apiError InternalServorError Database error while creating new entry.
   *
   */
+  @hasRoles("admin")
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
   async addQuestions(@Body("questions") questions: [Question]) {
     const result = await this.questionService.createQuestions(questions);
@@ -216,6 +224,8 @@ export class QuestionController {
   * @apiError InternalServorError .
   *
   */
+  @hasRoles("admin")
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get(":id/admin")
   async showAdminQuizQuestions(
     @Param("id") id: Mongoose.Schema.Types.ObjectId,
@@ -256,6 +266,8 @@ export class QuestionController {
   *     }
   *
   */
+  @hasRoles("admin")
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Patch(":id")
   async updateQuestions(
     @Param("id") id: Mongoose.Schema.Types.ObjectId,
@@ -285,6 +297,8 @@ export class QuestionController {
   * @apiError InternalServerError.
   *
   */
+  @hasRoles("admin")
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(":id")
   async deleteQuestions(@Param("id") id: Mongoose.Schema.Types.ObjectId) {
     const result = await this.questionService.deleteAll(id);

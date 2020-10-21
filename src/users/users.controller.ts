@@ -17,7 +17,7 @@ import * as Mongoose from "mongoose";
 
 @Controller("users")
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   /**
    * @api {post} /users Create new user
@@ -122,8 +122,8 @@ export class UsersController {
    *       "error": "unauthorized"
    *     }
    */
-  @hasRoles("admin")
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  //@hasRoles("admin")
+  //@UseGuards(JwtAuthGuard, RolesGuard)
   @Get("admin") //  pour admin
   async getAllUsers() {
     const users = await this.usersService.getUsers();

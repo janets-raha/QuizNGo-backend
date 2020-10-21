@@ -1,6 +1,9 @@
-import { Controller, Body, Post, Get, Patch, Delete, Param } from '@nestjs/common';
+import { Controller, Body, Post, Get, Patch, Delete, Param, UseGuards } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import * as Mongoose from 'mongoose';
+import { hasRoles } from 'src/auth/roles.decorator';
+import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
+import { RolesGuard } from 'src/auth/roles.guards';
 
 @Controller('category')
 export class CategoryController {
@@ -20,6 +23,8 @@ export class CategoryController {
    * @apiError InternalServerError Database error while creating new entry.
    * 
    */
+  @hasRoles("admin")
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
   async addCategory(@Body('name') name: string) {
     const result = await this.categoryService.createCategory(name);
@@ -85,6 +90,8 @@ export class CategoryController {
   * @apiError NotFoundError Category not found
   *
   */
+  @hasRoles("admin")
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Patch(':id')
   async updateCategory(
     @Param('id') categoryId: Mongoose.Schema.Types.ObjectId,
@@ -112,6 +119,8 @@ export class CategoryController {
   * @apiError NotFoundError Category not found
   *
   */
+  @hasRoles("admin")
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(':id')   // pour admin
   async deleteConcert(@Param('id') categoryId) {
     const result = await this.categoryService.delete(categoryId);

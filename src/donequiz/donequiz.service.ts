@@ -15,7 +15,7 @@ export class DonequizService {
     @InjectModel("Donequiz") private readonly donequizModel: Model<Donequiz>,
     @InjectModel("Category") private readonly categoryModel: Model<Category>,
     @InjectModel("User") private readonly userModel: Model<User>, //private readonly userService: UsersService,
-  ) {}
+  ) { }
 
   async enterQuiz(
     user_id: Mongoose.Schema.Types.ObjectId,
@@ -73,7 +73,12 @@ export class DonequizService {
   async getOneUserQuiz(userId: Mongoose.Schema.Types.ObjectId) {
     const quizz = await this.donequizModel
       .find({ user_id: userId })
-      .populate("quizz_id");
+      .populate({
+        path: 'quizz_id',
+        populate: {
+          path: 'category'
+        }
+      }).exec();
 
     const categories = await this.categoryModel.find().exec();
 
