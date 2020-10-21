@@ -1,6 +1,6 @@
 define({ "api": [
   {
-    "type": "POST",
+    "type": "post",
     "url": "/quizz",
     "title": "Create a new quiz",
     "name": "addQuizz",
@@ -248,14 +248,14 @@ define({ "api": [
             "type": "Timestamp",
             "optional": false,
             "field": "created_at",
-            "description": "<p>Date of the quiz's creation</p>"
+            "description": "<p>Timestamp of the quiz's creation</p>"
           },
           {
             "group": "Success 200",
             "type": "Timestamp",
             "optional": false,
             "field": "updated_at",
-            "description": "<p>Date of the quiz's last modification</p>"
+            "description": "<p>Timestamp of the quiz's last modification</p>"
           }
         ]
       },
@@ -354,14 +354,14 @@ define({ "api": [
             "type": "Timestamp",
             "optional": false,
             "field": "created_at",
-            "description": "<p>Date of the quiz's creation</p>"
+            "description": "<p>Timestamp of the quiz's creation</p>"
           },
           {
             "group": "Success 200",
             "type": "Timestamp",
             "optional": false,
             "field": "updated_at",
-            "description": "<p>Date of the quiz's last modification</p>"
+            "description": "<p>Timestamp of the quiz's last modification</p>"
           }
         ]
       },
@@ -447,14 +447,14 @@ define({ "api": [
             "type": "Timestamp",
             "optional": false,
             "field": "created_at",
-            "description": "<p>Date of the quiz's creation</p>"
+            "description": "<p>Timestamp of the quiz's creation</p>"
           },
           {
             "group": "Success 200",
             "type": "Timestamp",
             "optional": false,
             "field": "updated_at",
-            "description": "<p>Date of the quiz's last modification</p>"
+            "description": "<p>Timestamp of the quiz's last modification</p>"
           }
         ]
       },
@@ -553,14 +553,14 @@ define({ "api": [
             "type": "Timestamp",
             "optional": false,
             "field": "created_at",
-            "description": "<p>Date of the quiz's creation</p>"
+            "description": "<p>Timestamp of the quiz's creation</p>"
           },
           {
             "group": "Success 200",
             "type": "Timestamp",
             "optional": false,
             "field": "updated_at",
-            "description": "<p>Date of the quiz's last modification</p>"
+            "description": "<p>Timestamp of the quiz's last modification</p>"
           }
         ]
       },
@@ -646,14 +646,14 @@ define({ "api": [
             "type": "Timestamp",
             "optional": false,
             "field": "created_at",
-            "description": "<p>Date of the quiz's creation</p>"
+            "description": "<p>Timestamp of the quiz's creation</p>"
           },
           {
             "group": "Success 200",
             "type": "Timestamp",
             "optional": false,
             "field": "updated_at",
-            "description": "<p>Date of the quiz's last modification</p>"
+            "description": "<p>Timestamp of the quiz's last modification</p>"
           }
         ]
       },
@@ -778,6 +778,357 @@ define({ "api": [
     "version": "0.0.0",
     "filename": "src/quizz/quizz.controller.ts",
     "groupTitle": "Quizz"
+  },
+  {
+    "type": "post",
+    "url": "/ratings",
+    "title": "Create a new rating",
+    "name": "addRating",
+    "group": "Ratings",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "quizz_id",
+            "description": "<p>Id of the quiz</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id of the user</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "rating",
+            "description": "<p>Rating given by the user to the quiz</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "avg_rating",
+            "description": "<p>Average rating of the quiz</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "is_published",
+            "description": "<p>Published status</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "_id",
+            "description": "<p>Id of the quiz</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>Name of the quiz</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "category",
+            "description": "<p>Id of the quiz's category</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "difficulty",
+            "description": "<p>Quiz's difficulty</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "bonus_time",
+            "description": "<p>Max time in minutes to get bonus XPs</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "bonus_xp",
+            "description": "<p>XPs amount if quiz done under bonus time</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Timestamp",
+            "optional": false,
+            "field": "createdAt",
+            "description": "<p>Timestamp of the quiz's creation</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Timestamp",
+            "optional": false,
+            "field": "updatedAt",
+            "description": "<p>Timestamp of the quiz's last modification</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n[\n  {\n         \"avg_rating\": 3.4,\n         \"is_published\": true,\n         \"_id\": \"5f7f4c46eb4a5b3d2eaa1e34\",\n         \"name\": \"Test avec 2 questions\",\n         \"category\": \"5f7f4bf1eb4a5b3d2eaa1e33\",\n         \"difficulty\": \"Difficile\",\n         \"bonus_time\": 1,\n         \"bonus_xp\": 888,\n         \"createdAt\": \"2020-10-09T14:07:17.769Z\",\n         \"updatedAt\": \"2020-10-20T17:26:49.037Z\"\n       }\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "{\n  \"message\": \"Quiz was already rated !\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/rating/rating.controller.ts",
+    "groupTitle": "Ratings"
+  },
+  {
+    "type": "get",
+    "url": "/ratings",
+    "title": "Get all ratings",
+    "name": "getAllRatings",
+    "group": "Ratings",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "_id",
+            "description": "<p>Id of the rating</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "quizz_id",
+            "description": "<p>Id of the quiz</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id of the user</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "rating",
+            "description": "<p>Rating of the quiz</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Timestamp",
+            "optional": false,
+            "field": "createdAt",
+            "description": "<p>Timestamp of the rating's creation</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Timestamp",
+            "optional": false,
+            "field": "updatedAt",
+            "description": "<p>Timestamp of the rating's last modification</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n[\n  {\n         \"_id\": \"5f8745c82cb5147334e5e656\",\n         \"quizz_id\": \"5f7f4c46eb4a5b3d2eaa1e34\",\n         \"user_id\": \"5f85e5c90fd9ad51bb2b0c92\",\n         \"rating\": 5,\n         \"createdAt\": \"2020-10-14T18:39:04.551Z\",\n         \"updatedAt\": \"2020-10-14T18:39:04.551Z\",\n       }\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/rating/rating.controller.ts",
+    "groupTitle": "Ratings"
+  },
+  {
+    "type": "post",
+    "url": "/ratings/one",
+    "title": "Get one specific rating from one specific user",
+    "name": "getRating",
+    "group": "Ratings",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "quizz_id",
+            "description": "<p>Id of the quiz</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Id of the user</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Id of the rating</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "rating",
+            "description": "<p>Rating of the quiz</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Timestamp",
+            "optional": false,
+            "field": "createdAt",
+            "description": "<p>Timestamp of the rating's creation</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 201 OK\n{\n   \"id\": \"5f8ffa34b3815d03d1d82bfb\",\n        \"rating\": 4,\n        \"created_at\": \"2020-10-21T09:07:00.489Z\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/rating/rating.controller.ts",
+    "groupTitle": "Ratings"
+  },
+  {
+    "type": "get",
+    "url": "/ratings/:id",
+    "title": "Get average ratings of a specific quiz",
+    "name": "getavgRating",
+    "group": "Ratings",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "avg_rating",
+            "description": "<p>Average rating of the quiz</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "is_published",
+            "description": "<p>Published status</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "_id",
+            "description": "<p>Id of the quiz</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>Name of the quiz</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "category",
+            "description": "<p>Id of the quiz's category</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "difficulty",
+            "description": "<p>Quiz's difficulty</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "bonus_time",
+            "description": "<p>Max time in minutes to get bonus XPs</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "bonus_xp",
+            "description": "<p>XPs amount if quiz done under bonus time</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Timestamp",
+            "optional": false,
+            "field": "createdAt",
+            "description": "<p>Timestamp of the quiz's creation</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Timestamp",
+            "optional": false,
+            "field": "updatedAt",
+            "description": "<p>Timestamp of the quiz's last modification</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n[\n  {\n         \"avg_rating\": 3.4,\n         \"is_published\": true,\n         \"_id\": \"5f7f4c46eb4a5b3d2eaa1e34\",\n         \"name\": \"Test avec 2 questions\",\n         \"category\": \"5f7f4bf1eb4a5b3d2eaa1e33\",\n         \"difficulty\": \"Difficile\",\n         \"bonus_time\": 1,\n         \"bonus_xp\": 888,\n         \"createdAt\": \"2020-10-09T14:07:17.769Z\",\n         \"updatedAt\": \"2020-10-20T17:26:49.037Z\"\n       }\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/rating/rating.controller.ts",
+    "groupTitle": "Ratings"
   },
   {
     "type": "post",
