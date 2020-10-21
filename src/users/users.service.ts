@@ -1,7 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-} from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { User } from "./user.model";
 import { Model } from "mongoose";
@@ -9,7 +6,7 @@ import * as Mongoose from "mongoose";
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel("User") private readonly userModel: Model<User>) { }
+  constructor(@InjectModel("User") private readonly userModel: Model<User>) {}
 
   async insertUser(
     name: string,
@@ -36,7 +33,7 @@ export class UsersService {
       // return result.id;
       return { newUser: result };
     } catch (error) {
-      return { error: error.message }
+      return { error: error.message };
       //throw new NotAcceptableException(error.message);
     }
   }
