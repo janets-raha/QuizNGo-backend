@@ -7,8 +7,11 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from "@nestjs/common";
 import { DonequizService } from "./donequiz.service";
+import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
+
 
 @Controller("donequiz")
 export class DonequizController {
@@ -111,7 +114,10 @@ export class DonequizController {
   *            "avg_rating": 4.666666666666667,
   *            "is_published": true,
   *            "name": "Nico Facile 2",
-  *            "category": "5f7efda4c828e01d223fd057",
+  *            "category": {
+  *                "id": "5f7efda4c828e01d223fd057",
+  *                "name": "Javascript"
+  *             }
   *            "difficulty": "Facile",
   *            "bonus_time": 10,
   *            "bonus_xp": 100,
@@ -128,12 +134,36 @@ export class DonequizController {
   * @apiError InternalServorError.
   *
   */
+  @UseGuards(JwtAuthGuard)
   @Get("user/:id")
   async getUserQuiz(@Param("id") userId: Mongoose.Schema.Types.ObjectId) {
     const result = await this.DonequizService.getOneUserQuiz(userId);
     return result;
   }
 
+
+  /**
+* @api {get} /donequiz/rank/:id Show user rank
+* @apiName GetUserRank
+* @apiGroup DoneQuiz
+* @apiDescription Showing the score rank of a given user.
+*
+* @apiParam {String} id ID of the user.
+* 
+* @apiSuccess {String} user_id ID of the user.
+* @apiSuccess {String} rank Rank of the user.
+*
+* @apiSuccessExample Success-Response:
+*     HTTP/1.1 200 OK
+*       {
+*         "user_id": "5f845e9c3637511f9875b34f",
+*         "rank": 3
+*       }
+* 
+* @apiError InternalServorError
+* 
+*/
+  @UseGuards(JwtAuthGuard)
   @Get("rank/:id")
   async getUserRank(@Param("id") userId: Mongoose.Schema.Types.ObjectId) {
     const result = await this.DonequizService.getOneUserRank(userId);
@@ -165,6 +195,7 @@ export class DonequizController {
   *
   * @apiError NotFoundError Quiz not found.
   */
+  @UseGuards(JwtAuthGuard)
   @Patch(":id")
   async update(
     @Param("id") quizId: Mongoose.Schema.Types.ObjectId,
@@ -197,6 +228,7 @@ export class DonequizController {
   * 
   * @apiError NotFoundError Quiz not found.
   */
+  @UseGuards(JwtAuthGuard)
   @Delete(":id")
   async delete(@Param("id") quizId: Mongoose.Schema.Types.ObjectId) {
     const result = await this.DonequizService.delete(quizId);
