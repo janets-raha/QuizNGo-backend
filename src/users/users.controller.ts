@@ -122,8 +122,8 @@ export class UsersController {
    *       "error": "unauthorized"
    *     }
    */
-  @hasRoles("admin")
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  //@hasRoles("admin")
+  //@UseGuards(JwtAuthGuard, RolesGuard)
   @Get("admin") //  pour admin
   async getAllUsers() {
     const users = await this.usersService.getUsers();
