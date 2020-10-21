@@ -1,7 +1,9 @@
 import * as Mongoose from "mongoose";
 
 export const UserRef = 'UserRef';
+
 export const UserSchema = new Mongoose.Schema({
+
   name: {
     type: String,
     required: true,
@@ -36,3 +38,5 @@ export interface User extends Mongoose.Document {
   score: Number;
   role: string;
 }
+
+

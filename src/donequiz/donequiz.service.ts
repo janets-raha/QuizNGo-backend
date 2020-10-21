@@ -3,16 +3,19 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Donequiz } from "./donequiz.model";
+import { Category } from "../category/category.model";
 import { User } from "src/users/user.model";
 import { argv } from "process";
+//import { UsersService } from "src/users/users.service";
 // import { Quizz } from "src/quizz/quizz.model";
 
 @Injectable()
 export class DonequizService {
   constructor(
     @InjectModel("Donequiz") private readonly donequizModel: Model<Donequiz>,
-    @InjectModel("User") private readonly userModel: Model<User>, // @InjectModel("Quizz") private readonly quizModel: Model<Quizz>,
-  ) {}
+    @InjectModel("Category") private readonly categoryModel: Model<Category>,
+    @InjectModel("User") private readonly userModel: Model<User>, //private readonly userService: UsersService,
+  ) { }
 
   async enterQuiz(
     user_id: Mongoose.Schema.Types.ObjectId,
@@ -62,20 +65,48 @@ export class DonequizService {
       quizz_id: quiz.quizz_id,
       score: quiz.score,
       success_rate: quiz.success_rate,
+      created_at: quiz.createdAt,
+      updated_at: quiz.updatedAt,
     }));
   }
 
   async getOneUserQuiz(userId: Mongoose.Schema.Types.ObjectId) {
     const quizz = await this.donequizModel
       .find({ user_id: userId })
-      .populate("quizz_id");
-    return quizz.map(quiz => ({
+      .populate({
+        path: 'quizz_id',
+        populate: {
+          path: 'category'
+        }
+      }).exec();
+
+    const categories = await this.categoryModel.find().exec();
+
+    const ret = quizz.map(quiz => ({
       id: quiz._id,
       user_id: quiz.user_id,
       quizz_id: quiz.quizz_id,
       score: quiz.score,
       success_rate: quiz.success_rate,
+      created_at: quiz.createdAt,
+      updated_at: quiz.updatedAt,
     }));
+
+    return { quizzes: ret, categories: categories };
+  }
+
+  async getOneUserRank(userId: Mongoose.Schema.Types.ObjectId) {
+    const userRanks = await this.getUserRanks();
+    const rank = userRanks.findIndex(r => r._id == userId) + 1;
+    return { user_id: userId, rank: rank };
+  }
+
+  async getUserRanks() {
+    const ranks = await this.userModel
+      .find({})
+      .sort({ score: -1 })
+      .exec();
+    return ranks;
   }
 
   async countQuiz() {

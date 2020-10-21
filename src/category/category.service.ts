@@ -8,7 +8,7 @@ import { Category } from "./category.model";
 export class CategoryService {
   constructor(
     @InjectModel("Category") private readonly categoryModel: Model<Category>,
-  ) {}
+  ) { }
 
   async createCategory(name: string) {
     const newCategory = new this.categoryModel({ name });
@@ -39,7 +39,7 @@ export class CategoryService {
     } else {
       category.name = name;
       category.save();
-      return { id: category.id, name: category.name };
+      return { id: category._id, name: category.name };
     }
   }
 

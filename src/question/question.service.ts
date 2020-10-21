@@ -14,7 +14,7 @@ export class QuestionService {
     @InjectModel("Quizz") private readonly quizModel: Model<Quizz>,
     @InjectModel("Donequiz") private readonly DonequizModel: Model<Donequiz>,
     private readonly doneQuizService: DonequizService,
-  ) {}
+  ) { }
 
   async getResults(
     quizz_id: Mongoose.Schema.Types.ObjectId,
@@ -44,8 +44,9 @@ export class QuestionService {
         xps: isGoodAnswer ? questions[idx].xps : 0,
       });
     });
-    const success_rate =
-      (results.filter(r => r.is_good_answer).length / questions.length) * 100;
+    const success_rate = Math.trunc(
+      (results.filter(r => r.is_good_answer).length / questions.length) * 100,
+    );
     score += timeout ? 0 : success_rate > 75 ? quiz.bonus_xp.valueOf() : 0;
 
     if (user_id) {
@@ -187,7 +188,7 @@ export class QuestionService {
         newquestion.save();
       }
     });
-    return questions.length + " questions modified !";
+    return questions.length + " questions updated !";
   }
 
   async delete(quest_id: Mongoose.Schema.Types.ObjectId) {

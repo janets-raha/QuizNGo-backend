@@ -6,6 +6,8 @@ import { Quizz } from "./quizz.model";
 import { Question } from "src/question/question.model";
 import { Donequiz } from "src/donequiz/donequiz.model";
 import { DonequizService } from "src/donequiz/donequiz.service";
+import { CommentService } from "src/comment/comment.service";
+import { Comment } from "src/comment/comment.model";
 
 @Injectable()
 export class QuizzService {
@@ -13,7 +15,9 @@ export class QuizzService {
     @InjectModel("Quizz") private readonly quizzModel: Model<Quizz>,
     @InjectModel("Donequiz") private readonly donequizModel: Model<Donequiz>,
     @InjectModel("Question") private readonly questionModel: Model<Question>,
+    @InjectModel("Comment") private readonly commentModel: Model<Comment>,
     private readonly doneQuizService: DonequizService,
+    private readonly commentService: CommentService,
   ) {}
 
   async createQuizz(
@@ -56,7 +60,7 @@ export class QuizzService {
     }));
   }
 
-  async showQuizzesWithStats() {
+  async getQuizzesWithStats() {
     const quizzes = await this.quizzModel
       .find()
       .sort({ createdAt: "desc" })
@@ -64,6 +68,7 @@ export class QuizzService {
       .exec();
     const counts = await this.doneQuizService.countQuiz();
     const successratio = await this.doneQuizService.avgSuccessratio();
+    const comments = await this.commentService.countOneQuizComments();
     return quizzes.map(quiz => ({
       id: quiz._id,
       name: quiz.name,
@@ -86,6 +91,15 @@ export class QuizzService {
             ratio => ratio._id.toString() === quiz._id.toString(),
           ).average
         : null,
+
+      commentsCount: comments.find(
+        comment => comment._id.toString() === quiz._id.toString(),
+      )
+        ? comments.find(
+            comment => comment._id.toString() === quiz._id.toString(),
+          ).count
+        : null,
+
       is_published: quiz.is_published,
       created_at: quiz.createdAt,
       updated_at: quiz.updatedAt,
@@ -267,25 +281,28 @@ export class QuizzService {
     if (level && category) {
       payload = {
         name: { $regex: query, $options: "i" },
+        is_published: true,
         difficulty: level,
         category: category,
       };
     } else if (level && !category) {
       payload = {
         name: { $regex: query, $options: "i" },
+        is_published: true,
         difficulty: level,
       };
     } else if (!level && category) {
       payload = {
         name: { $regex: query, $options: "i" },
+        is_published: true,
         category: category,
       };
     } else {
       payload = {
         name: { $regex: query, $options: "i" },
+        is_published: true,
       };
     }
-
     const quizzes = await this.quizzModel
       .find(payload)
       .sort({ createdAt: sort })
