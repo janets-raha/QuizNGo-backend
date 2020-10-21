@@ -15,7 +15,7 @@ export class QuizzController {
   constructor(private readonly quizzService: QuizzService) {}
 
   /**
-   * @api {POST} /quizz Create a new quiz
+   * @api {post} /quizz Create a new quiz
    * @apiName addQuizz
    * @apiGroup Quizz
    *
@@ -76,8 +76,8 @@ export class QuizzController {
    * @apiSuccess {Number} bonus_xp XPs amount if quiz done under bonus time
    * @apiSuccess {Number} avg_rating Average rating based on user's ratings
    * @apiSuccess {Boolean} is_published TRUE : quiz is published, FALSE : quiz is NOT published
-   * @apiSuccess {Timestamp} created_at Date of the quiz's creation
-   * @apiSuccess {Timestamp} updated_at Date of the quiz's last modification
+   * @apiSuccess {Timestamp} created_at Timestamp of the quiz's creation
+   * @apiSuccess {Timestamp} updated_at Timestamp of the quiz's last modification
    * 
    * @apiSuccessExample Success-Response:
    *    HTTP/1.1 200 OK
@@ -118,8 +118,8 @@ export class QuizzController {
    * @apiSuccess {Number} bonus_xp XPs amount if quiz done under bonus time
    * @apiSuccess {Number} avg_rating Average rating based on user's ratings
    * @apiSuccess {Boolean} is_published TRUE : quiz is published, FALSE : quiz is NOT published
-   * @apiSuccess {Timestamp} created_at Date of the quiz's creation
-   * @apiSuccess {Timestamp} updated_at Date of the quiz's last modification
+   * @apiSuccess {Timestamp} created_at Timestamp of the quiz's creation
+   * @apiSuccess {Timestamp} updated_at Timestamp of the quiz's last modification
    * 
    * @apiSuccessExample Success-Response:
    *    HTTP/1.1 200 OK
@@ -162,8 +162,8 @@ export class QuizzController {
    * @apiSuccess {Number} playcount UNRELIABLE (playcount of the quiz, but doesn't considers unregisred users games nor registred users multiple games)
    * @apiSuccess {Number} success_ratio Average success ratio based on users results
    * @apiSuccess {Boolean} is_published TRUE : quiz is published, FALSE : quiz is NOT published
-   * @apiSuccess {Timestamp} created_at Date of the quiz's creation
-   * @apiSuccess {Timestamp} updated_at Date of the quiz's last modification
+   * @apiSuccess {Timestamp} created_at Timestamp of the quiz's creation
+   * @apiSuccess {Timestamp} updated_at Timestamp of the quiz's last modification
    * 
    * @apiSuccessExample Success-Response:
    *    HTTP/1.1 200 OK
@@ -208,8 +208,8 @@ export class QuizzController {
    * @apiSuccess {Number} bonus_xp XPs amount if quiz done under bonus time
    * @apiSuccess {Number} avg_rating Average rating based on user's ratings
    * @apiSuccess {Boolean} is_published TRUE : quiz is published, FALSE : quiz is NOT published
-   * @apiSuccess {Timestamp} created_at Date of the quiz's creation
-   * @apiSuccess {Timestamp} updated_at Date of the quiz's last modification
+   * @apiSuccess {Timestamp} created_at Timestamp of the quiz's creation
+   * @apiSuccess {Timestamp} updated_at Timestamp of the quiz's last modification
    * 
    * @apiSuccessExample Success-Response:
    *    HTTP/1.1 200 OK
@@ -360,8 +360,8 @@ export class QuizzController {
    * @apiSuccess {Number} bonus_xp XPs amount if quiz done under bonus time
    * @apiSuccess {Number} avg_rating Average rating based on user's ratings
    * @apiSuccess {Boolean} is_published TRUE : quiz is published, FALSE : quiz is NOT published
-   * @apiSuccess {Timestamp} created_at Date of the quiz's creation
-   * @apiSuccess {Timestamp} updated_at Date of the quiz's last modification
+   * @apiSuccess {Timestamp} created_at Timestamp of the quiz's creation
+   * @apiSuccess {Timestamp} updated_at Timestamp of the quiz's last modification
    * 
    * @apiSuccessExample Success-Response:
    *    HTTP/1.1 200 OK
