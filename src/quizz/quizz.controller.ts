@@ -190,7 +190,7 @@ export class QuizzController {
    */
   @Get("stats")
   async getAllQuizzWithStats() {
-    const result = await this.quizzService.showQuizzesWithStats();
+    const result = await this.quizzService.getQuizzesWithStats();
     return result;
   }
   /**
