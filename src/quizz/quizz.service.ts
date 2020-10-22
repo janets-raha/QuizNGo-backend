@@ -332,6 +332,7 @@ export class QuizzService {
 
   async suggestQuiz(userId: Mongoose.Schema.Types.ObjectId) {
     const donequizzArr = await this.doneQuizService.listDoneQuiz(userId);
+    const allquizz = await this.quizzModel.find().populate('category').exec()
     const notDonequiz = await this.quizzModel.find({ _id: { $nin: donequizzArr } }).populate('category').exec()
     if (notDonequiz) {
       const random = this.getRandomInt(notDonequiz.length)
@@ -349,7 +350,20 @@ export class QuizzService {
         updated_at: result.updatedAt,
       }
     } else {
-      throw new NotFoundException("No match found");
+      const random = this.getRandomInt(allquizz.length)
+      const result = allquizz[random]
+      return {
+        id: result._id,
+        name: result.name,
+        category: result.category,
+        difficulty: result.difficulty,
+        bonus_time: result.bonus_time,
+        bonus_xp: result.bonus_xp,
+        avg_rating: result.avg_rating,
+        is_published: result.is_published,
+        created_at: result.createdAt,
+        updated_at: result.updatedAt,
+      }
     }
 
   }
