@@ -136,7 +136,7 @@ export class DonequizController {
   * @apiError InternalServorError.
   *
   */
-  @UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard)
   @Get("user/:id")
   async getUserQuiz(@Param("id") userId: Mongoose.Schema.Types.ObjectId) {
     const result = await this.DonequizService.getOneUserQuiz(userId);

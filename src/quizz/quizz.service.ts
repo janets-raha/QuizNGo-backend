@@ -197,10 +197,11 @@ export class QuizzService {
       const questions = await this.questionModel
         .deleteMany({ quizz_id: id })
         .exec();
-      if (questions.deletedCount === 0) {
+      const donequiz = await this.donequizModel.deleteMany({ quizz_id: id }).exec();
+      if (questions.deletedCount === 0 && donequiz.deletedCount == 0) {
         return "Quiz successfully deleted";
       } else {
-        return "Quiz and related questions successfully deleted";
+        return "Quiz and related dependency successfully deleted";
       }
     }
   }
