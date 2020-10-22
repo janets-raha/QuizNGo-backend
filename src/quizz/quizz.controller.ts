@@ -22,6 +22,9 @@ export class QuizzController {
    * @api {post} /quizz Create a new quiz
    * @apiName addQuizz
    * @apiGroup Quizz
+   * 
+   * @apiHeader {String} authorization Bearer token.
+   * @apiPermission admin
    *
    * @apiParam {String} name Quiz name
    * @apiParam {String} category Id of the quiz category
@@ -153,10 +156,15 @@ export class QuizzController {
     return result;
   }
 
+
   /**
-   * @api {get} /quizz/published Get all quizz with playcount (unreliable) and success ratio additional stats
+   * @api {get} /quizz/stats Get all quizz stats
    * @apiName getAllQuizzWithStats
    * @apiGroup Quizz
+   * @apiDescription Get all quizz with playcount (unreliable) and success ratio additional stats
+   * 
+   * @apiHeader {String} authorization Bearer token.
+   * @apiPermission admin
    * 
    * @apiSuccess {String} id Id of the quiz
    * @apiSuccess {String} name Name of the quiz
@@ -201,10 +209,13 @@ export class QuizzController {
     const result = await this.quizzService.getQuizzesWithStats();
     return result;
   }
+
+
   /**
    * @api {get} /quizz/:id Get one quiz by Id
    * @apiName showOneQuizz
    * @apiGroup Quizz
+   * @apiDescription Get one quiz by Id
    * 
    * @apiParam {Number} id Quiz unique ID
    * 
@@ -251,6 +262,8 @@ export class QuizzController {
    * @apiName updateQuizz
    * @apiGroup Quizz
    *
+   * @apiHeader {String} authorization Bearer token.
+   * 
    * @apiParam {Number} id Quiz unique ID
    * @apiParam {String} [name] Quiz name
    * @apiParam {String} [category] Id of the quiz category
@@ -305,6 +318,9 @@ export class QuizzController {
    * @apiName deleteQuizz
    * @apiGroup Quizz
    *
+   * @apiHeader {String} authorization Bearer token.
+   * @apiPermission admin
+   * 
    * @apiParam {Number} id Quiz unique ID
    *
    * @apiSuccess {String} message "Quiz successfully deleted"
@@ -395,6 +411,8 @@ export class QuizzController {
   * @apiGroup Quizz
   * @apiDescription Suggest a quiz to a given user according to the quizz they didn't do yet
   *
+  * @apiHeader {String} authorization Bearer token.
+  * 
   * @apiParam {String} id ID of the user
   *
   * @apiSuccess {String} id Id of the quiz
@@ -431,6 +449,7 @@ export class QuizzController {
   
   * @apiError NotFound No Match Found
   */
+  @UseGuards(JwtAuthGuard)
   @Get('/suggest/:id')
   async suggestQuiz(
     @Param('id') userId: Mongoose.Schema.Types.ObjectId,
