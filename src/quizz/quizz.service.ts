@@ -18,7 +18,7 @@ export class QuizzService {
     @InjectModel("Comment") private readonly commentModel: Model<Comment>,
     private readonly doneQuizService: DonequizService,
     private readonly commentService: CommentService,
-  ) {}
+  ) { }
 
   async createQuizz(
     name: string,
@@ -81,23 +81,23 @@ export class QuizzService {
         count => count._id.toString() === quiz._id.toString(),
       )
         ? counts.find(count => count._id.toString() === quiz._id.toString())
-            .count
+          .count
         : null,
 
       success_ratio: successratio.find(
         ratio => ratio._id.toString() === quiz._id.toString(),
       )
         ? successratio.find(
-            ratio => ratio._id.toString() === quiz._id.toString(),
-          ).average
+          ratio => ratio._id.toString() === quiz._id.toString(),
+        ).average
         : null,
 
       commentsCount: comments.find(
         comment => comment._id.toString() === quiz._id.toString(),
       )
         ? comments.find(
-            comment => comment._id.toString() === quiz._id.toString(),
-          ).count
+          comment => comment._id.toString() === quiz._id.toString(),
+        ).count
         : null,
 
       is_published: quiz.is_published,
@@ -324,5 +324,33 @@ export class QuizzService {
     } else {
       throw new NotFoundException("No match found");
     }
+  }
+
+  getRandomInt(max) {
+    return Math.floor(Math.random() * max)
+  }
+
+  async suggestQuiz(userId: Mongoose.Schema.Types.ObjectId) {
+    const donequizzArr = await this.doneQuizService.listDoneQuiz(userId);
+    const notDonequiz = await this.quizzModel.find({ _id: { $nin: donequizzArr } }).populate('category').exec()
+    if (notDonequiz) {
+      const random = this.getRandomInt(notDonequiz.length)
+      const result = notDonequiz[random]
+      return {
+        id: result._id,
+        name: result.name,
+        category: result.category,
+        difficulty: result.difficulty,
+        bonus_time: result.bonus_time,
+        bonus_xp: result.bonus_xp,
+        avg_rating: result.avg_rating,
+        is_published: result.is_published,
+        created_at: result.createdAt,
+        updated_at: result.updatedAt,
+      }
+    } else {
+      throw new NotFoundException("No match found");
+    }
+
   }
 }

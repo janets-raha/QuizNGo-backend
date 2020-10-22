@@ -387,4 +387,55 @@ export class QuizzController {
     );
     return result;
   }
+
+
+  /**
+  * @api {get} /quizz/suggest/:id Suggest a quiz
+  * @apiName QuizSuggestion
+  * @apiGroup Quizz
+  * @apiDescription Suggest a quiz to a given user according to the quizz they didn't do yet
+  *
+  * @apiParam {String} id ID of the user
+  *
+  * @apiSuccess {String} id Id of the quiz
+  * @apiSuccess {String} name Name of the quiz
+  * @apiSuccess {String} category Id & Name of the quiz's category
+  * @apiSuccess {String} difficulty Difficulty level of the quiz
+  * @apiSuccess {Number} bonus_time Max time in minutes to get bonus XPs
+  * @apiSuccess {Number} bonus_xp XPs amount if quiz done under bonus time
+  * @apiSuccess {Number} avg_rating Average rating based on user's ratings
+  * @apiSuccess {Boolean} is_published TRUE : quiz is published, FALSE : quiz is NOT published
+  * @apiSuccess {Timestamp} created_at Timestamp of the quiz's creation
+  * @apiSuccess {Timestamp} updated_at Timestamp of the quiz's last modification
+  *
+  * @apiSuccessExample Success-Response:
+  *    HTTP/1.1 200 OK
+  *    [
+  *     {
+          "id": "5f7f3dac7a1445090cc23e75",
+          "name": "Nico Facile 2",
+          "category": {
+              "_id": "5f7efda4c828e01d223fd057",
+              "name": "Javascript",
+              "__v": 0
+          },
+          "difficulty": "Facile",
+          "bonus_time": 10,
+          "bonus_xp": 100,
+          "avg_rating": 4.666666666666667,
+          "is_published": true,
+          "created_at": "2020-10-08T16:26:20.517Z",
+          "updated_at": "2020-10-19T08:08:32.179Z"
+        }
+  *    ]
+  
+  * @apiError NotFound No Match Found
+  */
+  @Get('/suggest/:id')
+  async suggestQuiz(
+    @Param('id') userId: Mongoose.Schema.Types.ObjectId,
+  ) {
+    const result = await this.quizzService.suggestQuiz(userId);
+    return result
+  }
 }
