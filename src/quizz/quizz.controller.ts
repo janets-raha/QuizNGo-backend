@@ -339,8 +339,8 @@ export class QuizzController {
    *   "XXX": "XXX"
    * }
    */
-  @hasRoles("admin")
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  //@hasRoles("admin")
+  //@UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(":id")
   async deleteQuizz(@Param("id") quizzId: Mongoose.Schema.Types.ObjectId) {
     const result = await this.quizzService.delete(quizzId);
