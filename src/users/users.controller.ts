@@ -88,9 +88,9 @@ export class UsersController {
     // modifié pour register new user par admin
   }
 
+
   /**
    * @api {get} /users/admin Get all registered users
-   * @apiPermission admin
    * @apiName GetAllUser
    * @apiGroup User
    *
@@ -132,9 +132,11 @@ export class UsersController {
 
   /**
    * @api {get} /users/admin/:id Get one user info
-   * @apiPermission admin
    * @apiName GetOneUser
    * @apiGroup User
+   * 
+   * @apiHeader {String} authorization Bearer token.
+   * @apiPermission admin
    *
    * @apiParam {Number} id User unique ID.
    * @apiSuccessExample Success-Response:
@@ -167,6 +169,8 @@ export class UsersController {
    * @api {patch} /users/admin/:id Update user (admin)
    * @apiName UpdateUserAdm
    * @apiGroup User
+   * 
+   * @apiHeader {String} authorization Bearer token.
    * @apiPermission admin
    *
    * @apiParam {Number} id User unique ID.
@@ -213,6 +217,8 @@ export class UsersController {
    * @apiName UpdateUser
    * @apiGroup User
    *
+   * @apiHeader {String} authorization Bearer token.
+   * 
    * @apiParam {Number} id User unique ID.
    * @apiParam {String} [email] User unique email.
    * @apiParam {String} [password] User password with 6 char min..
@@ -228,6 +234,7 @@ export class UsersController {
    *
    * @apiError NotAcceptableException.
    */
+  @UseGuards(JwtAuthGuard)
   @Patch(":id") //  pour utilisateur simple
   async updateUser(
     @Param("id") userId: string,
@@ -254,6 +261,8 @@ export class UsersController {
    * @api {delete} /users/admin/:id Delete user
    * @apiName DeleteUser
    * @apiGroup User
+   * 
+   * @apiHeader {String} authorization Bearer token.
    * @apiPermission admin
    *
    * @apiParam {Number} id User unique ID.
@@ -266,6 +275,8 @@ export class UsersController {
    *
    * @apiError 404 UserNotFound
    */
+  @hasRoles("admin")
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete("admin/:id") //  pour admin
   async removeUser(@Param("id") prodId: string) {
     await this.usersService.deleteUser(prodId);

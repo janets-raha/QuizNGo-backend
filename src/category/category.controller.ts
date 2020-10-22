@@ -16,7 +16,7 @@ import { RolesGuard } from "src/auth/roles.guards";
 
 @Controller("category")
 export class CategoryController {
-  constructor(private readonly categoryService: CategoryService) {}
+  constructor(private readonly categoryService: CategoryService) { }
 
   /**
    * @api {post} /category Create new category
@@ -24,6 +24,9 @@ export class CategoryController {
    * @apiGroup Category
    * @apiDescription Creating a new category
    *
+   * @apiHeader {String} authorization Bearer token.
+   * @apiPermission admin
+   * 
    * @apiParam {String} name Name of the new category
    *
    * @apiSuccess {String} id ID of the created category
@@ -67,7 +70,6 @@ export class CategoryController {
    *    ]
    *
    *
-   * @apiError InternalServerError
    *
    */
   @Get()
@@ -82,6 +84,9 @@ export class CategoryController {
    * @apiGroup Category
    * @apiDescription Updating an existing category
    *
+   * @apiHeader {String} authorization Bearer token.
+   * @apiPermission admin
+   * 
    * @apiParam {String} id ID of the category
    * @apiParam {String} name New name of a category
    *
@@ -113,6 +118,9 @@ export class CategoryController {
    * @apiGroup Category
    * @apiDescription Deleting an existing category
    *
+   * @apiHeader {String} authorization Bearer token.
+   * @apiPermission admin
+   * 
    * @apiParam {String} id ID of the category
    *
    * @apiSuccessExample

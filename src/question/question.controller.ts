@@ -25,6 +25,9 @@ export class QuestionController {
   * @apiGroup Question
   * @apiDescription Adding one question to a specific quiz.
   *
+  * @apiHeader {String} authorization Bearer token.
+  * @apiPermission admin
+  * 
   * @apiParam {String} quizz_id ID of the quiz.
   * @apiParam {Number} xps Number of points to win.
   * @apiParam {String} question Title of the question.
@@ -119,6 +122,9 @@ export class QuestionController {
   * @apiGroup Question
   * @apiDescription Adding multiple questions to one quiz at once
   *
+  * @apiHeader {String} authorization Bearer token.
+  * @apiPermission admin
+  * 
   * @apiParam {Object[]} questions Array of question objects with properties quizz_id, xps, question, answers.
   *
   * @apiSuccess {String} message ID of the created question.
@@ -189,8 +195,10 @@ export class QuestionController {
   * @api {get} /question/:id/admin Get quiz question(admin)
   * @apiName GetOneQuizQuestionsAdmin
   * @apiGroup Question
-  * @apiPermission admin
   * @apiDescription Get all the questions from a given quiz with the correct answers.
+  * 
+  * @apiHeader {String} authorization Bearer token.
+  * @apiPermission admin
   * 
   * @apiParam {String} id ID of the quiz.
   *
@@ -248,6 +256,9 @@ export class QuestionController {
   * @apiPermission admin
   * @apiDescription Update multiple questions from one quiz at once.
   *
+  * @apiHeader {String} authorization Bearer token.
+  * @apiPermission admin
+  * 
   * @apiParam {String} id ID of the quiz.
   * @apiParam {Object[]} question Array of question objects with properties id, quizz_id, xps, question, answers.
   *
@@ -285,6 +296,9 @@ export class QuestionController {
   * @apiPermission admin
   * @apiDescription Delete all the questions from a given quiz
   *
+  * @apiHeader {String} authorization Bearer token.
+  * @apiPermission admin
+  * 
   * @apiParam {String} id ID of the quiz.
   *
   *
