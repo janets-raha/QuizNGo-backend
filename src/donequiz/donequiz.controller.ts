@@ -102,6 +102,8 @@ export class DonequizController {
   * @apiGroup DoneQuiz
   * @apiDescription Showing all the quiz already done by a given user.
   *
+  * @apiHeader {String} authorization Bearer token.
+  * 
   * @apiParam {String} id ID of the user.
   *
   * @apiSuccessExample Success-Response:
@@ -134,7 +136,7 @@ export class DonequizController {
   * @apiError InternalServorError.
   *
   */
-  @UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard)
   @Get("user/:id")
   async getUserQuiz(@Param("id") userId: Mongoose.Schema.Types.ObjectId) {
     const result = await this.DonequizService.getOneUserQuiz(userId);
@@ -147,6 +149,8 @@ export class DonequizController {
 * @apiName GetUserRank
 * @apiGroup DoneQuiz
 * @apiDescription Showing the score rank of a given user.
+*
+* @apiHeader {String} authorization Bearer token.
 *
 * @apiParam {String} id ID of the user.
 * 
@@ -182,6 +186,8 @@ export class DonequizController {
   * @apiName UpdateDoneQuiz
   * @apiGroup DoneQuiz
   * @apiDescription Update a quiz already done.
+  * 
+  * @apiHeader {String} authorization Bearer token.
   *
   * @apiParam {String} id ID of the quiz done.
   * @apiParam {Number} score  New total of xps won.
@@ -218,6 +224,8 @@ export class DonequizController {
   * @apiGroup DoneQuiz
   * @apiDescription Delete a quiz already done.
   *
+  * @apiHeader {String} authorization Bearer token.
+  * 
   * @apiParam {String} id ID of the quiz done.
   * 
   * @apiSuccessExample Success-Response:

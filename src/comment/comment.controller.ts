@@ -16,6 +16,8 @@ export class CommentController {
    * @apiName CreateComment
    * @apiGroup Comments
    * 
+   * @apiHeader {String} authorization Bearer token.
+   * 
    * @apiParam {String} user_id ID of the user posting the comment.
    * @apiParam {String} quizz_id ID of the quiz where the comment was added.
    * @apiParam {String} comment Content of the comment.
@@ -109,6 +111,7 @@ export class CommentController {
   * @apiName UpdateComment
   * @apiGroup Comments
   * 
+  * @apiHeader {String} authorization Bearer token.
   * @apiParam {String} id ID of the comment
   * @apiParam {String} comment New content of the comment
   *
@@ -135,6 +138,8 @@ export class CommentController {
    * @api {delete} /comments/:id
    * @apiName DeleteComment
    * @apiGroup Comments
+   * 
+   * @apiHeader {String} authorization Bearer token.
    * 
    * @apiParam {String} id ID of the comment
    * 

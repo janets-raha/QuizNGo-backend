@@ -7,7 +7,9 @@ import { Question } from "src/question/question.model";
 import { Donequiz } from "src/donequiz/donequiz.model";
 import { DonequizService } from "src/donequiz/donequiz.service";
 import { CommentService } from "src/comment/comment.service";
-import { Comment } from "src/comment/comment.model";
+import { User } from "src/users/user.model";
+import { UsersService } from "src/users/users.service";
+import { ObjectId } from "mongodb";
 
 @Injectable()
 export class QuizzService {
@@ -15,10 +17,11 @@ export class QuizzService {
     @InjectModel("Quizz") private readonly quizzModel: Model<Quizz>,
     @InjectModel("Donequiz") private readonly donequizModel: Model<Donequiz>,
     @InjectModel("Question") private readonly questionModel: Model<Question>,
-    @InjectModel("Comment") private readonly commentModel: Model<Comment>,
+    @InjectModel("User") private readonly userModel: Model<User>,
     private readonly doneQuizService: DonequizService,
     private readonly commentService: CommentService,
-  ) {}
+    private readonly userService: UsersService,
+  ) { }
 
   async createQuizz(
     name: string,
@@ -81,23 +84,23 @@ export class QuizzService {
         count => count._id.toString() === quiz._id.toString(),
       )
         ? counts.find(count => count._id.toString() === quiz._id.toString())
-            .count
+          .count
         : null,
 
       success_ratio: successratio.find(
         ratio => ratio._id.toString() === quiz._id.toString(),
       )
         ? successratio.find(
-            ratio => ratio._id.toString() === quiz._id.toString(),
-          ).average
+          ratio => ratio._id.toString() === quiz._id.toString(),
+        ).average
         : null,
 
       commentsCount: comments.find(
         comment => comment._id.toString() === quiz._id.toString(),
       )
         ? comments.find(
-            comment => comment._id.toString() === quiz._id.toString(),
-          ).count
+          comment => comment._id.toString() === quiz._id.toString(),
+        ).count
         : null,
 
       is_published: quiz.is_published,
@@ -190,6 +193,8 @@ export class QuizzService {
   }
 
   async delete(id: Mongoose.Schema.Types.ObjectId) {
+
+
     const quiz = await this.quizzModel.deleteOne({ _id: id }).exec();
     if (quiz.deletedCount === 0) {
       throw new NotFoundException("Quiz not found");
@@ -197,10 +202,23 @@ export class QuizzService {
       const questions = await this.questionModel
         .deleteMany({ quizz_id: id })
         .exec();
-      if (questions.deletedCount === 0) {
+      const donequiz = await this.donequizModel.deleteMany({ quizz_id: id }).exec();
+      const allUser = await this.userModel.find({ favorites: id }).exec();
+      allUser.forEach(user => {
+        const newFav: [Mongoose.Schema.Types.ObjectId] = [id]
+        user.favorites.forEach(fav => {
+          if (fav != id) {
+            newFav.push(fav);
+          }
+        })
+        const result = newFav.shift()
+        //console.log("neFav", newFav)
+        this.userService.updateFav(user._id, newFav)
+      })
+      if (questions.deletedCount === 0 && donequiz.deletedCount == 0) {
         return "Quiz successfully deleted";
       } else {
-        return "Quiz and related questions successfully deleted";
+        return "Quiz and related dependency successfully deleted";
       }
     }
   }
@@ -323,6 +341,53 @@ export class QuizzService {
       }));
     } else {
       throw new NotFoundException("No match found");
+    }
+  }
+
+  getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+  }
+
+  async suggestQuiz(userId: Mongoose.Schema.Types.ObjectId) {
+    const donequizzArr = await this.doneQuizService.listDoneQuiz(userId);
+    const allquizz = await this.quizzModel
+      .find()
+      .populate("category")
+      .exec();
+    const notDonequiz = await this.quizzModel
+      .find({ _id: { $nin: donequizzArr } })
+      .populate("category")
+      .exec();
+    if (notDonequiz.length) {
+      const random = this.getRandomInt(notDonequiz.length);
+      const result = notDonequiz[random];
+      return {
+        id: result._id,
+        name: result.name,
+        category: result.category,
+        difficulty: result.difficulty,
+        bonus_time: result.bonus_time,
+        bonus_xp: result.bonus_xp,
+        avg_rating: result.avg_rating,
+        is_published: result.is_published,
+        created_at: result.createdAt,
+        updated_at: result.updatedAt,
+      };
+    } else {
+      const random = this.getRandomInt(allquizz.length);
+      const result = allquizz[random];
+      return {
+        id: result._id,
+        name: result.name,
+        category: result.category,
+        difficulty: result.difficulty,
+        bonus_time: result.bonus_time,
+        bonus_xp: result.bonus_xp,
+        avg_rating: result.avg_rating,
+        is_published: result.is_published,
+        created_at: result.createdAt,
+        updated_at: result.updatedAt,
+      };
     }
   }
 }

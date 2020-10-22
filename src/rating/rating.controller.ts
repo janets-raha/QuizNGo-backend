@@ -12,6 +12,8 @@ export class RatingController {
    * @apiName addRating
    * @apiGroup Ratings
    * 
+   * @apiHeader {String} authorization Bearer token.
+   * 
    * @apiParam {String} quizz_id Id of the quiz
    * @apiParam {String} user_id Id of the user
    * @apiParam {Number} rating Rating given by the user to the quiz
@@ -65,9 +67,10 @@ export class RatingController {
   }
 
   /**
-   * @api {post} /ratings/one Get one specific rating from one specific user
+   * @api {post} /ratings/one Get one user rating
    * @apiName getRating
    * @apiGroup Ratings
+   * @apiDescription Get one specific rating from one specific user
    *
    * @apiParam {String} quizz_id Id of the quiz
    * @apiParam {String} user_id Id of the user

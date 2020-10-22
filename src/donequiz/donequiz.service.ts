@@ -165,4 +165,11 @@ export class DonequizService {
       return "Quiz successfully deleted !";
     }
   }
+
+  async listDoneQuiz(userId: Mongoose.Schema.Types.ObjectId) {
+    const quizz = await this.donequizModel.find({ user_id: userId }).exec();
+    return quizz.map(quiz => (
+      quiz.quizz_id
+    ))
+  }
 }

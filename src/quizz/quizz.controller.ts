@@ -22,6 +22,9 @@ export class QuizzController {
    * @api {post} /quizz Create a new quiz
    * @apiName addQuizz
    * @apiGroup Quizz
+   * 
+   * @apiHeader {String} authorization Bearer token.
+   * @apiPermission admin
    *
    * @apiParam {String} name Quiz name
    * @apiParam {String} category Id of the quiz category
@@ -153,10 +156,15 @@ export class QuizzController {
     return result;
   }
 
+
   /**
-   * @api {get} /quizz/published Get all quizz with playcount (unreliable) and success ratio additional stats
+   * @api {get} /quizz/stats Get all quizz stats
    * @apiName getAllQuizzWithStats
    * @apiGroup Quizz
+   * @apiDescription Get all quizz with playcount (unreliable) and success ratio additional stats
+   * 
+   * @apiHeader {String} authorization Bearer token.
+   * @apiPermission admin
    * 
    * @apiSuccess {String} id Id of the quiz
    * @apiSuccess {String} name Name of the quiz
@@ -201,10 +209,13 @@ export class QuizzController {
     const result = await this.quizzService.getQuizzesWithStats();
     return result;
   }
+
+
   /**
    * @api {get} /quizz/:id Get one quiz by Id
    * @apiName showOneQuizz
    * @apiGroup Quizz
+   * @apiDescription Get one quiz by Id
    * 
    * @apiParam {Number} id Quiz unique ID
    * 
@@ -251,6 +262,8 @@ export class QuizzController {
    * @apiName updateQuizz
    * @apiGroup Quizz
    *
+   * @apiHeader {String} authorization Bearer token.
+   * 
    * @apiParam {Number} id Quiz unique ID
    * @apiParam {String} [name] Quiz name
    * @apiParam {String} [category] Id of the quiz category
@@ -305,6 +318,9 @@ export class QuizzController {
    * @apiName deleteQuizz
    * @apiGroup Quizz
    *
+   * @apiHeader {String} authorization Bearer token.
+   * @apiPermission admin
+   * 
    * @apiParam {Number} id Quiz unique ID
    *
    * @apiSuccess {String} message "Quiz successfully deleted"
@@ -323,8 +339,8 @@ export class QuizzController {
    *   "XXX": "XXX"
    * }
    */
-  @hasRoles("admin")
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  //@hasRoles("admin")
+  //@UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(":id")
   async deleteQuizz(@Param("id") quizzId: Mongoose.Schema.Types.ObjectId) {
     const result = await this.quizzService.delete(quizzId);
@@ -386,5 +402,59 @@ export class QuizzController {
       sort,
     );
     return result;
+  }
+
+
+  /**
+  * @api {get} /quizz/suggest/:id Suggest a quiz
+  * @apiName QuizSuggestion
+  * @apiGroup Quizz
+  * @apiDescription Suggest a quiz to a given user according to the quizz they didn't do yet
+  *
+  * @apiHeader {String} authorization Bearer token.
+  * 
+  * @apiParam {String} id ID of the user
+  *
+  * @apiSuccess {String} id Id of the quiz
+  * @apiSuccess {String} name Name of the quiz
+  * @apiSuccess {String} category Id & Name of the quiz's category
+  * @apiSuccess {String} difficulty Difficulty level of the quiz
+  * @apiSuccess {Number} bonus_time Max time in minutes to get bonus XPs
+  * @apiSuccess {Number} bonus_xp XPs amount if quiz done under bonus time
+  * @apiSuccess {Number} avg_rating Average rating based on user's ratings
+  * @apiSuccess {Boolean} is_published TRUE : quiz is published, FALSE : quiz is NOT published
+  * @apiSuccess {Timestamp} created_at Timestamp of the quiz's creation
+  * @apiSuccess {Timestamp} updated_at Timestamp of the quiz's last modification
+  *
+  * @apiSuccessExample Success-Response:
+  *    HTTP/1.1 200 OK
+  *    [
+  *     {
+          "id": "5f7f3dac7a1445090cc23e75",
+          "name": "Nico Facile 2",
+          "category": {
+              "_id": "5f7efda4c828e01d223fd057",
+              "name": "Javascript",
+              "__v": 0
+          },
+          "difficulty": "Facile",
+          "bonus_time": 10,
+          "bonus_xp": 100,
+          "avg_rating": 4.666666666666667,
+          "is_published": true,
+          "created_at": "2020-10-08T16:26:20.517Z",
+          "updated_at": "2020-10-19T08:08:32.179Z"
+        }
+  *    ]
+  
+  * @apiError NotFound No Match Found
+  */
+  @UseGuards(JwtAuthGuard)
+  @Get('/suggest/:id')
+  async suggestQuiz(
+    @Param('id') userId: Mongoose.Schema.Types.ObjectId,
+  ) {
+    const result = await this.quizzService.suggestQuiz(userId);
+    return result
   }
 }

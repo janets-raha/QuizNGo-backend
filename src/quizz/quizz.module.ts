@@ -6,6 +6,7 @@ import { QuizzSchema } from "./quizz.model";
 import { QuestionModule } from "src/question/question.module";
 import { DonequizModule } from "src/donequiz/donequiz.module";
 import { CommentModule } from "src/comment/comment.module";
+import { UsersModule } from "src/users/users.module";
 
 @Module({
   imports: [
@@ -13,9 +14,10 @@ import { CommentModule } from "src/comment/comment.module";
     forwardRef(() => QuestionModule),
     DonequizModule,
     CommentModule,
+    UsersModule
   ],
   controllers: [QuizzController],
   providers: [QuizzService],
   exports: [MongooseModule, QuizzService],
 })
-export class QuizzModule {}
+export class QuizzModule { }

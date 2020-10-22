@@ -6,7 +6,7 @@ import * as Mongoose from "mongoose";
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel("User") private readonly userModel: Model<User>) {}
+  constructor(@InjectModel("User") private readonly userModel: Model<User>) { }
 
   async insertUser(
     name: string,
@@ -123,6 +123,16 @@ export class UsersService {
     if (score) {
       updatedUser.score = score;
     }
+    updatedUser.save();
+    return "User updated";
+  }
+
+  async updateFav(
+    userId: string,
+    favorites: [Mongoose.Schema.Types.ObjectId],
+  ) {
+    const updatedUser = await this.findUser(userId);
+    updatedUser.favorites = favorites;
     updatedUser.save();
     return "User updated";
   }
