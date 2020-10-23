@@ -137,6 +137,24 @@ define({ "api": [
     "name": "CreateCategory",
     "group": "Category",
     "description": "<p>Creating a new category</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Bearer token.</p>"
+          }
+        ]
+      }
+    },
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -186,6 +204,24 @@ define({ "api": [
     "name": "DeleteCategory",
     "group": "Category",
     "description": "<p>Deleting an existing category</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Bearer token.</p>"
+          }
+        ]
+      }
+    },
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -240,18 +276,6 @@ define({ "api": [
         }
       ]
     },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "InternalServerError",
-            "description": ""
-          }
-        ]
-      }
-    },
     "version": "0.0.0",
     "filename": "src/category/category.controller.ts",
     "groupTitle": "Category"
@@ -263,6 +287,24 @@ define({ "api": [
     "name": "UpdateCategory",
     "group": "Category",
     "description": "<p>Updating an existing category</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Bearer token.</p>"
+          }
+        ]
+      }
+    },
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -314,6 +356,19 @@ define({ "api": [
     "title": "Add a comment",
     "name": "CreateComment",
     "group": "Comments",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Bearer token.</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -404,6 +459,19 @@ define({ "api": [
     "title": "",
     "name": "DeleteComment",
     "group": "Comments",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Bearer token.</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -500,6 +568,19 @@ define({ "api": [
     "title": "Update comment",
     "name": "UpdateComment",
     "group": "Comments",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Bearer token.</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -540,6 +621,19 @@ define({ "api": [
     "name": "DeleteDoneQuiz",
     "group": "DoneQuiz",
     "description": "<p>Delete a quiz already done.</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Bearer token.</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -617,6 +711,19 @@ define({ "api": [
     "name": "GetUserDoneQuiz",
     "group": "DoneQuiz",
     "description": "<p>Showing all the quiz already done by a given user.</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Bearer token.</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -662,6 +769,19 @@ define({ "api": [
     "name": "GetUserRank",
     "group": "DoneQuiz",
     "description": "<p>Showing the score rank of a given user.</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Bearer token.</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -830,6 +950,19 @@ define({ "api": [
     "name": "UpdateDoneQuiz",
     "group": "DoneQuiz",
     "description": "<p>Update a quiz already done.</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Bearer token.</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -889,6 +1022,24 @@ define({ "api": [
     "name": "CreateNewQuestion",
     "group": "Question",
     "description": "<p>Adding one question to a specific quiz.</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Bearer token.</p>"
+          }
+        ]
+      }
+    },
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -966,6 +1117,24 @@ define({ "api": [
     "name": "CreateNewQuestions",
     "group": "Question",
     "description": "<p>Adding multiple questions to one quiz at once</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Bearer token.</p>"
+          }
+        ]
+      }
+    },
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -1024,9 +1193,25 @@ define({ "api": [
     "permission": [
       {
         "name": "admin"
+      },
+      {
+        "name": "admin"
       }
     ],
     "description": "<p>Delete all the questions from a given quiz</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Bearer token.</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -1116,12 +1301,25 @@ define({ "api": [
     "title": "Get quiz question(admin)",
     "name": "GetOneQuizQuestionsAdmin",
     "group": "Question",
+    "description": "<p>Get all the questions from a given quiz with the correct answers.</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Bearer token.</p>"
+          }
+        ]
+      }
+    },
     "permission": [
       {
         "name": "admin"
       }
     ],
-    "description": "<p>Get all the questions from a given quiz with the correct answers.</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -1169,9 +1367,25 @@ define({ "api": [
     "permission": [
       {
         "name": "admin"
+      },
+      {
+        "name": "admin"
       }
     ],
     "description": "<p>Update multiple questions from one quiz at once.</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Bearer token.</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -1316,11 +1530,161 @@ define({ "api": [
     "groupTitle": "Question"
   },
   {
+    "type": "get",
+    "url": "/quizz/suggest/:id",
+    "title": "Suggest a quiz",
+    "name": "QuizSuggestion",
+    "group": "Quizz",
+    "description": "<p>Suggest a quiz to a given user according to the quizz they didn't do yet</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Bearer token.</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>ID of the user</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Id of the quiz</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>Name of the quiz</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "category",
+            "description": "<p>Id &amp; Name of the quiz's category</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "difficulty",
+            "description": "<p>Difficulty level of the quiz</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "bonus_time",
+            "description": "<p>Max time in minutes to get bonus XPs</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "bonus_xp",
+            "description": "<p>XPs amount if quiz done under bonus time</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "avg_rating",
+            "description": "<p>Average rating based on user's ratings</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "is_published",
+            "description": "<p>TRUE : quiz is published, FALSE : quiz is NOT published</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Timestamp",
+            "optional": false,
+            "field": "created_at",
+            "description": "<p>Timestamp of the quiz's creation</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Timestamp",
+            "optional": false,
+            "field": "updated_at",
+            "description": "<p>Timestamp of the quiz's last modification</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n[\n {\n       \"id\": \"5f7f3dac7a1445090cc23e75\",\n       \"name\": \"Nico Facile 2\",\n       \"category\": {\n           \"_id\": \"5f7efda4c828e01d223fd057\",\n           \"name\": \"Javascript\",\n           \"__v\": 0\n       },\n       \"difficulty\": \"Facile\",\n       \"bonus_time\": 10,\n       \"bonus_xp\": 100,\n       \"avg_rating\": 4.666666666666667,\n       \"is_published\": true,\n       \"created_at\": \"2020-10-08T16:26:20.517Z\",\n       \"updated_at\": \"2020-10-19T08:08:32.179Z\"\n     }\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "NotFound",
+            "description": "<p>No Match Found</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "src/quizz/quizz.controller.ts",
+    "groupTitle": "Quizz"
+  },
+  {
     "type": "post",
     "url": "/quizz",
     "title": "Create a new quiz",
     "name": "addQuizz",
     "group": "Quizz",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Bearer token.</p>"
+          }
+        ]
+      }
+    },
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -1424,6 +1788,24 @@ define({ "api": [
     "title": "Delete one quiz",
     "name": "deleteQuizz",
     "group": "Quizz",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Bearer token.</p>"
+          }
+        ]
+      }
+    },
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -1482,10 +1864,29 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/quizz/published",
-    "title": "Get all quizz with playcount (unreliable) and success ratio additional stats",
+    "url": "/quizz/stats",
+    "title": "Get all quizz stats",
     "name": "getAllQuizzWithStats",
     "group": "Quizz",
+    "description": "<p>Get all quizz with playcount (unreliable) and success ratio additional stats</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Bearer token.</p>"
+          }
+        ]
+      }
+    },
+    "permission": [
+      {
+        "name": "admin"
+      }
+    ],
     "success": {
       "fields": {
         "Success 200": [
@@ -1792,6 +2193,7 @@ define({ "api": [
     "title": "Get one quiz by Id",
     "name": "showOneQuizz",
     "group": "Quizz",
+    "description": "<p>Get one quiz by Id</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -1991,6 +2393,19 @@ define({ "api": [
     "title": "Update an existing quiz",
     "name": "updateQuizz",
     "group": "Quizz",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Bearer token.</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -2101,6 +2516,19 @@ define({ "api": [
     "title": "Create a new rating",
     "name": "addRating",
     "group": "Ratings",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Bearer token.</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -2292,9 +2720,10 @@ define({ "api": [
   {
     "type": "post",
     "url": "/ratings/one",
-    "title": "Get one specific rating from one specific user",
+    "title": "Get one user rating",
     "name": "getRating",
     "group": "Ratings",
+    "description": "<p>Get one specific rating from one specific user</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -2590,6 +3019,19 @@ define({ "api": [
     "title": "Delete user",
     "name": "DeleteUser",
     "group": "User",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Bearer token.</p>"
+          }
+        ]
+      }
+    },
     "permission": [
       {
         "name": "admin"
@@ -2637,11 +3079,6 @@ define({ "api": [
     "type": "get",
     "url": "/users/admin",
     "title": "Get all registered users",
-    "permission": [
-      {
-        "name": "admin"
-      }
-    ],
     "name": "GetAllUser",
     "group": "User",
     "success": {
@@ -2680,13 +3117,26 @@ define({ "api": [
     "type": "get",
     "url": "/users/admin/:id",
     "title": "Get one user info",
+    "name": "GetOneUser",
+    "group": "User",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Bearer token.</p>"
+          }
+        ]
+      }
+    },
     "permission": [
       {
         "name": "admin"
       }
     ],
-    "name": "GetOneUser",
-    "group": "User",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -2738,6 +3188,19 @@ define({ "api": [
     "title": "Update user",
     "name": "UpdateUser",
     "group": "User",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Bearer token.</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -2811,6 +3274,19 @@ define({ "api": [
     "title": "Update user (admin)",
     "name": "UpdateUserAdm",
     "group": "User",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Bearer token.</p>"
+          }
+        ]
+      }
+    },
     "permission": [
       {
         "name": "admin"
