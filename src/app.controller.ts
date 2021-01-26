@@ -69,6 +69,7 @@ export class AppController {
    *       "error": "Incorrect credentials"
    *     }
    */
+  
   @UseGuards(JwtAuthGuard)
   @Get("profile")
   getProfile(@Request() req) {
